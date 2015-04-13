@@ -1,0 +1,4 @@
+KLEE: WARNING: undefined reference to function: strlen
+KLEE: WARNING: undefined reference to function: strncmp
+KLEE: WARNING ONCE: calling external: strlen(33526720)
+KLEE: WARNING ONCE: calling external: strncmp(33400432, 33526720, 5)

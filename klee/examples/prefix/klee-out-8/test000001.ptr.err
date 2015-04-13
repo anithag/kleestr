@@ -1,0 +1,12 @@
+Error: memory error: invalid pointer: make_symbolic
+File: /home/anitha/klee/examples/prefix/prefix_pointer.c
+Line: 24
+assembly.ll line: 83
+Stack: 
+	#000000083 in main () at /home/anitha/klee/examples/prefix/prefix_pointer.c:24
+Info: 
+	address: 12370169555311111083
+	next: object at 140334706918272 of size 1536
+		MO3[1536] (no allocation info)
+	prev: object at 38675008 of size 4
+		MO19[4] allocated at main():  %0 = alloca i32

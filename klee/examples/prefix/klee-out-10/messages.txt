@@ -1,0 +1,2 @@
+KLEE: ERROR: /home/anitha/klee/examples/prefix/prefix_pointer.c:27: invalid klee_assume call (provably false)
+KLEE: NOTE: now ignoring this error at this location

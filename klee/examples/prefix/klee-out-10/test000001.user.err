@@ -1,0 +1,6 @@
+Error: invalid klee_assume call (provably false)
+File: /home/anitha/klee/examples/prefix/prefix_pointer.c
+Line: 27
+assembly.ll line: 89
+Stack: 
+	#000000089 in main () at /home/anitha/klee/examples/prefix/prefix_pointer.c:27

@@ -1,0 +1,2 @@
+KLEE: ERROR: /home/anitha/klee/examples/prefix/prefix_lib.c:17: ASSERTION FAIL: a[0] == 'h'
+KLEE: NOTE: now ignoring this error at this location

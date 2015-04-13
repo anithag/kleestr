@@ -1,0 +1,8 @@
+Error: ASSERTION FAIL: a[0] == 'h'
+File: /home/anitha/klee/examples/prefix/prefix_lib.c
+Line: 17
+assembly.ll line: 109
+Stack: 
+	#000000109 in __user_main () at /home/anitha/klee/examples/prefix/prefix_lib.c:17
+	#100000548 in __uClibc_main (main=28934352, argc=1, argv=29956128, app_init=0, app_fini=0, rtld_fini=0, stack_end=0) at /home/anitha/klee-uclibc/libc/misc/internals/__uClibc_main.c:401
+	#200001494 in main (=1, =29956128)

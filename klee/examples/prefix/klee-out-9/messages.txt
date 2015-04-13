@@ -1,0 +1,2 @@
+KLEE: ERROR: /home/anitha/klee/examples/prefix/prefix_pointer.c:26: wrong size given to klee_make_symbolic[_name]
+KLEE: NOTE: now ignoring this error at this location

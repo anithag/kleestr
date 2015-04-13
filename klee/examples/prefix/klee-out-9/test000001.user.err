@@ -1,0 +1,6 @@
+Error: wrong size given to klee_make_symbolic[_name]
+File: /home/anitha/klee/examples/prefix/prefix_pointer.c
+Line: 26
+assembly.ll line: 85
+Stack: 
+	#000000085 in main () at /home/anitha/klee/examples/prefix/prefix_pointer.c:26

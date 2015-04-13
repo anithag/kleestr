@@ -1,0 +1,14 @@
+*~
+*.swp
+build*
+root*
+cmake/*.Config.cmake
+deps
+dependencies
+*.aux
+*.bbl
+*.blg
+*.d
+*.log
+*.tdo
+*.pyc

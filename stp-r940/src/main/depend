@@ -1,0 +1,160 @@
+main.o: main.cpp ../AST/AST.h ../AST/UsefulDefs.h \
+ ../AST/../main/Globals.h ../AST/ASTKind.h \
+ ../AST/../extlib-constbv/constantbv.h ../AST/RunTimes.h ../AST/ASTNode.h \
+ ../AST/../AST/NodeFactory/HashingNodeFactory.h \
+ ../AST/../AST/NodeFactory/NodeFactory.h ../AST/ASTKind.h \
+ ../AST/ASTInternal.h ../AST/ASTInterior.h ../AST/ASTSymbol.h \
+ ../AST/ASTBVConst.h ../printer/AssortedPrinters.h \
+ ../printer/../AST/AST.h ../printer/printers.h \
+ ../printer/../AST/ASTKind.h ../printer/../STPManager/STP.h \
+ ../printer/../STPManager/../AST/AST.h \
+ ../printer/../STPManager/../AST/ArrayTransformer.h \
+ ../printer/../STPManager/../AST/AST.h \
+ ../printer/../STPManager/../AST/../STPManager/STPManager.h \
+ ../printer/../STPManager/../AST/../STPManager/UserDefinedFlags.h \
+ ../printer/../STPManager/../AST/../STPManager/../AST/AST.h \
+ ../printer/../STPManager/../AST/../STPManager/../AST/NodeFactory/HashingNodeFactory.h \
+ ../printer/../STPManager/../STPManager/STPManager.h \
+ ../printer/../STPManager/../simplifier/bvsolver.h \
+ ../printer/../STPManager/../simplifier/simplifier.h \
+ ../printer/../STPManager/../simplifier/../AST/AST.h \
+ ../printer/../STPManager/../simplifier/../STPManager/STPManager.h \
+ ../printer/../STPManager/../simplifier/../AST/NodeFactory/SimplifyingNodeFactory.h \
+ ../printer/../STPManager/../simplifier/../AST/NodeFactory/NodeFactory.h \
+ ../printer/../STPManager/../simplifier/../AST/NodeFactory/../../STPManager/STPManager.h \
+ ../printer/../STPManager/../simplifier/SubstitutionMap.h \
+ ../printer/../STPManager/../simplifier/Symbols.h \
+ ../printer/../STPManager/../simplifier/simplifier.h \
+ ../printer/../STPManager/../to-sat/ToSAT.h \
+ ../printer/../STPManager/../to-sat/ToCNF.h \
+ ../printer/../STPManager/../to-sat/../AST/AST.h \
+ ../printer/../STPManager/../to-sat/../STPManager/STPManager.h \
+ ../printer/../STPManager/../to-sat/ClauseList.h \
+ ../printer/../STPManager/../to-sat/../sat/sat.h \
+ ../printer/../STPManager/../to-sat/../sat/cryptominisat2/Solver.h \
+ ../printer/../STPManager/../to-sat/../sat/cryptominisat2/time_mem.h \
+ ../../src/sat/cryptominisat2/mtl/Vec.h \
+ ../../src/sat/cryptominisat2/mtl/Heap.h \
+ ../../src/sat/cryptominisat2/mtl/Vec.h \
+ ../../src/sat/cryptominisat2/mtl/Alg.h \
+ ../printer/../STPManager/../to-sat/../sat/cryptominisat2/MersenneTwister.h \
+ ../printer/../STPManager/../to-sat/../sat/cryptominisat2/SolverTypes.h \
+ ../printer/../STPManager/../to-sat/../sat/cryptominisat2/Clause.h \
+ ../printer/../STPManager/../to-sat/../sat/cryptominisat2/PackedRow.h \
+ ../printer/../STPManager/../to-sat/../sat/cryptominisat2/constants.h \
+ ../printer/../STPManager/../to-sat/../sat/cryptominisat2/ClauseAllocator.h \
+ ../../src/boost/pool/pool.hpp ../../src/boost/config.hpp \
+ ../../src/boost/config/user.hpp \
+ ../../src/boost/config/select_compiler_config.hpp \
+ ../../src/boost/config/compiler/gcc.hpp \
+ ../../src/boost/config/select_stdlib_config.hpp \
+ ../../src/boost/config/no_tr1/utility.hpp \
+ ../../src/boost/config/stdlib/libstdcpp3.hpp \
+ ../../src/boost/config/select_platform_config.hpp \
+ ../../src/boost/config/platform/linux.hpp \
+ ../../src/boost/config/posix_features.hpp \
+ ../../src/boost/config/suffix.hpp ../../src/boost/pool/poolfwd.hpp \
+ ../../src/boost/pool/detail/mutex.hpp \
+ ../../src/boost/pool/detail/ct_gcd_lcm.hpp \
+ ../../src/boost/static_assert.hpp ../../src/boost/detail/workaround.hpp \
+ ../../src/boost/type_traits/ice.hpp \
+ ../../src/boost/type_traits/detail/yes_no_type.hpp \
+ ../../src/boost/type_traits/detail/ice_or.hpp \
+ ../../src/boost/type_traits/detail/ice_and.hpp \
+ ../../src/boost/type_traits/detail/ice_not.hpp \
+ ../../src/boost/type_traits/detail/ice_eq.hpp \
+ ../../src/boost/pool/detail/gcd_lcm.hpp \
+ ../../src/boost/pool/simple_segregated_storage.hpp \
+ ../printer/../STPManager/../to-sat/../sat/cryptominisat2/Logger.h \
+ ../printer/../STPManager/../to-sat/../sat/cryptominisat2/BoundedQueue.h \
+ ../printer/../STPManager/../to-sat/../sat/cryptominisat2/GaussianConfig.h \
+ ../printer/../STPManager/../to-sat/../sat/cryptominisat2/SolverTypes.h \
+ ../printer/../STPManager/../to-sat/ToSATBase.h \
+ ../printer/../STPManager/../parser/LetMgr.h \
+ ../printer/../STPManager/../parser/../AST/AST.h \
+ ../printer/../STPManager/../absrefine_counterexample/AbsRefine_CounterExample.h \
+ ../printer/../STPManager/../absrefine_counterexample/../AST/AST.h \
+ ../printer/../STPManager/../absrefine_counterexample/../STPManager/STPManager.h \
+ ../printer/../STPManager/../absrefine_counterexample/../simplifier/simplifier.h \
+ ../printer/../STPManager/../absrefine_counterexample/../AST/ArrayTransformer.h \
+ ../printer/../STPManager/../absrefine_counterexample/../to-sat/ToSATBase.h \
+ ../STPManager/STPManager.h ../STPManager/STP.h \
+ ../AST/NodeFactory/TypeChecker.h ../AST/NodeFactory/NodeFactory.h \
+ ../AST/../STPManager/STPManager.h \
+ ../AST/NodeFactory/SimplifyingNodeFactory.h ../parser/ParserInterface.h \
+ ../parser/../AST/AST.h ../parser/../AST/NodeFactory/NodeFactory.h \
+ ../parser/LetMgr.h ../parser/../STPManager/STPManager.h
+versionString.o: versionString.cpp
+Globals.o: Globals.cpp ../AST/AST.h ../AST/UsefulDefs.h \
+ ../AST/../main/Globals.h ../AST/ASTKind.h \
+ ../AST/../extlib-constbv/constantbv.h ../AST/RunTimes.h ../AST/ASTNode.h \
+ ../AST/../AST/NodeFactory/HashingNodeFactory.h \
+ ../AST/../AST/NodeFactory/NodeFactory.h ../AST/ASTKind.h \
+ ../AST/ASTInternal.h ../AST/ASTInterior.h ../AST/ASTSymbol.h \
+ ../AST/ASTBVConst.h ../STPManager/STPManager.h \
+ ../STPManager/UserDefinedFlags.h ../STPManager/../AST/AST.h \
+ ../STPManager/../AST/NodeFactory/HashingNodeFactory.h \
+ ../STPManager/STP.h ../STPManager/../AST/ArrayTransformer.h \
+ ../STPManager/../AST/AST.h \
+ ../STPManager/../AST/../STPManager/STPManager.h \
+ ../STPManager/../STPManager/STPManager.h \
+ ../STPManager/../simplifier/bvsolver.h \
+ ../STPManager/../simplifier/simplifier.h \
+ ../STPManager/../simplifier/../AST/AST.h \
+ ../STPManager/../simplifier/../STPManager/STPManager.h \
+ ../STPManager/../simplifier/../AST/NodeFactory/SimplifyingNodeFactory.h \
+ ../STPManager/../simplifier/../AST/NodeFactory/NodeFactory.h \
+ ../STPManager/../simplifier/../AST/NodeFactory/../../STPManager/STPManager.h \
+ ../STPManager/../simplifier/SubstitutionMap.h \
+ ../STPManager/../simplifier/Symbols.h \
+ ../STPManager/../simplifier/simplifier.h ../STPManager/../to-sat/ToSAT.h \
+ ../STPManager/../to-sat/ToCNF.h ../STPManager/../to-sat/../AST/AST.h \
+ ../STPManager/../to-sat/../STPManager/STPManager.h \
+ ../STPManager/../to-sat/ClauseList.h \
+ ../STPManager/../to-sat/../sat/sat.h \
+ ../STPManager/../to-sat/../sat/cryptominisat2/Solver.h \
+ ../STPManager/../to-sat/../sat/cryptominisat2/time_mem.h \
+ ../../src/sat/cryptominisat2/mtl/Vec.h \
+ ../../src/sat/cryptominisat2/mtl/Heap.h \
+ ../../src/sat/cryptominisat2/mtl/Vec.h \
+ ../../src/sat/cryptominisat2/mtl/Alg.h \
+ ../STPManager/../to-sat/../sat/cryptominisat2/MersenneTwister.h \
+ ../STPManager/../to-sat/../sat/cryptominisat2/SolverTypes.h \
+ ../STPManager/../to-sat/../sat/cryptominisat2/Clause.h \
+ ../STPManager/../to-sat/../sat/cryptominisat2/PackedRow.h \
+ ../STPManager/../to-sat/../sat/cryptominisat2/constants.h \
+ ../STPManager/../to-sat/../sat/cryptominisat2/ClauseAllocator.h \
+ ../../src/boost/pool/pool.hpp ../../src/boost/config.hpp \
+ ../../src/boost/config/user.hpp \
+ ../../src/boost/config/select_compiler_config.hpp \
+ ../../src/boost/config/compiler/gcc.hpp \
+ ../../src/boost/config/select_stdlib_config.hpp \
+ ../../src/boost/config/no_tr1/utility.hpp \
+ ../../src/boost/config/stdlib/libstdcpp3.hpp \
+ ../../src/boost/config/select_platform_config.hpp \
+ ../../src/boost/config/platform/linux.hpp \
+ ../../src/boost/config/posix_features.hpp \
+ ../../src/boost/config/suffix.hpp ../../src/boost/pool/poolfwd.hpp \
+ ../../src/boost/pool/detail/mutex.hpp \
+ ../../src/boost/pool/detail/ct_gcd_lcm.hpp \
+ ../../src/boost/static_assert.hpp ../../src/boost/detail/workaround.hpp \
+ ../../src/boost/type_traits/ice.hpp \
+ ../../src/boost/type_traits/detail/yes_no_type.hpp \
+ ../../src/boost/type_traits/detail/ice_or.hpp \
+ ../../src/boost/type_traits/detail/ice_and.hpp \
+ ../../src/boost/type_traits/detail/ice_not.hpp \
+ ../../src/boost/type_traits/detail/ice_eq.hpp \
+ ../../src/boost/pool/detail/gcd_lcm.hpp \
+ ../../src/boost/pool/simple_segregated_storage.hpp \
+ ../STPManager/../to-sat/../sat/cryptominisat2/Logger.h \
+ ../STPManager/../to-sat/../sat/cryptominisat2/BoundedQueue.h \
+ ../STPManager/../to-sat/../sat/cryptominisat2/GaussianConfig.h \
+ ../STPManager/../to-sat/../sat/cryptominisat2/SolverTypes.h \
+ ../STPManager/../to-sat/ToSATBase.h ../STPManager/../parser/LetMgr.h \
+ ../STPManager/../parser/../AST/AST.h \
+ ../STPManager/../absrefine_counterexample/AbsRefine_CounterExample.h \
+ ../STPManager/../absrefine_counterexample/../AST/AST.h \
+ ../STPManager/../absrefine_counterexample/../STPManager/STPManager.h \
+ ../STPManager/../absrefine_counterexample/../simplifier/simplifier.h \
+ ../STPManager/../absrefine_counterexample/../AST/ArrayTransformer.h \
+ ../STPManager/../absrefine_counterexample/../to-sat/ToSATBase.h

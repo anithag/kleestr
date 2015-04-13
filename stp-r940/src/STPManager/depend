@@ -1,0 +1,134 @@
+STP.o: STP.cpp STP.h ../AST/AST.h ../AST/UsefulDefs.h \
+ ../AST/../main/Globals.h ../AST/ASTKind.h \
+ ../AST/../extlib-constbv/constantbv.h ../AST/RunTimes.h ../AST/ASTNode.h \
+ ../AST/../AST/NodeFactory/HashingNodeFactory.h \
+ ../AST/../AST/NodeFactory/NodeFactory.h ../AST/ASTKind.h \
+ ../AST/ASTInternal.h ../AST/ASTInterior.h ../AST/ASTSymbol.h \
+ ../AST/ASTBVConst.h ../AST/ArrayTransformer.h ../AST/AST.h \
+ ../AST/../STPManager/STPManager.h \
+ ../AST/../STPManager/UserDefinedFlags.h \
+ ../AST/../STPManager/../AST/AST.h \
+ ../AST/../STPManager/../AST/NodeFactory/HashingNodeFactory.h \
+ ../STPManager/STPManager.h ../simplifier/bvsolver.h \
+ ../simplifier/simplifier.h ../simplifier/../AST/AST.h \
+ ../simplifier/../STPManager/STPManager.h \
+ ../simplifier/../AST/NodeFactory/SimplifyingNodeFactory.h \
+ ../simplifier/../AST/NodeFactory/NodeFactory.h \
+ ../simplifier/../AST/NodeFactory/../../STPManager/STPManager.h \
+ ../simplifier/SubstitutionMap.h ../simplifier/Symbols.h \
+ ../simplifier/simplifier.h ../to-sat/ToSAT.h ../to-sat/ToCNF.h \
+ ../to-sat/../AST/AST.h ../to-sat/../STPManager/STPManager.h \
+ ../to-sat/ClauseList.h ../to-sat/../sat/sat.h \
+ ../to-sat/../sat/cryptominisat2/Solver.h \
+ ../to-sat/../sat/cryptominisat2/time_mem.h \
+ ../../src/sat/cryptominisat2/mtl/Vec.h \
+ ../../src/sat/cryptominisat2/mtl/Heap.h \
+ ../../src/sat/cryptominisat2/mtl/Vec.h \
+ ../../src/sat/cryptominisat2/mtl/Alg.h \
+ ../to-sat/../sat/cryptominisat2/MersenneTwister.h \
+ ../to-sat/../sat/cryptominisat2/SolverTypes.h \
+ ../to-sat/../sat/cryptominisat2/Clause.h \
+ ../to-sat/../sat/cryptominisat2/PackedRow.h \
+ ../to-sat/../sat/cryptominisat2/constants.h \
+ ../to-sat/../sat/cryptominisat2/ClauseAllocator.h \
+ ../../src/boost/pool/pool.hpp ../../src/boost/config.hpp \
+ ../../src/boost/config/user.hpp \
+ ../../src/boost/config/select_compiler_config.hpp \
+ ../../src/boost/config/compiler/gcc.hpp \
+ ../../src/boost/config/select_stdlib_config.hpp \
+ ../../src/boost/config/no_tr1/utility.hpp \
+ ../../src/boost/config/stdlib/libstdcpp3.hpp \
+ ../../src/boost/config/select_platform_config.hpp \
+ ../../src/boost/config/platform/linux.hpp \
+ ../../src/boost/config/posix_features.hpp \
+ ../../src/boost/config/suffix.hpp ../../src/boost/pool/poolfwd.hpp \
+ ../../src/boost/pool/detail/mutex.hpp \
+ ../../src/boost/pool/detail/ct_gcd_lcm.hpp \
+ ../../src/boost/static_assert.hpp ../../src/boost/detail/workaround.hpp \
+ ../../src/boost/type_traits/ice.hpp \
+ ../../src/boost/type_traits/detail/yes_no_type.hpp \
+ ../../src/boost/type_traits/detail/ice_or.hpp \
+ ../../src/boost/type_traits/detail/ice_and.hpp \
+ ../../src/boost/type_traits/detail/ice_not.hpp \
+ ../../src/boost/type_traits/detail/ice_eq.hpp \
+ ../../src/boost/pool/detail/gcd_lcm.hpp \
+ ../../src/boost/pool/simple_segregated_storage.hpp \
+ ../to-sat/../sat/cryptominisat2/Logger.h \
+ ../to-sat/../sat/cryptominisat2/BoundedQueue.h \
+ ../to-sat/../sat/cryptominisat2/GaussianConfig.h \
+ ../to-sat/../sat/cryptominisat2/SolverTypes.h ../to-sat/ToSATBase.h \
+ ../parser/LetMgr.h ../parser/../AST/AST.h \
+ ../absrefine_counterexample/AbsRefine_CounterExample.h \
+ ../absrefine_counterexample/../AST/AST.h \
+ ../absrefine_counterexample/../STPManager/STPManager.h \
+ ../absrefine_counterexample/../simplifier/simplifier.h \
+ ../absrefine_counterexample/../AST/ArrayTransformer.h \
+ ../absrefine_counterexample/../to-sat/ToSATBase.h DifficultyScore.h \
+ ../AST/ASTKind.h ../to-sat/AIG/ToSATAIG.h ../AST/../AST/AST.h \
+ ../AST/../AST/RunTimes.h ../AST/../STPManager/STPManager.h \
+ ../to-sat/AIG/../BitBlaster.h \
+ ../to-sat/AIG/../../STPManager/STPManager.h \
+ ../to-sat/AIG/BBNodeManagerAIG.h ../to-sat/AIG/BBNodeAIG.h \
+ ../to-sat/AIG/../../extlib-abc/aig.h \
+ ../to-sat/AIG/../../extlib-abc/vec.h \
+ ../to-sat/AIG/../../extlib-abc/leaks.h \
+ ../to-sat/AIG/../../extlib-abc/vecInt.h \
+ ../to-sat/AIG/../../extlib-abc/vecFlt.h \
+ ../to-sat/AIG/../../extlib-abc/vecStr.h \
+ ../to-sat/AIG/../../extlib-abc/vecPtr.h \
+ ../to-sat/AIG/../../extlib-abc/vecVec.h \
+ ../to-sat/AIG/../../extlib-abc/vecAtt.h \
+ ../to-sat/AIG/../../extlib-abc/cnf_short.h \
+ ../to-sat/AIG/../../extlib-abc/aig.h \
+ ../to-sat/AIG/../../extlib-abc/dar.h ../to-sat/AIG/../ToSATBase.h \
+ ../simplifier/constantBitP/ConstantBitPropagation.h \
+ ../simplifier/constantBitP/FixedBits.h \
+ ../simplifier/constantBitP/Dependencies.h \
+ ../simplifier/constantBitP/../../AST/AST.h \
+ ../simplifier/constantBitP/NodeToFixedBitsMap.h \
+ ../simplifier/constantBitP/WorkList.h \
+ ../simplifier/constantBitP/MultiplicationStats.h \
+ ../simplifier/constantBitP/NodeToFixedBitsMap.h
+STPManager.o: STPManager.cpp ../sat/sat.h ../sat/cryptominisat2/Solver.h \
+ ../sat/cryptominisat2/time_mem.h ../../src/sat/cryptominisat2/mtl/Vec.h \
+ ../../src/sat/cryptominisat2/mtl/Heap.h \
+ ../../src/sat/cryptominisat2/mtl/Vec.h \
+ ../../src/sat/cryptominisat2/mtl/Alg.h \
+ ../sat/cryptominisat2/MersenneTwister.h \
+ ../sat/cryptominisat2/SolverTypes.h ../sat/cryptominisat2/Clause.h \
+ ../sat/cryptominisat2/PackedRow.h ../sat/cryptominisat2/constants.h \
+ ../sat/cryptominisat2/ClauseAllocator.h ../../src/boost/pool/pool.hpp \
+ ../../src/boost/config.hpp ../../src/boost/config/user.hpp \
+ ../../src/boost/config/select_compiler_config.hpp \
+ ../../src/boost/config/compiler/gcc.hpp \
+ ../../src/boost/config/select_stdlib_config.hpp \
+ ../../src/boost/config/no_tr1/utility.hpp \
+ ../../src/boost/config/stdlib/libstdcpp3.hpp \
+ ../../src/boost/config/select_platform_config.hpp \
+ ../../src/boost/config/platform/linux.hpp \
+ ../../src/boost/config/posix_features.hpp \
+ ../../src/boost/config/suffix.hpp ../../src/boost/pool/poolfwd.hpp \
+ ../../src/boost/pool/detail/mutex.hpp \
+ ../../src/boost/pool/detail/ct_gcd_lcm.hpp \
+ ../../src/boost/static_assert.hpp ../../src/boost/detail/workaround.hpp \
+ ../../src/boost/type_traits/ice.hpp \
+ ../../src/boost/type_traits/detail/yes_no_type.hpp \
+ ../../src/boost/type_traits/detail/ice_or.hpp \
+ ../../src/boost/type_traits/detail/ice_and.hpp \
+ ../../src/boost/type_traits/detail/ice_not.hpp \
+ ../../src/boost/type_traits/detail/ice_eq.hpp \
+ ../../src/boost/pool/detail/gcd_lcm.hpp \
+ ../../src/boost/pool/simple_segregated_storage.hpp \
+ ../sat/cryptominisat2/Logger.h ../sat/cryptominisat2/BoundedQueue.h \
+ ../sat/cryptominisat2/GaussianConfig.h \
+ ../sat/cryptominisat2/SolverTypes.h ../STPManager/STPManager.h \
+ ../STPManager/UserDefinedFlags.h ../STPManager/../AST/AST.h \
+ ../STPManager/../AST/UsefulDefs.h ../STPManager/../AST/../main/Globals.h \
+ ../STPManager/../AST/ASTKind.h \
+ ../STPManager/../AST/../extlib-constbv/constantbv.h \
+ ../STPManager/../AST/RunTimes.h ../STPManager/../AST/ASTNode.h \
+ ../STPManager/../AST/../AST/NodeFactory/HashingNodeFactory.h \
+ ../STPManager/../AST/../AST/NodeFactory/NodeFactory.h ../AST/ASTKind.h \
+ ../STPManager/../AST/ASTInternal.h ../STPManager/../AST/ASTInterior.h \
+ ../STPManager/../AST/ASTSymbol.h ../STPManager/../AST/ASTBVConst.h \
+ ../STPManager/../AST/NodeFactory/HashingNodeFactory.h

@@ -1,0 +1,98 @@
+aigRet.o: aig/aig/aigRet.c aig.h vec.h leaks.h vecInt.h vecFlt.h vecStr.h \
+ vecPtr.h vecVec.h vecAtt.h
+aigPart.o: aig/aig/aigPart.c aig.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h
+aigTruth.o: aig/aig/aigTruth.c aig.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h
+aigDfs.o: aig/aig/aigDfs.c aig.h vec.h leaks.h vecInt.h vecFlt.h vecStr.h \
+ vecPtr.h vecVec.h vecAtt.h
+aigTable.o: aig/aig/aigTable.c aig.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h
+aigMan.o: aig/aig/aigMan.c aig.h vec.h leaks.h vecInt.h vecFlt.h vecStr.h \
+ vecPtr.h vecVec.h vecAtt.h
+aigTiming.o: aig/aig/aigTiming.c aig.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h
+aigMem.o: aig/aig/aigMem.c aig.h vec.h leaks.h vecInt.h vecFlt.h vecStr.h \
+ vecPtr.h vecVec.h vecAtt.h
+aigTime.o: aig/aig/aigTime.c aig.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h
+aigRepr.o: aig/aig/aigRepr.c aig.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h
+aigWin.o: aig/aig/aigWin.c aig.h vec.h leaks.h vecInt.h vecFlt.h vecStr.h \
+ vecPtr.h vecVec.h vecAtt.h
+aigFanout.o: aig/aig/aigFanout.c aig.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h
+aigTsim.o: aig/aig/aigTsim.c aig.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h
+aigOrder.o: aig/aig/aigOrder.c aig.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h
+aigMffc.o: aig/aig/aigMffc.c aig.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h
+aigOper.o: aig/aig/aigOper.c aig.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h
+aigSeq.o: aig/aig/aigSeq.c aig.h vec.h leaks.h vecInt.h vecFlt.h vecStr.h \
+ vecPtr.h vecVec.h vecAtt.h
+aigCheck.o: aig/aig/aigCheck.c aig.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h
+aig_.o: aig/aig/aig_.c aig.h vec.h leaks.h vecInt.h vecFlt.h vecStr.h \
+ vecPtr.h vecVec.h vecAtt.h
+aigScl.o: aig/aig/aigScl.c aig.h vec.h leaks.h vecInt.h vecFlt.h vecStr.h \
+ vecPtr.h vecVec.h vecAtt.h
+aigObj.o: aig/aig/aigObj.c aig.h vec.h leaks.h vecInt.h vecFlt.h vecStr.h \
+ vecPtr.h vecVec.h vecAtt.h
+aigShow.o: aig/aig/aigShow.c aig.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h
+aigUtil.o: aig/aig/aigUtil.c aig.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h
+cnfCore.o: aig/cnf/cnfCore.c cnf.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h aig.h darInt.h dar.h
+cnfMan.o: aig/cnf/cnfMan.c cnf.h vec.h leaks.h vecInt.h vecFlt.h vecStr.h \
+ vecPtr.h vecVec.h vecAtt.h aig.h darInt.h dar.h
+cnfUtil.o: aig/cnf/cnfUtil.c cnf.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h aig.h darInt.h dar.h
+cnfPost.o: aig/cnf/cnfPost.c cnf.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h aig.h darInt.h dar.h
+cnf_.o: aig/cnf/cnf_.c cnf.h vec.h leaks.h vecInt.h vecFlt.h vecStr.h \
+ vecPtr.h vecVec.h vecAtt.h aig.h darInt.h dar.h
+cnfMap.o: aig/cnf/cnfMap.c cnf.h vec.h leaks.h vecInt.h vecFlt.h vecStr.h \
+ vecPtr.h vecVec.h vecAtt.h aig.h darInt.h dar.h
+cnfWrite.o: aig/cnf/cnfWrite.c cnf.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h aig.h darInt.h dar.h
+cnfData.o: aig/cnf/cnfData.c cnf.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h aig.h darInt.h dar.h
+cnfCut.o: aig/cnf/cnfCut.c cnf.h vec.h leaks.h vecInt.h vecFlt.h vecStr.h \
+ vecPtr.h vecVec.h vecAtt.h aig.h darInt.h dar.h kit.h
+darMan.o: aig/dar/darMan.c darInt.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h aig.h dar.h
+darRefact.o: aig/dar/darRefact.c darInt.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h aig.h dar.h kit.h
+darCut.o: aig/dar/darCut.c darInt.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h aig.h dar.h
+darLib.o: aig/dar/darLib.c darInt.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h aig.h dar.h
+darData.o: aig/dar/darData.c darInt.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h aig.h dar.h
+darScript.o: aig/dar/darScript.c darInt.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h aig.h dar.h
+darPrec.o: aig/dar/darPrec.c darInt.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h aig.h dar.h
+darCore.o: aig/dar/darCore.c darInt.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h aig.h dar.h
+dar_.o: aig/dar/dar_.c darInt.h vec.h leaks.h vecInt.h vecFlt.h vecStr.h \
+ vecPtr.h vecVec.h vecAtt.h aig.h dar.h
+darBalance.o: aig/dar/darBalance.c darInt.h vec.h leaks.h vecInt.h \
+ vecFlt.h vecStr.h vecPtr.h vecVec.h vecAtt.h aig.h dar.h
+darResub.o: aig/dar/darResub.c darInt.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h aig.h dar.h
+kitSop.o: aig/kit/kitSop.c kit.h vec.h leaks.h vecInt.h vecFlt.h vecStr.h \
+ vecPtr.h vecVec.h vecAtt.h
+kit_.o: aig/kit/kit_.c kit.h vec.h leaks.h vecInt.h vecFlt.h vecStr.h \
+ vecPtr.h vecVec.h vecAtt.h
+kitAig.o: aig/kit/kitAig.c kit.h vec.h leaks.h vecInt.h vecFlt.h vecStr.h \
+ vecPtr.h vecVec.h vecAtt.h aig.h
+kitGraph.o: aig/kit/kitGraph.c kit.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h
+kitIsop.o: aig/kit/kitIsop.c kit.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h
+kitTruth.o: aig/kit/kitTruth.c kit.h vec.h leaks.h vecInt.h vecFlt.h \
+ vecStr.h vecPtr.h vecVec.h vecAtt.h

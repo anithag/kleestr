@@ -365,6 +365,7 @@ void SpecialFunctionHandler::handleMalloc(ExecutionState &state,
   executor.executeAlloc(state, arguments[0], false, target);
 }
 
+// HERE: I am going to add another function!
 void SpecialFunctionHandler::handleAssume(ExecutionState &state,
                             KInstruction *target,
                             std::vector<ref<Expr> > &arguments) {

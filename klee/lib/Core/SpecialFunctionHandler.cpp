@@ -90,6 +90,7 @@ static SpecialFunctionHandler::HandlerInfo handlerInfo[] = {
   add("klee_alias_function", handleAliasFunction, false),
   add("malloc", handleMalloc, true),
   add("realloc", handleRealloc, true),
+  add("test_function", handleTestFunction, true),
 
   // operator delete[](void*)
   add("_ZdaPv", handleDeleteArray, false),
@@ -524,6 +525,27 @@ void SpecialFunctionHandler::handleGetErrno(ExecutionState &state,
   executor.bindLocal(target, state,
                      ConstantExpr::create(errno, Expr::Int32));
 }
+
+void SpecialFunctionHandler::handleTestFunction(ExecutionState &state,
+                            KInstruction *target,
+                            std::vector<ref<Expr> > &arguments) {
+  // XXX should type check args
+  assert(arguments.size() == 1 &&
+         "invalid number of arguments to test_function");
+
+  ref<Expr> value = executor.toUnique(state, arguments[0]);
+  if (ConstantExpr *CE = dyn_cast<ConstantExpr>(value)) {
+    executor.terminateStateOnError(state, 
+                                   "klee_test_function got a constant arg",
+                                   "user.err");
+  } else {
+    executor.terminateStateOnError(state, 
+                                   "klee_test_function requires a constant arg",
+                                   "user.err");
+  }
+
+}
+
 
 void SpecialFunctionHandler::handleCalloc(ExecutionState &state,
                             KInstruction *target,

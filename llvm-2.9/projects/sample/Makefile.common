@@ -3,14 +3,14 @@ PROJECT_NAME := sample
 PROJ_VERSION := 0.9
  
 # Set this variable to the top of the LLVM source tree.
-LLVM_SRC_ROOT = /home/anitha/llvm-2.9
+LLVM_SRC_ROOT = /home/anitha/kleestr/llvm-2.9
 
 # Set this variable to the top level directory where LLVM was built
 # (this is *not* the same as OBJ_ROOT as defined in LLVM's Makefile.config).
-LLVM_OBJ_ROOT = /home/anitha/llvm-2.9
+LLVM_OBJ_ROOT = /home/anitha/kleestr/llvm-2.9
 
 # Set the directory root of this project's source files
-PROJ_SRC_ROOT := $(subst //,/,/home/anitha/llvm-2.9/projects/sample)
+PROJ_SRC_ROOT := $(subst //,/,/home/anitha/kleestr/llvm-2.9/projects/sample)
 
 # Set the root directory of this project's object files
 PROJ_OBJ_ROOT := $(subst //,/,@abs_top_objdir@)

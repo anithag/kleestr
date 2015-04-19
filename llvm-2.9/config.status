@@ -328,7 +328,7 @@ Copyright (C) 2006 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/home/anitha/llvm-2.9'
+ac_pwd='/home/anitha/kleestr/llvm-2.9'
 srcdir='.'
 INSTALL='/usr/bin/install -c'
 # If no file are specified by the user, then we need to provide default
@@ -668,8 +668,8 @@ s,@CONVENIENCE_LTDL_FALSE@,|#_!!_#|,g
 s,@LIBADD_DL@,|#_!!_#|-ldl,g
 s,@LLVMGCCCOMMAND@,|#_!!_#|llvm-gcc,g
 s,@LLVMGXXCOMMAND@,|#_!!_#|llvm-g++,g
-s,@LLVMGCC@,|#_!!_#|/home/anitha/llvm-gcc4.2-2.9-x86_64-linux/bin/llvm-gcc,g
-s,@LLVMGXX@,|#_!!_#|/home/anitha/llvm-gcc4.2-2.9-x86_64-linux/bin/llvm-g++,g
+s,@LLVMGCC@,|#_!!_#|/home/anitha/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin/llvm-gcc,g
+s,@LLVMGXX@,|#_!!_#|/home/anitha/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin/llvm-g++,g
 s,@LLVMCC_OPTION@,|#_!!_#|llvm-gcc,g
 s,@NO_VARIADIC_MACROS@,|#_!!_#|-Wno-variadic-macros,g
 s,@NO_MISSING_FIELD_INITIALIZERS@,|#_!!_#|-Wno-missing-field-initializers,g
@@ -679,9 +679,9 @@ s,@HAVE_PTHREAD@,|#_!!_#|1,g
 s,@HUGE_VAL_SANITY@,|#_!!_#|yes,g
 s,@MMAP_FILE@,|#_!!_#|yes,g
 s,@LLVMCC_EMITIR_FLAG@,|#_!!_#|-emit-llvm,g
-s,@LLVMCC1@,|#_!!_#|/home/anitha/llvm-gcc4.2-2.9-x86_64-linux/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.2.1/cc1,g
-s,@LLVMCC1PLUS@,|#_!!_#|/home/anitha/llvm-gcc4.2-2.9-x86_64-linux/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.2.1/cc1plus,g
-s,@LLVMGCCDIR@,|#_!!_#|/home/anitha/llvm-gcc4.2-2.9-x86_64-linux/bin/..,g
+s,@LLVMCC1@,|#_!!_#|/home/anitha/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.2.1/cc1,g
+s,@LLVMCC1PLUS@,|#_!!_#|/home/anitha/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.2.1/cc1plus,g
+s,@LLVMGCCDIR@,|#_!!_#|/home/anitha/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin/..,g
 s,@LLVMGCC_LANGS@,|#_!!_#|c\,c++\,fortran,g
 s,@LLVMGCC_DRAGONEGG@,|#_!!_#|no,g
 s,@LLVMCC_DISABLEOPT_FLAGS@,|#_!!_#|-mllvm -disable-llvm-optzns,g
@@ -696,7 +696,7 @@ s,@LLVM_ETCDIR@,|#_!!_#|/usr/local/etc/llvm,g
 s,@LLVM_INCLUDEDIR@,|#_!!_#|/usr/local/include,g
 s,@LLVM_INFODIR@,|#_!!_#|/usr/local/info,g
 s,@LLVM_MANDIR@,|#_!!_#|/usr/local/man,g
-s,@LLVM_CONFIGTIME@,|#_!!_#|Tue Apr  7 09:37:21 EDT 2015,g
+s,@LLVM_CONFIGTIME@,|#_!!_#|Thu Apr 16 11:11:59 EDT 2015,g
 s,@BINDINGS_TO_BUILD@,|#_!!_#|,g
 s,@ALL_BINDINGS@,|#_!!_#|ocaml,g
 s,@OCAML_LIBDIR@,|#_!!_#|,g
@@ -1148,7 +1148,7 @@ s,^\([	 #]*\)[^	 ]*\([	 ]*LLVM_ETCDIR\)[	 (].*,\1define\2 "/usr/local/etc/llvm" 
 s,^\([	 #]*\)[^	 ]*\([	 ]*LLVM_INCLUDEDIR\)[	 (].*,\1define\2 "/usr/local/include" ,
 s,^\([	 #]*\)[^	 ]*\([	 ]*LLVM_INFODIR\)[	 (].*,\1define\2 "/usr/local/info" ,
 s,^\([	 #]*\)[^	 ]*\([	 ]*LLVM_MANDIR\)[	 (].*,\1define\2 "/usr/local/man" ,
-s,^\([	 #]*\)[^	 ]*\([	 ]*LLVM_CONFIGTIME\)[	 (].*,\1define\2 "Tue Apr  7 09:37:21 EDT 2015" ,
+s,^\([	 #]*\)[^	 ]*\([	 ]*LLVM_CONFIGTIME\)[	 (].*,\1define\2 "Thu Apr 16 11:11:59 EDT 2015" ,
 s,^\([	 #]*\)[^	 ]*\([	 ]*LLVM_HOSTTRIPLE\)[	 (].*,\1define\2 "x86_64-unknown-linux-gnu" ,
 s/ $//
 s,^[	 #]*u.*,/* & */,

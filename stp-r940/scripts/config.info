@@ -1,2 +1,2 @@
-PREFIX=/home/anitha/stp-r940/install
+PREFIX=/home/anitha/kleestr/stp-r940/install
 SAT=cryptominisat2

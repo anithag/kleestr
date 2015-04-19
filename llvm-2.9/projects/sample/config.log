@@ -27,7 +27,7 @@ uname -v = #31-Ubuntu SMP Tue Oct 21 17:56:17 UTC 2014
 /usr/bin/oslevel       = unknown
 /bin/universe          = unknown
 
-PATH: /home/anitha/llvm-gcc4.2-2.9-x86_64-linux/bin
+PATH: /home/anitha/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin
 PATH: /usr/local/sbin
 PATH: /usr/local/bin
 PATH: /usr/sbin
@@ -88,8 +88,8 @@ ECHO_N='-n'
 ECHO_T=''
 LIBOBJS=''
 LIBS=''
-LLVM_OBJ='/home/anitha/llvm-2.9'
-LLVM_SRC='/home/anitha/llvm-2.9'
+LLVM_OBJ='/home/anitha/kleestr/llvm-2.9'
+LLVM_SRC='/home/anitha/kleestr/llvm-2.9'
 LTLIBOBJS=''
 PACKAGE_BUGREPORT='bugs@yourdomain'
 PACKAGE_NAME='[SAMPLE]'

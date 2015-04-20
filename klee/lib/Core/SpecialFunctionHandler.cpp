@@ -28,6 +28,7 @@
 #include "llvm/Module.h"
 #endif
 #include "llvm/ADT/Twine.h"
+#include "llvm/ADT/APInt.h"	// Included for testing purposes - remove if not needed to parse Int from expr
 
 #include <errno.h>
 
@@ -90,6 +91,7 @@ static SpecialFunctionHandler::HandlerInfo handlerInfo[] = {
   add("klee_alias_function", handleAliasFunction, false),
   add("malloc", handleMalloc, true),
   add("realloc", handleRealloc, true),
+  add("test_function_adds", handleTestFunctionAdds, true),
   add("test_function", handleTestFunction, true),
 
   // operator delete[](void*)
@@ -526,7 +528,7 @@ void SpecialFunctionHandler::handleGetErrno(ExecutionState &state,
                      ConstantExpr::create(errno, Expr::Int32));
 }
 
-void SpecialFunctionHandler::handleTestFunction(ExecutionState &state,
+void SpecialFunctionHandler::handleTestFunctionAdds(ExecutionState &state,
                             KInstruction *target,
                             std::vector<ref<Expr> > &arguments) {
   // XXX should type check args
@@ -534,16 +536,39 @@ void SpecialFunctionHandler::handleTestFunction(ExecutionState &state,
          "invalid number of arguments to test_function");
 
   ref<Expr> value = executor.toUnique(state, arguments[0]);
-  if (ConstantExpr *CE = dyn_cast<ConstantExpr>(value)) {
-    executor.terminateStateOnError(state, 
-                                   "klee_test_function got a constant arg",
-                                   "user.err");
-  } else {
-    executor.terminateStateOnError(state, 
-                                   "klee_test_function requires a constant arg",
-                                   "user.err");
-  }
+  ConstantExpr *CE = dyn_cast<ConstantExpr>(value);
+  uint64_t int_val = CE->getLimitedValue();
+  executor.bindLocal(target, state, ConstantExpr::create((int_val + 102), Expr::Int32));
+  return;
 
+}
+
+void SpecialFunctionHandler::handleTestFunction(ExecutionState &state,
+                            KInstruction *target,
+                            std::vector<ref<Expr> > &arguments) {
+	// XXX should type check args
+	  assert(arguments.size() == 1 &&
+	         "invalid number of arguments to test_function");
+
+	  // TODO: Parse string out of arguments [0] and [1]
+	  // TODO: Generate constraints for string concat: - must be two arguments, result must be concat of both
+
+	  ref<Expr> value = executor.toUnique(state, arguments[0]);
+	  // if (ConstantExpr *CE = dyn_cast<ConstantExpr>(value)) {
+	  ConstantExpr *CE = dyn_cast<ConstantExpr>(value);
+	  // ConstantExpr::create(102, Expr::Int32).ref(ConstantExpr::Add(value));
+	  uint64_t int_val = CE->getLimitedValue();
+	  //executor.bindLocal(target, state, ConstantExpr::create(new_arg, Expr::Int32));
+	  executor.bindLocal(target, state, ConstantExpr::create((int_val + 102), Expr::Int32));
+	  return;
+	//    executor.terminateStateOnError(state,
+	//                                   "klee_test_function got a constant arg",
+	//                                   "user.err");
+	//  } else {
+	//    executor.terminateStateOnError(state,
+	//                                   "klee_test_function requires a constant arg",
+	//                                   "user.err");
+	//  }
 }
 
 

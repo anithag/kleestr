@@ -45,6 +45,7 @@ using namespace klee::expr;
 #ifdef SUPPORT_METASMT
 
 #include <metaSMT/DirectSolver_Context.hpp>
+#include <metaSMT/backend/CVC4.hpp>
 #include <metaSMT/backend/Z3_Backend.hpp>
 //#include <metaSMT/backend/Boolector.hpp>
 
@@ -246,6 +247,10 @@ static bool EvaluateInputAST(const char *Filename,
           case METASMT_BACKEND_Z3:
               backend = "Z3";
               coreSolver = new MetaSMTSolver< DirectSolver_Context < Z3_Backend > >(UseForkedCoreSolver, CoreSolverOptimizeDivides);
+              break;
+          case METASMT_BACKEND_CVC4:
+              backend = "CVC4";
+              coreSolver = new MetaSMTSolver< DirectSolver_Context < ::metaSMT::solver::CVC4 > >(UseForkedCoreSolver, CoreSolverOptimizeDivides);
               break;
           case METASMT_BACKEND_BOOLECTOR:
               backend = "Boolector";

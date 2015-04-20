@@ -25,8 +25,9 @@ LIBS += $(STP_LDFLAGS)
 ifeq ($(ENABLE_METASMT),1)
   include $(METASMT_ROOT)/share/metaSMT/metaSMT.makefile
   LD.Flags += -L$(METASMT_ROOT)/../../deps/Z3-4.1/lib \
-              -L$(METASMT_ROOT)/../../deps/boost-1_55_0/lib 
+              -L$(METASMT_ROOT)/../../deps/boost-1_55_0/lib \
+              -L$(METASMT_ROOT)/../../deps/cvc4-1.4/lib 
   CXX.Flags += -DBOOST_HAS_GCC_TR1
   CXX.Flags := $(filter-out -fno-exceptions,$(CXX.Flags)) 
-  LIBS += -lgomp -lboost_iostreams -lboost_thread -lboost_system -lmetaSMT -lz3 -lrt 
+  LIBS += -lgomp -lboost_iostreams -lboost_thread -lboost_system -lmetaSMT -lz3 -lcvc4 -lrt -lgmp
 endif

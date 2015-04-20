@@ -111,6 +111,7 @@ using namespace klee;
 
 #include <metaSMT/frontend/Array.hpp>
 #include <metaSMT/backend/Z3_Backend.hpp>
+#include <metaSMT/backend/CVC4.hpp>
 //#include <metaSMT/backend/Boolector.hpp>
 //#include <metaSMT/backend/MiniSAT.hpp>
 #include <metaSMT/DirectSolver_Context.hpp>
@@ -313,6 +314,10 @@ Executor::Executor(const InterpreterOptions &opts,
           case METASMT_BACKEND_Z3:
               backend = "Z3";
               coreSolver = new MetaSMTSolver< DirectSolver_Context < Z3_Backend > >(UseForkedCoreSolver, CoreSolverOptimizeDivides);
+              break;
+          case METASMT_BACKEND_CVC4:
+              backend = "CVC4";
+              coreSolver = new MetaSMTSolver< DirectSolver_Context < ::metaSMT::solver::CVC4 > >(UseForkedCoreSolver, CoreSolverOptimizeDivides);
               break;
           case METASMT_BACKEND_BOOLECTOR:
               backend = "Boolector";

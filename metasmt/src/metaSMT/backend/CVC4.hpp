@@ -226,13 +226,13 @@ namespace metaSMT {
 
         typedef mpl::map33<
           // binary Logic tags
-          mpl::pair<predtags::and_tag,     Op2<AND> >
-        , mpl::pair<predtags::nand_tag,    NotOp2<AND> >
-        , mpl::pair<predtags::or_tag,      Op2<OR> >
-        , mpl::pair<predtags::nor_tag,     NotOp2<OR> >
-        , mpl::pair<predtags::xor_tag,     Op2<XOR> >
-        , mpl::pair<predtags::xnor_tag,    NotOp2<XOR> >
-        , mpl::pair<predtags::implies_tag, Op2<IMPLIES> >
+          mpl::pair<predtags::and_tag,     Op2< ::CVC4::kind::AND> >
+        , mpl::pair<predtags::nand_tag,    NotOp2< ::CVC4::kind::AND> >
+        , mpl::pair<predtags::or_tag,      Op2< ::CVC4::kind::OR> >
+        , mpl::pair<predtags::nor_tag,     NotOp2< ::CVC4::kind::OR> >
+        , mpl::pair<predtags::xor_tag,     Op2< ::CVC4::kind::XOR> >
+        , mpl::pair<predtags::xnor_tag,    NotOp2< ::CVC4::kind::XOR> >
+        , mpl::pair<predtags::implies_tag, Op2< ::CVC4::kind::IMPLIES> >
         // binary QF_BV tags
         , mpl::pair<bvtags::bvand_tag,     Op2<BITVECTOR_AND> >
         , mpl::pair<bvtags::bvnand_tag,    Op2<BITVECTOR_NAND> >

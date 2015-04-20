@@ -554,21 +554,13 @@ void SpecialFunctionHandler::handleTestFunction(ExecutionState &state,
 	  // TODO: Generate constraints for string concat: - must be two arguments, result must be concat of both
 
 	  ref<Expr> value = executor.toUnique(state, arguments[0]);
-	  // if (ConstantExpr *CE = dyn_cast<ConstantExpr>(value)) {
 	  ConstantExpr *CE = dyn_cast<ConstantExpr>(value);
-	  // ConstantExpr::create(102, Expr::Int32).ref(ConstantExpr::Add(value));
-	  uint64_t int_val = CE->getLimitedValue();
-	  //executor.bindLocal(target, state, ConstantExpr::create(new_arg, Expr::Int32));
-	  executor.bindLocal(target, state, ConstantExpr::create((int_val + 102), Expr::Int32));
+	  // uint64_t int_val = CE->getLimitedValue();
+	  ref<ConstantExpr> compare_to = ConstantExpr::create(100, Expr::Int32);
+	  ref<Expr> equal_test = EqExpr::create(CE, compare_to);
+	  executor.addConstraint(state, equal_test);
+	  //executor.bindLocal(target, state, ConstantExpr::create((int_val + 102), Expr::Int32));
 	  return;
-	//    executor.terminateStateOnError(state,
-	//                                   "klee_test_function got a constant arg",
-	//                                   "user.err");
-	//  } else {
-	//    executor.terminateStateOnError(state,
-	//                                   "klee_test_function requires a constant arg",
-	//                                   "user.err");
-	//  }
 }
 
 

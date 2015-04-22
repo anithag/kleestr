@@ -93,6 +93,7 @@ static SpecialFunctionHandler::HandlerInfo handlerInfo[] = {
   add("realloc", handleRealloc, true),
   add("test_function_adds", handleTestFunctionAdds, true),
   add("test_function", handleTestFunction, true),
+  add("strcat", handleConcat, true),
 
   // operator delete[](void*)
   add("_ZdaPv", handleDeleteArray, false),
@@ -553,13 +554,34 @@ void SpecialFunctionHandler::handleTestFunction(ExecutionState &state,
 	  // TODO: Parse string out of arguments [0] and [1]
 	  // TODO: Generate constraints for string concat: - must be two arguments, result must be concat of both
 
-	  ref<Expr> value = executor.toUnique(state, arguments[0]);
-	  ConstantExpr *CE = dyn_cast<ConstantExpr>(value);
-	  // uint64_t int_val = CE->getLimitedValue();
+	  //ref<Expr> value = executor.toUnique(state, arguments[0]);
+	  //ConstantExpr *CE = dyn_cast<ConstantExpr>(value);
+	  ref<Expr> value = arguments[0];
+
 	  ref<ConstantExpr> compare_to = ConstantExpr::create(100, Expr::Int32);
-	  ref<Expr> equal_test = EqExpr::create(CE, compare_to);
+	  ref<Expr> equal_test = EqExpr::create(value, compare_to);
 	  executor.addConstraint(state, equal_test);
 	  //executor.bindLocal(target, state, ConstantExpr::create((int_val + 102), Expr::Int32));
+	  return;
+}
+
+void SpecialFunctionHandler::handleConcat(ExecutionState &state,
+                            KInstruction *target,
+                            std::vector<ref<Expr> > &arguments) {
+	// XXX should type check args
+	  assert(arguments.size() == 2 &&
+	         "invalid number of arguments to test_function");
+
+	  // TODO: Parse string out of arguments [0] and [1]
+	  // TODO: Generate constraints for string concat: - must be two arguments, result must be concat of both
+
+//	  ref<Expr> dest_left = arguments[0];
+//	  ref<Expr> src_right = arguments[1];
+//
+//	  ref<ConstantExpr> compare_to = ConstantExpr::create(100, Expr::Int32);
+	  //ref<Expr> equal_test = EqExpr::create(value, compare_to);
+	 // executor.addConstraint(state, equal_test);
+	  executor.bindLocal(target, state, ConstantExpr::create(102, Expr::Int32));
 	  return;
 }
 

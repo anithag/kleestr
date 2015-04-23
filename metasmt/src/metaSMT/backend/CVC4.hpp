@@ -1,6 +1,8 @@
 #pragma once
 
 #include "../tags/QF_BV.hpp"
+#include "../tags/Array.hpp"
+#include "../tags/String.hpp"
 #include "../result_wrapper.hpp"
 
 #include <cvc4/cvc4.h>

@@ -11,4 +11,4 @@ then
    usage
 fi
    llvm-gcc -c -g --emit-llvm $1
-   klee --write-smt2s --use-metasmt=z3 `basename $1 .c`.o
+   klee --write-smt2s --use-metasmt=cvc4 `basename $1 .c`.o

@@ -149,6 +149,14 @@ namespace {
     virtual ref<Expr> Sge(const ref<Expr> &LHS, const ref<Expr> &RHS) {
       return SgeExpr::alloc(LHS, RHS);
     }
+
+    virtual ref<Expr> Strlen(const ref<Expr> &arg){
+      return StrlenExpr::alloc(arg);
+    }
+
+    virtual ref<Expr> Strconcat(const ref<Expr> &LHS, const ref<Expr> &RHS) {
+      return StrconcatExpr::alloc(LHS, RHS);
+    }
   };
 
   /// ChainedBuilder - Helper class for construct specialized expression
@@ -297,6 +305,14 @@ namespace {
 
     ref<Expr> Sge(const ref<Expr> &LHS, const ref<Expr> &RHS) {
       return Base->Sge(LHS, RHS);
+    }
+
+    virtual ref<Expr> Strlen(const ref<Expr> &arg){
+      return StrlenExpr::alloc(arg);
+    }
+
+    virtual ref<Expr> Strconcat(const ref<Expr> &LHS, const ref<Expr> &RHS) {
+      return StrconcatExpr::alloc(LHS, RHS);
     }
   };
 
@@ -686,6 +702,26 @@ namespace {
       }
 
       return Builder.Sge(cast<NonConstantExpr>(LHS),
+                         cast<NonConstantExpr>(RHS));
+    }
+    virtual ref<Expr> Strlen(const ref<Expr> &LHS) {
+      if (ConstantExpr *LCE = dyn_cast<ConstantExpr>(LHS)) {
+        return Builder.Strlen(LCE);
+      } 
+      return Builder.Strlen(cast<NonConstantExpr>(LHS));
+    }
+    virtual ref<Expr> Strconcat(const ref<Expr> &LHS, const ref<Expr> &RHS) {
+  // FIXME: What is this??
+ /* 
+     if (ConstantExpr *LCE = dyn_cast<ConstantExpr>(LHS)) {
+        if (ConstantExpr *RCE = dyn_cast<ConstantExpr>(RHS))
+          return LCE->Strconcat(RCE);
+        return Builder.Strconcat(LCE, cast<NonConstantExpr>(RHS));
+      } else if (ConstantExpr *RCE = dyn_cast<ConstantExpr>(RHS)) {
+        return Builder.Strconcat(cast<NonConstantExpr>(LHS), RCE);
+      }
+*/
+      return Builder.Strconcat(cast<NonConstantExpr>(LHS),
                          cast<NonConstantExpr>(RHS));
     }
   };

@@ -20,19 +20,14 @@ target triple = "x86_64-unknown-linux-gnu"
 %union.anon = type { i64 }
 %union.sigval_t = type { i8* }
 
-@.str = private unnamed_addr constant [2 x i8] c"a\00", align 1
-@.str1 = private unnamed_addr constant [2 x i8] c"b\00", align 1
-@.str2 = private unnamed_addr constant [5 x i8] c"this\00", align 1
-@.str3 = private unnamed_addr constant [5 x i8] c"that\00", align 1
-@.str4 = private unnamed_addr constant [9 x i8] c"c == 102\00", align 1
-@.str5 = private unnamed_addr constant [14 x i8] c"test_concat.c\00", align 1
-@__PRETTY_FUNCTION__.2263 = internal unnamed_addr constant [5 x i8] c"main\00"
+@.str = private unnamed_addr constant [4 x i8] c"bad\00", align 1
+@.str1 = private unnamed_addr constant [2 x i8] c"a\00", align 1
 @__libc_stack_end = global i8* null
-@__uclibc_progname = hidden global i8* getelementptr inbounds ([1 x i8]* @.str6, i64 0, i64 0)
-@.str6 = private constant [1 x i8] zeroinitializer, align 1
+@__uclibc_progname = hidden global i8* getelementptr inbounds ([1 x i8]* @.str2, i64 0, i64 0)
+@.str2 = private constant [1 x i8] zeroinitializer, align 1
 @__environ = global i8** null
 @__pagesize = global i64 0
-@.str17 = private constant [10 x i8] c"/dev/null\00", align 1
+@.str13 = private constant [10 x i8] c"/dev/null\00", align 1
 @been_there_done_that.2848 = internal global i32 0
 @__app_fini = hidden global void ()* null
 @__rtld_fini = hidden global void ()* null
@@ -47,19 +42,19 @@ target triple = "x86_64-unknown-linux-gnu"
 @__exit_cleanup = hidden global void (i32)* null
 @errno = global i32 0
 @h_errno = global i32 0
-@.str27 = private constant [22 x i8] c"klee_div_zero_check.c\00", align 1
-@.str128 = private constant [15 x i8] c"divide by zero\00", align 1
-@.str229 = private constant [8 x i8] c"div.err\00", align 1
-@.str330 = private constant [8 x i8] c"IGNORED\00", align 1
+@.str23 = private constant [22 x i8] c"klee_div_zero_check.c\00", align 1
+@.str124 = private constant [15 x i8] c"divide by zero\00", align 1
+@.str225 = private constant [8 x i8] c"div.err\00", align 1
+@.str3 = private constant [8 x i8] c"IGNORED\00", align 1
 @.str14 = private constant [16 x i8] c"overshift error\00", align 1
 @.str25 = private constant [14 x i8] c"overshift.err\00", align 1
-@.str631 = private constant [13 x i8] c"klee_range.c\00", align 1
-@.str1732 = private constant [14 x i8] c"invalid range\00", align 1
+@.str6 = private constant [13 x i8] c"klee_range.c\00", align 1
+@.str17 = private constant [14 x i8] c"invalid range\00", align 1
 @.str28 = private constant [5 x i8] c"user\00", align 1
 
 @environ = alias weak i8*** @__environ
-@raise = alias weak i32 (i32)* @__raise
 @sigaction = alias weak i32 (i32, %struct.sigaction*, %struct.sigaction*)* @__libc_sigaction
+@raise = alias weak i32 (i32)* @__raise
 
 define i32 @__user_main() nounwind {
 entry:
@@ -67,34 +62,22 @@ entry:
   %0 = alloca i32
   %a = alloca i8*
   %b = alloca i8*
-  %c = alloca i32
+  %c = alloca i8*
   %"alloca point" = bitcast i32 0 to i32
-  %1 = call noalias i8* @malloc(i64 11) nounwind, !dbg !521
+  %1 = call noalias i8* @malloc(i64 5) nounwind, !dbg !521
   store i8* %1, i8** %a, align 8, !dbg !521
-  %2 = call noalias i8* @malloc(i64 5) nounwind, !dbg !523
-  store i8* %2, i8** %b, align 8, !dbg !523
-  %3 = load i8** %a, align 8, !dbg !524
-  call void @klee_make_symbolic(i8* %3, i64 11, i8* getelementptr inbounds ([2 x i8]* @.str, i64 0, i64 0)) nounwind, !dbg !524
+  store i8* getelementptr inbounds ([4 x i8]* @.str, i64 0, i64 0), i8** %b, align 8, !dbg !523
+  %2 = load i8** %a, align 8, !dbg !524
+  call void @klee_make_symbolic(i8* %2, i64 5, i8* getelementptr inbounds ([2 x i8]* @.str1, i64 0, i64 0)) nounwind, !dbg !524
+  %3 = load i8** %a, align 8, !dbg !525
   %4 = load i8** %b, align 8, !dbg !525
-  call void @klee_make_symbolic(i8* %4, i64 5, i8* getelementptr inbounds ([2 x i8]* @.str1, i64 0, i64 0)) nounwind, !dbg !525
-  %5 = call i8* @strcat(i8* noalias getelementptr inbounds ([5 x i8]* @.str2, i64 0, i64 0), i8* noalias getelementptr inbounds ([5 x i8]* @.str3, i64 0, i64 0)) nounwind, !dbg !526
-  %6 = ptrtoint i8* %5 to i64, !dbg !526
-  %7 = trunc i64 %6 to i32, !dbg !526
-  store i32 %7, i32* %c, align 4, !dbg !526
-  %8 = load i32* %c, align 4, !dbg !527
-  %9 = icmp ne i32 %8, 102, !dbg !527
-  br i1 %9, label %bb, label %bb1, !dbg !527
-
-bb:                                               ; preds = %entry
-  %10 = call i32 (...)* @__assert_fail(i8* getelementptr inbounds ([9 x i8]* @.str4, i64 0, i64 0), i8* getelementptr inbounds ([14 x i8]* @.str5, i64 0, i64 0), i32 21, i8* getelementptr inbounds ([5 x i8]* @__PRETTY_FUNCTION__.2263, i64 0, i64 0)) noun
-  unreachable
-
-bb1:                                              ; preds = %entry
-  store i32 0, i32* %0, align 4, !dbg !528
-  %11 = load i32* %0, align 4, !dbg !528
-  store i32 %11, i32* %retval, align 4, !dbg !528
-  %retval2 = load i32* %retval, !dbg !528
-  ret i32 %retval2, !dbg !528
+  %5 = call i8* @strcat(i8* noalias %3, i8* noalias %4) nounwind, !dbg !525
+  store i8* %5, i8** %c, align 8, !dbg !525
+  store i32 0, i32* %0, align 4, !dbg !526
+  %6 = load i32* %0, align 4, !dbg !526
+  store i32 %6, i32* %retval, align 4, !dbg !526
+  %retval1 = load i32* %retval, !dbg !526
+  ret i32 %retval1, !dbg !526
 }
 
 declare void @llvm.dbg.declare(metadata, metadata) nounwind readnone
@@ -102,8 +85,6 @@ declare void @llvm.dbg.declare(metadata, metadata) nounwind readnone
 declare noalias i8* @malloc(i64) nounwind
 
 declare void @klee_make_symbolic(i8*, i64, i8*)
-
-declare i32 @__assert_fail(...) noreturn
 
 define internal void @__check_one_fd(i32 %fd, i32 %mode) nounwind {
 entry:
@@ -115,66 +96,66 @@ entry:
   %"alloca point" = bitcast i32 0 to i32
   store i32 %fd, i32* %fd_addr
   store i32 %mode, i32* %mode_addr
-  %0 = load i32* %fd_addr, align 4, !dbg !529
-  %1 = call i32 (i32, i32, ...)* @fcntl(i32 %0, i32 1) nounwind, !dbg !529
-  %2 = icmp ne i32 %1, -1, !dbg !529
-  br i1 %2, label %bb2, label %bb, !dbg !529
+  %0 = load i32* %fd_addr, align 4, !dbg !527
+  %1 = call i32 (i32, i32, ...)* @fcntl(i32 %0, i32 1) nounwind, !dbg !527
+  %2 = icmp ne i32 %1, -1, !dbg !527
+  br i1 %2, label %bb2, label %bb, !dbg !527
 
 bb:                                               ; preds = %entry
-  %3 = call i32* @__errno_location() nounwind readnone, !dbg !529
-  %4 = load i32* %3, align 4, !dbg !529
-  %5 = icmp ne i32 %4, 9, !dbg !529
-  br i1 %5, label %bb2, label %bb1, !dbg !529
+  %3 = call i32* @__errno_location() nounwind readnone, !dbg !527
+  %4 = load i32* %3, align 4, !dbg !527
+  %5 = icmp ne i32 %4, 9, !dbg !527
+  br i1 %5, label %bb2, label %bb1, !dbg !527
 
 bb1:                                              ; preds = %bb
-  store i32 1, i32* %iftmp.0, align 4, !dbg !529
-  br label %bb3, !dbg !529
+  store i32 1, i32* %iftmp.0, align 4, !dbg !527
+  br label %bb3, !dbg !527
 
 bb2:                                              ; preds = %bb, %entry
-  store i32 0, i32* %iftmp.0, align 4, !dbg !529
-  br label %bb3, !dbg !529
+  store i32 0, i32* %iftmp.0, align 4, !dbg !527
+  br label %bb3, !dbg !527
 
 bb3:                                              ; preds = %bb2, %bb1
-  %6 = load i32* %iftmp.0, align 4, !dbg !529
-  %7 = sext i32 %6 to i64, !dbg !529
-  %8 = icmp ne i64 %7, 0, !dbg !529
-  br i1 %8, label %bb4, label %return, !dbg !529
+  %6 = load i32* %iftmp.0, align 4, !dbg !527
+  %7 = sext i32 %6 to i64, !dbg !527
+  %8 = icmp ne i64 %7, 0, !dbg !527
+  br i1 %8, label %bb4, label %return, !dbg !527
 
 bb4:                                              ; preds = %bb3
-  %9 = load i32* %mode_addr, align 4, !dbg !531
-  %10 = call i32 (i8*, i32, ...)* @open(i8* getelementptr inbounds ([10 x i8]* @.str17, i64 0, i64 0), i32 %9) nounwind, !dbg !531
-  store i32 %10, i32* %nullfd, align 4, !dbg !531
-  %11 = load i32* %nullfd, align 4, !dbg !533
-  %12 = load i32* %fd_addr, align 4, !dbg !533
-  %13 = icmp ne i32 %11, %12, !dbg !533
-  br i1 %13, label %bb8, label %bb5, !dbg !533
+  %9 = load i32* %mode_addr, align 4, !dbg !529
+  %10 = call i32 (i8*, i32, ...)* @open(i8* getelementptr inbounds ([10 x i8]* @.str13, i64 0, i64 0), i32 %9) nounwind, !dbg !529
+  store i32 %10, i32* %nullfd, align 4, !dbg !529
+  %11 = load i32* %nullfd, align 4, !dbg !531
+  %12 = load i32* %fd_addr, align 4, !dbg !531
+  %13 = icmp ne i32 %11, %12, !dbg !531
+  br i1 %13, label %bb8, label %bb5, !dbg !531
 
 bb5:                                              ; preds = %bb4
-  %14 = load i32* %fd_addr, align 4, !dbg !533
-  %15 = call i32 @fstat(i32 %14, %struct.stat* %st) nounwind, !dbg !533
-  %16 = icmp ne i32 %15, 0, !dbg !533
-  br i1 %16, label %bb8, label %bb6, !dbg !533
+  %14 = load i32* %fd_addr, align 4, !dbg !531
+  %15 = call i32 @fstat(i32 %14, %struct.stat* %st) nounwind, !dbg !531
+  %16 = icmp ne i32 %15, 0, !dbg !531
+  br i1 %16, label %bb8, label %bb6, !dbg !531
 
 bb6:                                              ; preds = %bb5
-  %17 = getelementptr inbounds %struct.stat* %st, i32 0, i32 3, !dbg !533
-  %18 = load i32* %17, align 8, !dbg !533
-  %19 = and i32 %18, 61440, !dbg !533
-  %20 = icmp ne i32 %19, 8192, !dbg !533
-  br i1 %20, label %bb8, label %bb7, !dbg !533
+  %17 = getelementptr inbounds %struct.stat* %st, i32 0, i32 3, !dbg !531
+  %18 = load i32* %17, align 8, !dbg !531
+  %19 = and i32 %18, 61440, !dbg !531
+  %20 = icmp ne i32 %19, 8192, !dbg !531
+  br i1 %20, label %bb8, label %bb7, !dbg !531
 
 bb7:                                              ; preds = %bb6
-  %21 = getelementptr inbounds %struct.stat* %st, i32 0, i32 7, !dbg !533
-  %22 = load i64* %21, align 8, !dbg !533
-  %23 = call i64 @gnu_dev_makedev(i32 1, i32 3) nounwind, !dbg !533
-  %24 = icmp ne i64 %22, %23, !dbg !533
-  br i1 %24, label %bb8, label %return, !dbg !533
+  %21 = getelementptr inbounds %struct.stat* %st, i32 0, i32 7, !dbg !531
+  %22 = load i64* %21, align 8, !dbg !531
+  %23 = call i64 @gnu_dev_makedev(i32 1, i32 3) nounwind, !dbg !531
+  %24 = icmp ne i64 %22, %23, !dbg !531
+  br i1 %24, label %bb8, label %return, !dbg !531
 
 bb8:                                              ; preds = %bb7, %bb6, %bb5, %bb4
-  call void @abort() noreturn nounwind, !dbg !534
-  unreachable, !dbg !534
+  call void @abort() noreturn nounwind, !dbg !532
+  unreachable, !dbg !532
 
 return:                                           ; preds = %bb3, %bb7
-  ret void, !dbg !535
+  ret void, !dbg !533
 }
 
 declare i32 @fcntl(i32, i32, ...)
@@ -192,34 +173,34 @@ entry:
   %"alloca point" = bitcast i32 0 to i32
   store i32 %__major, i32* %__major_addr
   store i32 %__minor, i32* %__minor_addr
-  %1 = load i32* %__minor_addr, align 4, !dbg !536
-  %2 = and i32 %1, 255, !dbg !536
-  %3 = load i32* %__major_addr, align 4, !dbg !536
-  %4 = and i32 %3, 4095, !dbg !536
+  %1 = load i32* %__minor_addr, align 4, !dbg !534
+  %2 = and i32 %1, 255, !dbg !534
+  %3 = load i32* %__major_addr, align 4, !dbg !534
+  %4 = and i32 %3, 4095, !dbg !534
   %int_cast_to_i64 = zext i32 8 to i64
-  call void @klee_overshift_check(i64 32, i64 %int_cast_to_i64), !dbg !536
-  %5 = shl i32 %4, 8, !dbg !536
-  %6 = or i32 %2, %5, !dbg !536
-  %7 = zext i32 %6 to i64, !dbg !536
-  %8 = load i32* %__minor_addr, align 4, !dbg !536
-  %9 = zext i32 %8 to i64, !dbg !536
-  %10 = and i64 %9, 4294967040, !dbg !536
+  call void @klee_overshift_check(i64 32, i64 %int_cast_to_i64), !dbg !534
+  %5 = shl i32 %4, 8, !dbg !534
+  %6 = or i32 %2, %5, !dbg !534
+  %7 = zext i32 %6 to i64, !dbg !534
+  %8 = load i32* %__minor_addr, align 4, !dbg !534
+  %9 = zext i32 %8 to i64, !dbg !534
+  %10 = and i64 %9, 4294967040, !dbg !534
   %int_cast_to_i641 = bitcast i64 12 to i64
-  call void @klee_overshift_check(i64 64, i64 %int_cast_to_i641), !dbg !536
-  %11 = shl i64 %10, 12, !dbg !536
-  %12 = or i64 %7, %11, !dbg !536
-  %13 = load i32* %__major_addr, align 4, !dbg !536
-  %14 = zext i32 %13 to i64, !dbg !536
-  %15 = and i64 %14, 4294963200, !dbg !536
+  call void @klee_overshift_check(i64 64, i64 %int_cast_to_i641), !dbg !534
+  %11 = shl i64 %10, 12, !dbg !534
+  %12 = or i64 %7, %11, !dbg !534
+  %13 = load i32* %__major_addr, align 4, !dbg !534
+  %14 = zext i32 %13 to i64, !dbg !534
+  %15 = and i64 %14, 4294963200, !dbg !534
   %int_cast_to_i642 = bitcast i64 32 to i64
-  call void @klee_overshift_check(i64 64, i64 %int_cast_to_i642), !dbg !536
-  %16 = shl i64 %15, 32, !dbg !536
-  %17 = or i64 %12, %16, !dbg !536
-  store i64 %17, i64* %0, align 8, !dbg !536
-  %18 = load i64* %0, align 8, !dbg !536
-  store i64 %18, i64* %retval, align 8, !dbg !536
-  %retval1 = load i64* %retval, !dbg !536
-  ret i64 %retval1, !dbg !536
+  call void @klee_overshift_check(i64 64, i64 %int_cast_to_i642), !dbg !534
+  %16 = shl i64 %15, 32, !dbg !534
+  %17 = or i64 %12, %16, !dbg !534
+  store i64 %17, i64* %0, align 8, !dbg !534
+  %18 = load i64* %0, align 8, !dbg !534
+  store i64 %18, i64* %retval, align 8, !dbg !534
+  %retval1 = load i64* %retval, !dbg !534
+  ret i64 %retval1, !dbg !534
 }
 
 define internal i32 @__check_suid() nounwind {
@@ -231,38 +212,38 @@ entry:
   %gid = alloca i32
   %egid = alloca i32
   %"alloca point" = bitcast i32 0 to i32
-  %1 = call i32 @getuid() nounwind, !dbg !538
-  store i32 %1, i32* %uid, align 4, !dbg !538
-  %2 = call i32 @geteuid() nounwind, !dbg !540
-  store i32 %2, i32* %euid, align 4, !dbg !540
-  %3 = call i32 @getgid() nounwind, !dbg !541
-  store i32 %3, i32* %gid, align 4, !dbg !541
-  %4 = call i32 @getegid() nounwind, !dbg !542
-  store i32 %4, i32* %egid, align 4, !dbg !542
-  %5 = load i32* %uid, align 4, !dbg !543
-  %6 = load i32* %euid, align 4, !dbg !543
-  %7 = icmp eq i32 %5, %6, !dbg !543
-  br i1 %7, label %bb, label %bb2, !dbg !543
+  %1 = call i32 @getuid() nounwind, !dbg !536
+  store i32 %1, i32* %uid, align 4, !dbg !536
+  %2 = call i32 @geteuid() nounwind, !dbg !538
+  store i32 %2, i32* %euid, align 4, !dbg !538
+  %3 = call i32 @getgid() nounwind, !dbg !539
+  store i32 %3, i32* %gid, align 4, !dbg !539
+  %4 = call i32 @getegid() nounwind, !dbg !540
+  store i32 %4, i32* %egid, align 4, !dbg !540
+  %5 = load i32* %uid, align 4, !dbg !541
+  %6 = load i32* %euid, align 4, !dbg !541
+  %7 = icmp eq i32 %5, %6, !dbg !541
+  br i1 %7, label %bb, label %bb2, !dbg !541
 
 bb:                                               ; preds = %entry
-  %8 = load i32* %gid, align 4, !dbg !543
-  %9 = load i32* %egid, align 4, !dbg !543
-  %10 = icmp eq i32 %8, %9, !dbg !543
-  br i1 %10, label %bb1, label %bb2, !dbg !543
+  %8 = load i32* %gid, align 4, !dbg !541
+  %9 = load i32* %egid, align 4, !dbg !541
+  %10 = icmp eq i32 %8, %9, !dbg !541
+  br i1 %10, label %bb1, label %bb2, !dbg !541
 
 bb1:                                              ; preds = %bb
-  store i32 0, i32* %0, align 4, !dbg !544
-  br label %bb3, !dbg !544
+  store i32 0, i32* %0, align 4, !dbg !542
+  br label %bb3, !dbg !542
 
 bb2:                                              ; preds = %bb, %entry
-  store i32 1, i32* %0, align 4, !dbg !545
-  br label %bb3, !dbg !545
+  store i32 1, i32* %0, align 4, !dbg !543
+  br label %bb3, !dbg !543
 
 bb3:                                              ; preds = %bb2, %bb1
-  %11 = load i32* %0, align 4, !dbg !544
-  store i32 %11, i32* %retval, align 4, !dbg !544
-  %retval4 = load i32* %retval, !dbg !544
-  ret i32 %retval4, !dbg !544
+  %11 = load i32* %0, align 4, !dbg !542
+  store i32 %11, i32* %retval, align 4, !dbg !542
+  %retval4 = load i32* %retval, !dbg !542
+  ret i32 %retval4, !dbg !542
 }
 
 declare i32 @getuid() nounwind
@@ -275,45 +256,45 @@ declare i32 @getegid() nounwind
 
 define void @__uClibc_init() nounwind {
 entry:
-  %0 = load i32* @been_there_done_that.2848, align 4, !dbg !546
-  %1 = icmp ne i32 %0, 0, !dbg !546
-  br i1 %1, label %return, label %bb, !dbg !546
+  %0 = load i32* @been_there_done_that.2848, align 4, !dbg !544
+  %1 = icmp ne i32 %0, 0, !dbg !544
+  br i1 %1, label %return, label %bb, !dbg !544
 
 bb:                                               ; preds = %entry
-  %2 = load i32* @been_there_done_that.2848, align 4, !dbg !548
-  %3 = add nsw i32 %2, 1, !dbg !548
-  store i32 %3, i32* @been_there_done_that.2848, align 4, !dbg !548
-  store i64 4096, i64* @__pagesize, align 8, !dbg !549
-  call void @_stdio_init() nounwind, !dbg !550
-  br label %return, !dbg !550
+  %2 = load i32* @been_there_done_that.2848, align 4, !dbg !546
+  %3 = add nsw i32 %2, 1, !dbg !546
+  store i32 %3, i32* @been_there_done_that.2848, align 4, !dbg !546
+  store i64 4096, i64* @__pagesize, align 8, !dbg !547
+  call void @_stdio_init() nounwind, !dbg !548
+  br label %return, !dbg !548
 
 return:                                           ; preds = %entry, %bb
-  ret void, !dbg !551
+  ret void, !dbg !549
 }
 
 define void @__uClibc_fini() nounwind {
 entry:
-  %0 = load void ()** @__app_fini, align 8, !dbg !552
-  %1 = icmp ne void ()* %0, null, !dbg !552
-  br i1 %1, label %bb, label %bb1, !dbg !552
+  %0 = load void ()** @__app_fini, align 8, !dbg !550
+  %1 = icmp ne void ()* %0, null, !dbg !550
+  br i1 %1, label %bb, label %bb1, !dbg !550
 
 bb:                                               ; preds = %entry
-  %2 = load void ()** @__app_fini, align 8, !dbg !554
-  call void %2() nounwind, !dbg !554
-  br label %bb1, !dbg !554
+  %2 = load void ()** @__app_fini, align 8, !dbg !552
+  call void %2() nounwind, !dbg !552
+  br label %bb1, !dbg !552
 
 bb1:                                              ; preds = %bb, %entry
-  %3 = load void ()** @__rtld_fini, align 8, !dbg !555
-  %4 = icmp ne void ()* %3, null, !dbg !555
-  br i1 %4, label %bb2, label %return, !dbg !555
+  %3 = load void ()** @__rtld_fini, align 8, !dbg !553
+  %4 = icmp ne void ()* %3, null, !dbg !553
+  br i1 %4, label %bb2, label %return, !dbg !553
 
 bb2:                                              ; preds = %bb1
-  %5 = load void ()** @__rtld_fini, align 8, !dbg !556
-  call void %5() nounwind, !dbg !556
-  br label %return, !dbg !556
+  %5 = load void ()** @__rtld_fini, align 8, !dbg !554
+  call void %5() nounwind, !dbg !554
+  br label %return, !dbg !554
 
 return:                                           ; preds = %bb1, %bb2
-  ret void, !dbg !557
+  ret void, !dbg !555
 }
 
 define void @__uClibc_main(i32 (i32, i8**, i8**)* %main, i32 %argc, i8** %argv, void ()* %app_init, void ()* %app_fini, void ()* %rtld_fini, i8* %stack_end) noreturn nounwind {
@@ -337,211 +318,267 @@ entry:
   store void ()* %app_fini, void ()** %app_fini_addr
   store void ()* %rtld_fini, void ()** %rtld_fini_addr
   store i8* %stack_end, i8** %stack_end_addr
-  %0 = load i8** %stack_end_addr, align 8, !dbg !558
-  store i8* %0, i8** @__libc_stack_end, align 8, !dbg !558
-  %1 = load void ()** %rtld_fini_addr, align 8, !dbg !560
-  store void ()* %1, void ()** @__rtld_fini, align 8, !dbg !560
-  %2 = load i32* %argc_addr, align 4, !dbg !561
-  %3 = add nsw i32 %2, 1, !dbg !561
-  %4 = load i8*** %argv_addr, align 8, !dbg !561
-  %5 = sext i32 %3 to i64, !dbg !561
-  %6 = getelementptr inbounds i8** %4, i64 %5, !dbg !561
-  store i8** %6, i8*** @__environ, align 8, !dbg !561
-  %7 = load i8*** %argv_addr, align 8, !dbg !562
-  %8 = load i8** %7, align 8, !dbg !562
-  %9 = load i8*** @__environ, align 8, !dbg !562
-  %10 = bitcast i8** %9 to i8*, !dbg !562
-  %11 = icmp eq i8* %8, %10, !dbg !562
-  br i1 %11, label %bb, label %bb1, !dbg !562
+  %0 = load i8** %stack_end_addr, align 8, !dbg !556
+  store i8* %0, i8** @__libc_stack_end, align 8, !dbg !556
+  %1 = load void ()** %rtld_fini_addr, align 8, !dbg !558
+  store void ()* %1, void ()** @__rtld_fini, align 8, !dbg !558
+  %2 = load i32* %argc_addr, align 4, !dbg !559
+  %3 = add nsw i32 %2, 1, !dbg !559
+  %4 = load i8*** %argv_addr, align 8, !dbg !559
+  %5 = sext i32 %3 to i64, !dbg !559
+  %6 = getelementptr inbounds i8** %4, i64 %5, !dbg !559
+  store i8** %6, i8*** @__environ, align 8, !dbg !559
+  %7 = load i8*** %argv_addr, align 8, !dbg !560
+  %8 = load i8** %7, align 8, !dbg !560
+  %9 = load i8*** @__environ, align 8, !dbg !560
+  %10 = bitcast i8** %9 to i8*, !dbg !560
+  %11 = icmp eq i8* %8, %10, !dbg !560
+  br i1 %11, label %bb, label %bb1, !dbg !560
 
 bb:                                               ; preds = %entry
-  %12 = load i8*** %argv_addr, align 8, !dbg !563
-  %13 = load i32* %argc_addr, align 4, !dbg !563
-  %14 = sext i32 %13 to i64, !dbg !563
-  %15 = getelementptr inbounds i8** %12, i64 %14, !dbg !563
-  store i8** %15, i8*** @__environ, align 8, !dbg !563
-  br label %bb1, !dbg !563
+  %12 = load i8*** %argv_addr, align 8, !dbg !561
+  %13 = load i32* %argc_addr, align 4, !dbg !561
+  %14 = sext i32 %13 to i64, !dbg !561
+  %15 = getelementptr inbounds i8** %12, i64 %14, !dbg !561
+  store i8** %15, i8*** @__environ, align 8, !dbg !561
+  br label %bb1, !dbg !561
 
 bb1:                                              ; preds = %bb, %entry
-  %auxvt2 = bitcast [15 x %struct.Elf64_auxv_t]* %auxvt to %struct.Elf64_auxv_t*, !dbg !564
-  %auxvt23 = bitcast %struct.Elf64_auxv_t* %auxvt2 to i8*, !dbg !564
-  %16 = call i8* @memset(i8* %auxvt23, i32 0, i64 240) nounwind, !dbg !564
-  %17 = load i8*** @__environ, align 8, !dbg !565
-  %18 = bitcast i8** %17 to i64*, !dbg !565
-  store i64* %18, i64** %aux_dat, align 8, !dbg !565
-  br label %bb5, !dbg !565
+  %auxvt2 = bitcast [15 x %struct.Elf64_auxv_t]* %auxvt to %struct.Elf64_auxv_t*, !dbg !562
+  %auxvt23 = bitcast %struct.Elf64_auxv_t* %auxvt2 to i8*, !dbg !562
+  %16 = call i8* @memset(i8* %auxvt23, i32 0, i64 240) nounwind, !dbg !562
+  %17 = load i8*** @__environ, align 8, !dbg !563
+  %18 = bitcast i8** %17 to i64*, !dbg !563
+  store i64* %18, i64** %aux_dat, align 8, !dbg !563
+  br label %bb5, !dbg !563
 
 bb5:                                              ; preds = %bb5, %bb1
-  %19 = load i64** %aux_dat, align 8, !dbg !566
-  %20 = load i64* %19, align 8, !dbg !566
-  %21 = icmp ne i64 %20, 0, !dbg !566
-  %22 = load i64** %aux_dat, align 8, !dbg !567
-  %23 = getelementptr inbounds i64* %22, i64 1, !dbg !567
-  store i64* %23, i64** %aux_dat, align 8, !dbg !567
-  br i1 %21, label %bb5, label %bb10, !dbg !566
+  %19 = load i64** %aux_dat, align 8, !dbg !564
+  %20 = load i64* %19, align 8, !dbg !564
+  %21 = icmp ne i64 %20, 0, !dbg !564
+  %22 = load i64** %aux_dat, align 8, !dbg !565
+  %23 = getelementptr inbounds i64* %22, i64 1, !dbg !565
+  store i64* %23, i64** %aux_dat, align 8, !dbg !565
+  br i1 %21, label %bb5, label %bb10, !dbg !564
 
 bb7:                                              ; preds = %bb10
-  %24 = load i64** %aux_dat, align 8, !dbg !568
-  %25 = bitcast i64* %24 to %struct.Elf64_auxv_t*, !dbg !568
-  store %struct.Elf64_auxv_t* %25, %struct.Elf64_auxv_t** %auxv_entry, align 8, !dbg !568
-  %26 = load %struct.Elf64_auxv_t** %auxv_entry, align 8, !dbg !570
-  %27 = getelementptr inbounds %struct.Elf64_auxv_t* %26, i32 0, i32 0, !dbg !570
-  %28 = load i64* %27, align 8, !dbg !570
-  %29 = icmp ule i64 %28, 14, !dbg !570
-  br i1 %29, label %bb8, label %bb9, !dbg !570
+  %24 = load i64** %aux_dat, align 8, !dbg !566
+  %25 = bitcast i64* %24 to %struct.Elf64_auxv_t*, !dbg !566
+  store %struct.Elf64_auxv_t* %25, %struct.Elf64_auxv_t** %auxv_entry, align 8, !dbg !566
+  %26 = load %struct.Elf64_auxv_t** %auxv_entry, align 8, !dbg !568
+  %27 = getelementptr inbounds %struct.Elf64_auxv_t* %26, i32 0, i32 0, !dbg !568
+  %28 = load i64* %27, align 8, !dbg !568
+  %29 = icmp ule i64 %28, 14, !dbg !568
+  br i1 %29, label %bb8, label %bb9, !dbg !568
 
 bb8:                                              ; preds = %bb7
-  %30 = load %struct.Elf64_auxv_t** %auxv_entry, align 8, !dbg !571
-  %31 = getelementptr inbounds %struct.Elf64_auxv_t* %30, i32 0, i32 0, !dbg !571
-  %32 = load i64* %31, align 8, !dbg !571
-  %33 = getelementptr inbounds [15 x %struct.Elf64_auxv_t]* %auxvt, i64 0, i64 %32, !dbg !571
-  %34 = bitcast %struct.Elf64_auxv_t* %33 to i8*, !dbg !571
-  %35 = load %struct.Elf64_auxv_t** %auxv_entry, align 8, !dbg !571
-  %36 = bitcast %struct.Elf64_auxv_t* %35 to i8*, !dbg !571
-  %37 = call i8* @memcpy(i8* noalias %34, i8* noalias %36, i64 16) nounwind, !dbg !571
-  br label %bb9, !dbg !571
+  %30 = load %struct.Elf64_auxv_t** %auxv_entry, align 8, !dbg !569
+  %31 = getelementptr inbounds %struct.Elf64_auxv_t* %30, i32 0, i32 0, !dbg !569
+  %32 = load i64* %31, align 8, !dbg !569
+  %33 = getelementptr inbounds [15 x %struct.Elf64_auxv_t]* %auxvt, i64 0, i64 %32, !dbg !569
+  %34 = bitcast %struct.Elf64_auxv_t* %33 to i8*, !dbg !569
+  %35 = load %struct.Elf64_auxv_t** %auxv_entry, align 8, !dbg !569
+  %36 = bitcast %struct.Elf64_auxv_t* %35 to i8*, !dbg !569
+  %37 = call i8* @memcpy(i8* noalias %34, i8* noalias %36, i64 16) nounwind, !dbg !569
+  br label %bb9, !dbg !569
 
 bb9:                                              ; preds = %bb8, %bb7
-  %38 = load i64** %aux_dat, align 8, !dbg !572
-  %39 = getelementptr inbounds i64* %38, i64 2, !dbg !572
-  store i64* %39, i64** %aux_dat, align 8, !dbg !572
-  br label %bb10, !dbg !572
+  %38 = load i64** %aux_dat, align 8, !dbg !570
+  %39 = getelementptr inbounds i64* %38, i64 2, !dbg !570
+  store i64* %39, i64** %aux_dat, align 8, !dbg !570
+  br label %bb10, !dbg !570
 
 bb10:                                             ; preds = %bb5, %bb9
-  %40 = load i64** %aux_dat, align 8, !dbg !573
-  %41 = load i64* %40, align 8, !dbg !573
-  %42 = icmp ne i64 %41, 0, !dbg !573
-  br i1 %42, label %bb7, label %bb11, !dbg !573
+  %40 = load i64** %aux_dat, align 8, !dbg !571
+  %41 = load i64* %40, align 8, !dbg !571
+  %42 = icmp ne i64 %41, 0, !dbg !571
+  br i1 %42, label %bb7, label %bb11, !dbg !571
 
 bb11:                                             ; preds = %bb10
-  call void @__uClibc_init() nounwind, !dbg !574
-  %43 = getelementptr inbounds [15 x %struct.Elf64_auxv_t]* %auxvt, i64 0, i64 6, !dbg !575
-  %44 = getelementptr inbounds %struct.Elf64_auxv_t* %43, i32 0, i32 1, !dbg !575
-  %45 = getelementptr inbounds %union.anon* %44, i32 0, i32 0, !dbg !575
-  %46 = load i64* %45, align 8, !dbg !575
-  %47 = icmp ne i64 %46, 0, !dbg !575
-  br i1 %47, label %bb12, label %bb13, !dbg !575
+  call void @__uClibc_init() nounwind, !dbg !572
+  %43 = getelementptr inbounds [15 x %struct.Elf64_auxv_t]* %auxvt, i64 0, i64 6, !dbg !573
+  %44 = getelementptr inbounds %struct.Elf64_auxv_t* %43, i32 0, i32 1, !dbg !573
+  %45 = getelementptr inbounds %union.anon* %44, i32 0, i32 0, !dbg !573
+  %46 = load i64* %45, align 8, !dbg !573
+  %47 = icmp ne i64 %46, 0, !dbg !573
+  br i1 %47, label %bb12, label %bb13, !dbg !573
 
 bb12:                                             ; preds = %bb11
-  %48 = getelementptr inbounds [15 x %struct.Elf64_auxv_t]* %auxvt, i64 0, i64 6, !dbg !575
-  %49 = getelementptr inbounds %struct.Elf64_auxv_t* %48, i32 0, i32 1, !dbg !575
-  %50 = getelementptr inbounds %union.anon* %49, i32 0, i32 0, !dbg !575
-  %51 = load i64* %50, align 8, !dbg !575
-  store i64 %51, i64* %iftmp.10, align 8, !dbg !575
-  br label %bb14, !dbg !575
+  %48 = getelementptr inbounds [15 x %struct.Elf64_auxv_t]* %auxvt, i64 0, i64 6, !dbg !573
+  %49 = getelementptr inbounds %struct.Elf64_auxv_t* %48, i32 0, i32 1, !dbg !573
+  %50 = getelementptr inbounds %union.anon* %49, i32 0, i32 0, !dbg !573
+  %51 = load i64* %50, align 8, !dbg !573
+  store i64 %51, i64* %iftmp.10, align 8, !dbg !573
+  br label %bb14, !dbg !573
 
 bb13:                                             ; preds = %bb11
-  store i64 4096, i64* %iftmp.10, align 8, !dbg !575
-  br label %bb14, !dbg !575
+  store i64 4096, i64* %iftmp.10, align 8, !dbg !573
+  br label %bb14, !dbg !573
 
 bb14:                                             ; preds = %bb13, %bb12
-  %52 = load i64* %iftmp.10, align 8, !dbg !575
-  store i64 %52, i64* @__pagesize, align 8, !dbg !575
-  %53 = getelementptr inbounds [15 x %struct.Elf64_auxv_t]* %auxvt, i64 0, i64 11, !dbg !576
-  %54 = getelementptr inbounds %struct.Elf64_auxv_t* %53, i32 0, i32 1, !dbg !576
-  %55 = getelementptr inbounds %union.anon* %54, i32 0, i32 0, !dbg !576
-  %56 = load i64* %55, align 8, !dbg !576
-  %57 = icmp ne i64 %56, -1, !dbg !576
-  br i1 %57, label %bb16, label %bb15, !dbg !576
+  %52 = load i64* %iftmp.10, align 8, !dbg !573
+  store i64 %52, i64* @__pagesize, align 8, !dbg !573
+  %53 = getelementptr inbounds [15 x %struct.Elf64_auxv_t]* %auxvt, i64 0, i64 11, !dbg !574
+  %54 = getelementptr inbounds %struct.Elf64_auxv_t* %53, i32 0, i32 1, !dbg !574
+  %55 = getelementptr inbounds %union.anon* %54, i32 0, i32 0, !dbg !574
+  %56 = load i64* %55, align 8, !dbg !574
+  %57 = icmp ne i64 %56, -1, !dbg !574
+  br i1 %57, label %bb16, label %bb15, !dbg !574
 
 bb15:                                             ; preds = %bb14
-  %58 = call i32 @__check_suid() nounwind, !dbg !576
-  %59 = icmp ne i32 %58, 0, !dbg !576
-  br i1 %59, label %bb19, label %bb16, !dbg !576
+  %58 = call i32 @__check_suid() nounwind, !dbg !574
+  %59 = icmp ne i32 %58, 0, !dbg !574
+  br i1 %59, label %bb19, label %bb16, !dbg !574
 
 bb16:                                             ; preds = %bb15, %bb14
-  %60 = getelementptr inbounds [15 x %struct.Elf64_auxv_t]* %auxvt, i64 0, i64 11, !dbg !576
-  %61 = getelementptr inbounds %struct.Elf64_auxv_t* %60, i32 0, i32 1, !dbg !576
-  %62 = getelementptr inbounds %union.anon* %61, i32 0, i32 0, !dbg !576
-  %63 = load i64* %62, align 8, !dbg !576
-  %64 = icmp eq i64 %63, -1, !dbg !576
-  br i1 %64, label %bb20, label %bb17, !dbg !576
+  %60 = getelementptr inbounds [15 x %struct.Elf64_auxv_t]* %auxvt, i64 0, i64 11, !dbg !574
+  %61 = getelementptr inbounds %struct.Elf64_auxv_t* %60, i32 0, i32 1, !dbg !574
+  %62 = getelementptr inbounds %union.anon* %61, i32 0, i32 0, !dbg !574
+  %63 = load i64* %62, align 8, !dbg !574
+  %64 = icmp eq i64 %63, -1, !dbg !574
+  br i1 %64, label %bb20, label %bb17, !dbg !574
 
 bb17:                                             ; preds = %bb16
-  %65 = getelementptr inbounds [15 x %struct.Elf64_auxv_t]* %auxvt, i64 0, i64 11, !dbg !576
-  %66 = getelementptr inbounds %struct.Elf64_auxv_t* %65, i32 0, i32 1, !dbg !576
-  %67 = getelementptr inbounds %union.anon* %66, i32 0, i32 0, !dbg !576
-  %68 = load i64* %67, align 8, !dbg !576
-  %69 = getelementptr inbounds [15 x %struct.Elf64_auxv_t]* %auxvt, i64 0, i64 12, !dbg !576
-  %70 = getelementptr inbounds %struct.Elf64_auxv_t* %69, i32 0, i32 1, !dbg !576
-  %71 = getelementptr inbounds %union.anon* %70, i32 0, i32 0, !dbg !576
-  %72 = load i64* %71, align 8, !dbg !576
-  %73 = icmp ne i64 %68, %72, !dbg !576
-  br i1 %73, label %bb19, label %bb18, !dbg !576
+  %65 = getelementptr inbounds [15 x %struct.Elf64_auxv_t]* %auxvt, i64 0, i64 11, !dbg !574
+  %66 = getelementptr inbounds %struct.Elf64_auxv_t* %65, i32 0, i32 1, !dbg !574
+  %67 = getelementptr inbounds %union.anon* %66, i32 0, i32 0, !dbg !574
+  %68 = load i64* %67, align 8, !dbg !574
+  %69 = getelementptr inbounds [15 x %struct.Elf64_auxv_t]* %auxvt, i64 0, i64 12, !dbg !574
+  %70 = getelementptr inbounds %struct.Elf64_auxv_t* %69, i32 0, i32 1, !dbg !574
+  %71 = getelementptr inbounds %union.anon* %70, i32 0, i32 0, !dbg !574
+  %72 = load i64* %71, align 8, !dbg !574
+  %73 = icmp ne i64 %68, %72, !dbg !574
+  br i1 %73, label %bb19, label %bb18, !dbg !574
 
 bb18:                                             ; preds = %bb17
-  %74 = getelementptr inbounds [15 x %struct.Elf64_auxv_t]* %auxvt, i64 0, i64 13, !dbg !576
-  %75 = getelementptr inbounds %struct.Elf64_auxv_t* %74, i32 0, i32 1, !dbg !576
-  %76 = getelementptr inbounds %union.anon* %75, i32 0, i32 0, !dbg !576
-  %77 = load i64* %76, align 8, !dbg !576
-  %78 = getelementptr inbounds [15 x %struct.Elf64_auxv_t]* %auxvt, i64 0, i64 14, !dbg !576
-  %79 = getelementptr inbounds %struct.Elf64_auxv_t* %78, i32 0, i32 1, !dbg !576
-  %80 = getelementptr inbounds %union.anon* %79, i32 0, i32 0, !dbg !576
-  %81 = load i64* %80, align 8, !dbg !576
-  %82 = icmp ne i64 %77, %81, !dbg !576
-  br i1 %82, label %bb19, label %bb20, !dbg !576
+  %74 = getelementptr inbounds [15 x %struct.Elf64_auxv_t]* %auxvt, i64 0, i64 13, !dbg !574
+  %75 = getelementptr inbounds %struct.Elf64_auxv_t* %74, i32 0, i32 1, !dbg !574
+  %76 = getelementptr inbounds %union.anon* %75, i32 0, i32 0, !dbg !574
+  %77 = load i64* %76, align 8, !dbg !574
+  %78 = getelementptr inbounds [15 x %struct.Elf64_auxv_t]* %auxvt, i64 0, i64 14, !dbg !574
+  %79 = getelementptr inbounds %struct.Elf64_auxv_t* %78, i32 0, i32 1, !dbg !574
+  %80 = getelementptr inbounds %union.anon* %79, i32 0, i32 0, !dbg !574
+  %81 = load i64* %80, align 8, !dbg !574
+  %82 = icmp ne i64 %77, %81, !dbg !574
+  br i1 %82, label %bb19, label %bb20, !dbg !574
 
 bb19:                                             ; preds = %bb18, %bb17, %bb15
-  call void @__check_one_fd(i32 0, i32 131072) nounwind, !dbg !577
-  call void @__check_one_fd(i32 1, i32 131074) nounwind, !dbg !578
-  call void @__check_one_fd(i32 2, i32 131074) nounwind, !dbg !579
-  br label %bb20, !dbg !579
+  call void @__check_one_fd(i32 0, i32 131072) nounwind, !dbg !575
+  call void @__check_one_fd(i32 1, i32 131074) nounwind, !dbg !576
+  call void @__check_one_fd(i32 2, i32 131074) nounwind, !dbg !577
+  br label %bb20, !dbg !577
 
 bb20:                                             ; preds = %bb19, %bb18, %bb16
-  %83 = load i8*** %argv_addr, align 8, !dbg !580
-  %84 = load i8** %83, align 8, !dbg !580
-  store i8* %84, i8** @__uclibc_progname, align 8, !dbg !580
-  %85 = load void ()** %app_fini_addr, align 8, !dbg !581
-  store void ()* %85, void ()** @__app_fini, align 8, !dbg !581
-  %86 = load void ()** %app_init_addr, align 8, !dbg !582
-  %87 = icmp ne void ()* %86, null, !dbg !582
-  br i1 %87, label %bb21, label %bb22, !dbg !582
+  %83 = load i8*** %argv_addr, align 8, !dbg !578
+  %84 = load i8** %83, align 8, !dbg !578
+  store i8* %84, i8** @__uclibc_progname, align 8, !dbg !578
+  %85 = load void ()** %app_fini_addr, align 8, !dbg !579
+  store void ()* %85, void ()** @__app_fini, align 8, !dbg !579
+  %86 = load void ()** %app_init_addr, align 8, !dbg !580
+  %87 = icmp ne void ()* %86, null, !dbg !580
+  br i1 %87, label %bb21, label %bb22, !dbg !580
 
 bb21:                                             ; preds = %bb20
-  %88 = load void ()** %app_init_addr, align 8, !dbg !583
-  call void %88() nounwind, !dbg !583
-  br label %bb22, !dbg !583
+  %88 = load void ()** %app_init_addr, align 8, !dbg !581
+  call void %88() nounwind, !dbg !581
+  br label %bb22, !dbg !581
 
 bb22:                                             ; preds = %bb21, %bb20
-  %89 = icmp ne i8* bitcast (i32* ()* @__errno_location to i8*), null, !dbg !584
-  br i1 %89, label %bb23, label %bb24, !dbg !584
+  %89 = icmp ne i8* bitcast (i32* ()* @__errno_location to i8*), null, !dbg !582
+  br i1 %89, label %bb23, label %bb24, !dbg !582
 
 bb23:                                             ; preds = %bb22
-  %90 = call i32* @__errno_location() nounwind readnone, !dbg !585
-  store i32 0, i32* %90, align 4, !dbg !585
-  br label %bb24, !dbg !585
+  %90 = call i32* @__errno_location() nounwind readnone, !dbg !583
+  store i32 0, i32* %90, align 4, !dbg !583
+  br label %bb24, !dbg !583
 
 bb24:                                             ; preds = %bb23, %bb22
-  %91 = icmp ne i8* bitcast (i32* ()* @__h_errno_location to i8*), null, !dbg !586
-  br i1 %91, label %bb25, label %bb26, !dbg !586
+  %91 = icmp ne i8* bitcast (i32* ()* @__h_errno_location to i8*), null, !dbg !584
+  br i1 %91, label %bb25, label %bb26, !dbg !584
 
 bb25:                                             ; preds = %bb24
-  %92 = call i32* @__h_errno_location() nounwind readnone, !dbg !587
-  store i32 0, i32* %92, align 4, !dbg !587
-  br label %bb26, !dbg !587
+  %92 = call i32* @__h_errno_location() nounwind readnone, !dbg !585
+  store i32 0, i32* %92, align 4, !dbg !585
+  br label %bb26, !dbg !585
 
 bb26:                                             ; preds = %bb25, %bb24
-  %93 = load i8*** @__environ, align 8, !dbg !588
-  %94 = load i32 (i32, i8**, i8**)** %main_addr, align 8, !dbg !588
-  %95 = load i32* %argc_addr, align 4, !dbg !588
-  %96 = load i8*** %argv_addr, align 8, !dbg !588
-  %97 = call i32 %94(i32 %95, i8** %96, i8** %93) nounwind, !dbg !588
-  call void @exit(i32 %97) noreturn nounwind, !dbg !588
-  unreachable, !dbg !588
+  %93 = load i8*** @__environ, align 8, !dbg !586
+  %94 = load i32 (i32, i8**, i8**)** %main_addr, align 8, !dbg !586
+  %95 = load i32* %argc_addr, align 4, !dbg !586
+  %96 = load i8*** %argv_addr, align 8, !dbg !586
+  %97 = call i32 %94(i32 %95, i8** %96, i8** %93) nounwind, !dbg !586
+  call void @exit(i32 %97) noreturn nounwind, !dbg !586
+  unreachable, !dbg !586
 }
 
-declare i8* @strcat(i8* noalias, i8* noalias) nounwind
+define i8* @strcat(i8* noalias %s1, i8* noalias %s2) nounwind {
+entry:
+  %s1_addr = alloca i8*, align 8
+  %s2_addr = alloca i8*, align 8
+  %retval = alloca i8*
+  %0 = alloca i8*
+  %s = alloca i8*
+  %"alloca point" = bitcast i32 0 to i32
+  store i8* %s1, i8** %s1_addr
+  store i8* %s2, i8** %s2_addr
+  %1 = load i8** %s1_addr, align 8, !dbg !587
+  store i8* %1, i8** %s, align 8, !dbg !587
+  br label %bb, !dbg !587
+
+bb:                                               ; preds = %bb, %entry
+  %2 = load i8** %s, align 8, !dbg !589
+  %3 = load i8* %2, align 1, !dbg !589
+  %4 = icmp ne i8 %3, 0, !dbg !589
+  %5 = zext i1 %4 to i8, !dbg !589
+  %6 = load i8** %s, align 8, !dbg !589
+  %7 = getelementptr inbounds i8* %6, i64 1, !dbg !589
+  store i8* %7, i8** %s, align 8, !dbg !589
+  %toBool = icmp ne i8 %5, 0, !dbg !589
+  br i1 %toBool, label %bb, label %bb1, !dbg !589
+
+bb1:                                              ; preds = %bb
+  %8 = load i8** %s, align 8, !dbg !590
+  %9 = getelementptr inbounds i8* %8, i64 -1, !dbg !590
+  store i8* %9, i8** %s, align 8, !dbg !590
+  br label %bb2, !dbg !590
+
+bb2:                                              ; preds = %bb2, %bb1
+  %10 = load i8** %s2_addr, align 8, !dbg !591
+  %11 = load i8* %10, align 1, !dbg !591
+  %12 = load i8** %s, align 8, !dbg !591
+  store i8 %11, i8* %12, align 1, !dbg !591
+  %13 = load i8** %s, align 8, !dbg !591
+  %14 = load i8* %13, align 1, !dbg !591
+  %15 = icmp ne i8 %14, 0, !dbg !591
+  %16 = zext i1 %15 to i8, !dbg !591
+  %17 = load i8** %s, align 8, !dbg !591
+  %18 = getelementptr inbounds i8* %17, i64 1, !dbg !591
+  store i8* %18, i8** %s, align 8, !dbg !591
+  %19 = load i8** %s2_addr, align 8, !dbg !591
+  %20 = getelementptr inbounds i8* %19, i64 1, !dbg !591
+  store i8* %20, i8** %s2_addr, align 8, !dbg !591
+  %toBool3 = icmp ne i8 %16, 0, !dbg !591
+  br i1 %toBool3, label %bb2, label %bb4, !dbg !591
+
+bb4:                                              ; preds = %bb2
+  %21 = load i8** %s1_addr, align 8, !dbg !592
+  store i8* %21, i8** %0, align 8, !dbg !592
+  %22 = load i8** %0, align 8, !dbg !592
+  store i8* %22, i8** %retval, align 8, !dbg !592
+  %retval5 = load i8** %retval, !dbg !592
+  ret i8* %retval5, !dbg !592
+}
 
 define weak i32* @__errno_location() nounwind readnone {
 entry:
   %retval = alloca i32*
   %0 = alloca i32*
   %"alloca point" = bitcast i32 0 to i32
-  store i32* @errno, i32** %0, align 8, !dbg !589
-  %1 = load i32** %0, align 8, !dbg !589
-  store i32* %1, i32** %retval, align 8, !dbg !589
-  %retval1 = load i32** %retval, !dbg !589
-  ret i32* %retval1, !dbg !589
+  store i32* @errno, i32** %0, align 8, !dbg !593
+  %1 = load i32** %0, align 8, !dbg !593
+  store i32* %1, i32** %retval, align 8, !dbg !593
+  %retval1 = load i32** %retval, !dbg !593
+  ret i32* %retval1, !dbg !593
 }
 
 define weak i32* @__h_errno_location() nounwind readnone {
@@ -549,74 +586,74 @@ entry:
   %retval = alloca i32*
   %0 = alloca i32*
   %"alloca point" = bitcast i32 0 to i32
-  store i32* @h_errno, i32** %0, align 8, !dbg !591
-  %1 = load i32** %0, align 8, !dbg !591
-  store i32* %1, i32** %retval, align 8, !dbg !591
-  %retval1 = load i32** %retval, !dbg !591
-  ret i32* %retval1, !dbg !591
+  store i32* @h_errno, i32** %0, align 8, !dbg !595
+  %1 = load i32** %0, align 8, !dbg !595
+  store i32* %1, i32** %retval, align 8, !dbg !595
+  %retval1 = load i32** %retval, !dbg !595
+  ret i32* %retval1, !dbg !595
 }
 
 define hidden void @_stdio_term() nounwind {
 entry:
   %ptr = alloca %struct.FILE*
   %"alloca point" = bitcast i32 0 to i32
-  %0 = load %struct.FILE** @_stdio_openlist, align 8, !dbg !593
-  store %struct.FILE* %0, %struct.FILE** %ptr, align 8, !dbg !593
-  br label %bb3, !dbg !593
+  %0 = load %struct.FILE** @_stdio_openlist, align 8, !dbg !597
+  store %struct.FILE* %0, %struct.FILE** %ptr, align 8, !dbg !597
+  br label %bb3, !dbg !597
 
 bb:                                               ; preds = %bb3
-  %1 = load %struct.FILE** %ptr, align 8, !dbg !595
-  %2 = getelementptr inbounds %struct.FILE* %1, i32 0, i32 0, !dbg !595
-  %3 = load i16* %2, align 8, !dbg !595
-  %4 = zext i16 %3 to i32, !dbg !595
-  %5 = and i32 %4, 64, !dbg !595
-  %6 = icmp ne i32 %5, 0, !dbg !595
-  br i1 %6, label %bb1, label %bb2, !dbg !595
+  %1 = load %struct.FILE** %ptr, align 8, !dbg !599
+  %2 = getelementptr inbounds %struct.FILE* %1, i32 0, i32 0, !dbg !599
+  %3 = load i16* %2, align 8, !dbg !599
+  %4 = zext i16 %3 to i32, !dbg !599
+  %5 = and i32 %4, 64, !dbg !599
+  %6 = icmp ne i32 %5, 0, !dbg !599
+  br i1 %6, label %bb1, label %bb2, !dbg !599
 
 bb1:                                              ; preds = %bb
-  %7 = load %struct.FILE** %ptr, align 8, !dbg !596
-  %8 = call i64 @__stdio_wcommit(%struct.FILE* noalias %7) nounwind, !dbg !596
-  br label %bb2, !dbg !596
+  %7 = load %struct.FILE** %ptr, align 8, !dbg !600
+  %8 = call i64 @__stdio_wcommit(%struct.FILE* noalias %7) nounwind, !dbg !600
+  br label %bb2, !dbg !600
 
 bb2:                                              ; preds = %bb1, %bb
-  %9 = load %struct.FILE** %ptr, align 8, !dbg !593
-  %10 = getelementptr inbounds %struct.FILE* %9, i32 0, i32 9, !dbg !593
-  %11 = load %struct.FILE** %10, align 8, !dbg !593
-  store %struct.FILE* %11, %struct.FILE** %ptr, align 8, !dbg !593
-  br label %bb3, !dbg !593
+  %9 = load %struct.FILE** %ptr, align 8, !dbg !597
+  %10 = getelementptr inbounds %struct.FILE* %9, i32 0, i32 9, !dbg !597
+  %11 = load %struct.FILE** %10, align 8, !dbg !597
+  store %struct.FILE* %11, %struct.FILE** %ptr, align 8, !dbg !597
+  br label %bb3, !dbg !597
 
 bb3:                                              ; preds = %bb2, %entry
-  %12 = load %struct.FILE** %ptr, align 8, !dbg !593
-  %13 = icmp ne %struct.FILE* %12, null, !dbg !593
-  br i1 %13, label %bb, label %return, !dbg !593
+  %12 = load %struct.FILE** %ptr, align 8, !dbg !597
+  %13 = icmp ne %struct.FILE* %12, null, !dbg !597
+  br i1 %13, label %bb, label %return, !dbg !597
 
 return:                                           ; preds = %bb3
-  ret void, !dbg !597
+  ret void, !dbg !601
 }
 
 define hidden void @_stdio_init() nounwind {
 entry:
   %old_errno = alloca i32
   %"alloca point" = bitcast i32 0 to i32
-  %0 = load i32* @errno, align 4, !dbg !598
-  store i32 %0, i32* %old_errno, align 4, !dbg !598
-  %1 = load i16* getelementptr inbounds ([3 x %struct.FILE]* @_stdio_streams, i64 0, i64 0, i32 0), align 8, !dbg !600
-  %2 = call i32 @isatty(i32 0) nounwind, !dbg !600
-  %3 = sub nsw i32 1, %2, !dbg !600
-  %4 = mul i32 %3, 256, !dbg !600
-  %5 = trunc i32 %4 to i16, !dbg !600
-  %6 = xor i16 %1, %5, !dbg !600
-  store i16 %6, i16* getelementptr inbounds ([3 x %struct.FILE]* @_stdio_streams, i64 0, i64 0, i32 0), align 8, !dbg !600
-  %7 = load i16* getelementptr inbounds ([3 x %struct.FILE]* @_stdio_streams, i64 0, i64 1, i32 0), align 8, !dbg !601
-  %8 = call i32 @isatty(i32 1) nounwind, !dbg !601
-  %9 = sub nsw i32 1, %8, !dbg !601
-  %10 = mul i32 %9, 256, !dbg !601
-  %11 = trunc i32 %10 to i16, !dbg !601
-  %12 = xor i16 %7, %11, !dbg !601
-  store i16 %12, i16* getelementptr inbounds ([3 x %struct.FILE]* @_stdio_streams, i64 0, i64 1, i32 0), align 8, !dbg !601
-  %13 = load i32* %old_errno, align 4, !dbg !602
-  store i32 %13, i32* @errno, align 4, !dbg !602
-  ret void, !dbg !603
+  %0 = load i32* @errno, align 4, !dbg !602
+  store i32 %0, i32* %old_errno, align 4, !dbg !602
+  %1 = load i16* getelementptr inbounds ([3 x %struct.FILE]* @_stdio_streams, i64 0, i64 0, i32 0), align 8, !dbg !604
+  %2 = call i32 @isatty(i32 0) nounwind, !dbg !604
+  %3 = sub nsw i32 1, %2, !dbg !604
+  %4 = mul i32 %3, 256, !dbg !604
+  %5 = trunc i32 %4 to i16, !dbg !604
+  %6 = xor i16 %1, %5, !dbg !604
+  store i16 %6, i16* getelementptr inbounds ([3 x %struct.FILE]* @_stdio_streams, i64 0, i64 0, i32 0), align 8, !dbg !604
+  %7 = load i16* getelementptr inbounds ([3 x %struct.FILE]* @_stdio_streams, i64 0, i64 1, i32 0), align 8, !dbg !605
+  %8 = call i32 @isatty(i32 1) nounwind, !dbg !605
+  %9 = sub nsw i32 1, %8, !dbg !605
+  %10 = mul i32 %9, 256, !dbg !605
+  %11 = trunc i32 %10 to i16, !dbg !605
+  %12 = xor i16 %7, %11, !dbg !605
+  store i16 %12, i16* getelementptr inbounds ([3 x %struct.FILE]* @_stdio_streams, i64 0, i64 1, i32 0), align 8, !dbg !605
+  %13 = load i32* %old_errno, align 4, !dbg !606
+  store i32 %13, i32* @errno, align 4, !dbg !606
+  ret void, !dbg !607
 }
 
 declare void @abort() noreturn nounwind
@@ -630,22 +667,22 @@ entry:
   %rv_addr = alloca i32, align 4
   %"alloca point" = bitcast i32 0 to i32
   store i32 %rv, i32* %rv_addr
-  %0 = load void (i32)** @__exit_cleanup, align 8, !dbg !604
-  %1 = icmp ne void (i32)* %0, null, !dbg !604
-  br i1 %1, label %bb, label %bb1, !dbg !604
+  %0 = load void (i32)** @__exit_cleanup, align 8, !dbg !608
+  %1 = icmp ne void (i32)* %0, null, !dbg !608
+  br i1 %1, label %bb, label %bb1, !dbg !608
 
 bb:                                               ; preds = %entry
-  %2 = load void (i32)** @__exit_cleanup, align 8, !dbg !606
-  %3 = load i32* %rv_addr, align 4, !dbg !606
-  call void %2(i32 %3) nounwind, !dbg !606
-  br label %bb1, !dbg !606
+  %2 = load void (i32)** @__exit_cleanup, align 8, !dbg !610
+  %3 = load i32* %rv_addr, align 4, !dbg !610
+  call void %2(i32 %3) nounwind, !dbg !610
+  br label %bb1, !dbg !610
 
 bb1:                                              ; preds = %bb, %entry
-  call void @__uClibc_fini() nounwind, !dbg !607
-  call void @_stdio_term() nounwind, !dbg !608
-  %4 = load i32* %rv_addr, align 4, !dbg !609
-  call void @_exit(i32 %4) noreturn nounwind, !dbg !609
-  unreachable, !dbg !609
+  call void @__uClibc_fini() nounwind, !dbg !611
+  call void @_stdio_term() nounwind, !dbg !612
+  %4 = load i32* %rv_addr, align 4, !dbg !613
+  call void @_exit(i32 %4) noreturn nounwind, !dbg !613
+  unreachable, !dbg !613
 }
 
 define i8* @memcpy(i8* noalias %s1, i8* noalias %s2, i64 %n) nounwind {
@@ -661,40 +698,40 @@ entry:
   store i8* %s1, i8** %s1_addr
   store i8* %s2, i8** %s2_addr
   store i64 %n, i64* %n_addr
-  %1 = load i8** %s1_addr, align 8, !dbg !610
-  store i8* %1, i8** %r1, align 8, !dbg !610
-  %2 = load i8** %s2_addr, align 8, !dbg !612
-  store i8* %2, i8** %r2, align 8, !dbg !612
-  br label %bb1, !dbg !612
+  %1 = load i8** %s1_addr, align 8, !dbg !614
+  store i8* %1, i8** %r1, align 8, !dbg !614
+  %2 = load i8** %s2_addr, align 8, !dbg !616
+  store i8* %2, i8** %r2, align 8, !dbg !616
+  br label %bb1, !dbg !616
 
 bb:                                               ; preds = %bb1
-  %3 = load i8** %r2, align 8, !dbg !613
-  %4 = load i8* %3, align 1, !dbg !613
-  %5 = load i8** %r1, align 8, !dbg !613
-  store i8 %4, i8* %5, align 1, !dbg !613
-  %6 = load i8** %r1, align 8, !dbg !613
-  %7 = getelementptr inbounds i8* %6, i64 1, !dbg !613
-  store i8* %7, i8** %r1, align 8, !dbg !613
-  %8 = load i8** %r2, align 8, !dbg !613
-  %9 = getelementptr inbounds i8* %8, i64 1, !dbg !613
-  store i8* %9, i8** %r2, align 8, !dbg !613
-  %10 = load i64* %n_addr, align 8, !dbg !614
-  %11 = sub i64 %10, 1, !dbg !614
-  store i64 %11, i64* %n_addr, align 8, !dbg !614
-  br label %bb1, !dbg !614
+  %3 = load i8** %r2, align 8, !dbg !617
+  %4 = load i8* %3, align 1, !dbg !617
+  %5 = load i8** %r1, align 8, !dbg !617
+  store i8 %4, i8* %5, align 1, !dbg !617
+  %6 = load i8** %r1, align 8, !dbg !617
+  %7 = getelementptr inbounds i8* %6, i64 1, !dbg !617
+  store i8* %7, i8** %r1, align 8, !dbg !617
+  %8 = load i8** %r2, align 8, !dbg !617
+  %9 = getelementptr inbounds i8* %8, i64 1, !dbg !617
+  store i8* %9, i8** %r2, align 8, !dbg !617
+  %10 = load i64* %n_addr, align 8, !dbg !618
+  %11 = sub i64 %10, 1, !dbg !618
+  store i64 %11, i64* %n_addr, align 8, !dbg !618
+  br label %bb1, !dbg !618
 
 bb1:                                              ; preds = %bb, %entry
-  %12 = load i64* %n_addr, align 8, !dbg !615
-  %13 = icmp ne i64 %12, 0, !dbg !615
-  br i1 %13, label %bb, label %bb2, !dbg !615
+  %12 = load i64* %n_addr, align 8, !dbg !619
+  %13 = icmp ne i64 %12, 0, !dbg !619
+  br i1 %13, label %bb, label %bb2, !dbg !619
 
 bb2:                                              ; preds = %bb1
-  %14 = load i8** %s1_addr, align 8, !dbg !616
-  store i8* %14, i8** %0, align 8, !dbg !616
-  %15 = load i8** %0, align 8, !dbg !616
-  store i8* %15, i8** %retval, align 8, !dbg !616
-  %retval3 = load i8** %retval, !dbg !616
-  ret i8* %retval3, !dbg !616
+  %14 = load i8** %s1_addr, align 8, !dbg !620
+  store i8* %14, i8** %0, align 8, !dbg !620
+  %15 = load i8** %0, align 8, !dbg !620
+  store i8* %15, i8** %retval, align 8, !dbg !620
+  %retval3 = load i8** %retval, !dbg !620
+  ret i8* %retval3, !dbg !620
 }
 
 define i8* @memset(i8* %s, i32 %c, i64 %n) nounwind {
@@ -709,35 +746,35 @@ entry:
   store i8* %s, i8** %s_addr
   store i32 %c, i32* %c_addr
   store i64 %n, i64* %n_addr
-  %1 = load i8** %s_addr, align 8, !dbg !617
-  store i8* %1, i8** %p, align 8, !dbg !617
-  br label %bb1, !dbg !617
+  %1 = load i8** %s_addr, align 8, !dbg !621
+  store i8* %1, i8** %p, align 8, !dbg !621
+  br label %bb1, !dbg !621
 
 bb:                                               ; preds = %bb1
-  %2 = load i32* %c_addr, align 4, !dbg !619
-  %3 = trunc i32 %2 to i8, !dbg !619
-  %4 = load i8** %p, align 8, !dbg !619
-  store i8 %3, i8* %4, align 1, !dbg !619
-  %5 = load i8** %p, align 8, !dbg !619
-  %6 = getelementptr inbounds i8* %5, i64 1, !dbg !619
-  store i8* %6, i8** %p, align 8, !dbg !619
-  %7 = load i64* %n_addr, align 8, !dbg !620
-  %8 = sub i64 %7, 1, !dbg !620
-  store i64 %8, i64* %n_addr, align 8, !dbg !620
-  br label %bb1, !dbg !620
+  %2 = load i32* %c_addr, align 4, !dbg !623
+  %3 = trunc i32 %2 to i8, !dbg !623
+  %4 = load i8** %p, align 8, !dbg !623
+  store i8 %3, i8* %4, align 1, !dbg !623
+  %5 = load i8** %p, align 8, !dbg !623
+  %6 = getelementptr inbounds i8* %5, i64 1, !dbg !623
+  store i8* %6, i8** %p, align 8, !dbg !623
+  %7 = load i64* %n_addr, align 8, !dbg !624
+  %8 = sub i64 %7, 1, !dbg !624
+  store i64 %8, i64* %n_addr, align 8, !dbg !624
+  br label %bb1, !dbg !624
 
 bb1:                                              ; preds = %bb, %entry
-  %9 = load i64* %n_addr, align 8, !dbg !621
-  %10 = icmp ne i64 %9, 0, !dbg !621
-  br i1 %10, label %bb, label %bb2, !dbg !621
+  %9 = load i64* %n_addr, align 8, !dbg !625
+  %10 = icmp ne i64 %9, 0, !dbg !625
+  br i1 %10, label %bb, label %bb2, !dbg !625
 
 bb2:                                              ; preds = %bb1
-  %11 = load i8** %s_addr, align 8, !dbg !622
-  store i8* %11, i8** %0, align 8, !dbg !622
-  %12 = load i8** %0, align 8, !dbg !622
-  store i8* %12, i8** %retval, align 8, !dbg !622
-  %retval3 = load i8** %retval, !dbg !622
-  ret i8* %retval3, !dbg !622
+  %11 = load i8** %s_addr, align 8, !dbg !626
+  store i8* %11, i8** %0, align 8, !dbg !626
+  %12 = load i8** %0, align 8, !dbg !626
+  store i8* %12, i8** %retval, align 8, !dbg !626
+  %retval3 = load i8** %retval, !dbg !626
+  ret i8* %retval3, !dbg !626
 }
 
 define i32 @__sigismember(%struct.__sigset_t* %__set, i32 %__sig) nounwind {
@@ -751,35 +788,35 @@ entry:
   %"alloca point" = bitcast i32 0 to i32
   store %struct.__sigset_t* %__set, %struct.__sigset_t** %__set_addr
   store i32 %__sig, i32* %__sig_addr
-  %1 = load i32* %__sig_addr, align 4, !dbg !623
-  %2 = sub nsw i32 %1, 1, !dbg !623
-  %3 = and i32 %2, 63, !dbg !623
-  %.cast = zext i32 %3 to i64, !dbg !623
+  %1 = load i32* %__sig_addr, align 4, !dbg !627
+  %2 = sub nsw i32 %1, 1, !dbg !627
+  %3 = and i32 %2, 63, !dbg !627
+  %.cast = zext i32 %3 to i64, !dbg !627
   %int_cast_to_i641 = bitcast i64 %.cast to i64
-  call void @klee_overshift_check(i64 64, i64 %int_cast_to_i641), !dbg !623
-  %4 = shl i64 1, %.cast, !dbg !623
-  store i64 %4, i64* %__mask, align 8, !dbg !623
-  %5 = load i32* %__sig_addr, align 4, !dbg !623
-  %6 = sub nsw i32 %5, 1, !dbg !623
-  %7 = sext i32 %6 to i64, !dbg !623
+  call void @klee_overshift_check(i64 64, i64 %int_cast_to_i641), !dbg !627
+  %4 = shl i64 1, %.cast, !dbg !627
+  store i64 %4, i64* %__mask, align 8, !dbg !627
+  %5 = load i32* %__sig_addr, align 4, !dbg !627
+  %6 = sub nsw i32 %5, 1, !dbg !627
+  %7 = sext i32 %6 to i64, !dbg !627
   %int_cast_to_i64 = bitcast i64 64 to i64
-  call void @klee_div_zero_check(i64 %int_cast_to_i64), !dbg !623
-  %8 = udiv i64 %7, 64, !dbg !623
-  store i64 %8, i64* %__word, align 8, !dbg !623
-  %9 = load i64* %__word, align 8, !dbg !623
-  %10 = load %struct.__sigset_t** %__set_addr, align 8, !dbg !623
-  %11 = getelementptr inbounds %struct.__sigset_t* %10, i32 0, i32 0, !dbg !623
-  %12 = getelementptr inbounds [16 x i64]* %11, i64 0, i64 %9, !dbg !623
-  %13 = load i64* %12, align 8, !dbg !623
-  %14 = load i64* %__mask, align 8, !dbg !623
-  %15 = and i64 %13, %14, !dbg !623
-  %16 = icmp ne i64 %15, 0, !dbg !623
-  %17 = zext i1 %16 to i32, !dbg !623
-  store i32 %17, i32* %0, align 4, !dbg !623
-  %18 = load i32* %0, align 4, !dbg !623
-  store i32 %18, i32* %retval, align 4, !dbg !623
-  %retval1 = load i32* %retval, !dbg !623
-  ret i32 %retval1, !dbg !624
+  call void @klee_div_zero_check(i64 %int_cast_to_i64), !dbg !627
+  %8 = udiv i64 %7, 64, !dbg !627
+  store i64 %8, i64* %__word, align 8, !dbg !627
+  %9 = load i64* %__word, align 8, !dbg !627
+  %10 = load %struct.__sigset_t** %__set_addr, align 8, !dbg !627
+  %11 = getelementptr inbounds %struct.__sigset_t* %10, i32 0, i32 0, !dbg !627
+  %12 = getelementptr inbounds [16 x i64]* %11, i64 0, i64 %9, !dbg !627
+  %13 = load i64* %12, align 8, !dbg !627
+  %14 = load i64* %__mask, align 8, !dbg !627
+  %15 = and i64 %13, %14, !dbg !627
+  %16 = icmp ne i64 %15, 0, !dbg !627
+  %17 = zext i1 %16 to i32, !dbg !627
+  store i32 %17, i32* %0, align 4, !dbg !627
+  %18 = load i32* %0, align 4, !dbg !627
+  store i32 %18, i32* %retval, align 4, !dbg !627
+  %retval1 = load i32* %retval, !dbg !627
+  ret i32 %retval1, !dbg !628
 }
 
 define i32 @__sigaddset(%struct.__sigset_t* %__set, i32 %__sig) nounwind {
@@ -793,38 +830,38 @@ entry:
   %"alloca point" = bitcast i32 0 to i32
   store %struct.__sigset_t* %__set, %struct.__sigset_t** %__set_addr
   store i32 %__sig, i32* %__sig_addr
-  %1 = load i32* %__sig_addr, align 4, !dbg !626
-  %2 = sub nsw i32 %1, 1, !dbg !626
-  %3 = and i32 %2, 63, !dbg !626
-  %.cast = zext i32 %3 to i64, !dbg !626
+  %1 = load i32* %__sig_addr, align 4, !dbg !630
+  %2 = sub nsw i32 %1, 1, !dbg !630
+  %3 = and i32 %2, 63, !dbg !630
+  %.cast = zext i32 %3 to i64, !dbg !630
   %int_cast_to_i641 = bitcast i64 %.cast to i64
-  call void @klee_overshift_check(i64 64, i64 %int_cast_to_i641), !dbg !626
-  %4 = shl i64 1, %.cast, !dbg !626
-  store i64 %4, i64* %__mask, align 8, !dbg !626
-  %5 = load i32* %__sig_addr, align 4, !dbg !626
-  %6 = sub nsw i32 %5, 1, !dbg !626
-  %7 = sext i32 %6 to i64, !dbg !626
+  call void @klee_overshift_check(i64 64, i64 %int_cast_to_i641), !dbg !630
+  %4 = shl i64 1, %.cast, !dbg !630
+  store i64 %4, i64* %__mask, align 8, !dbg !630
+  %5 = load i32* %__sig_addr, align 4, !dbg !630
+  %6 = sub nsw i32 %5, 1, !dbg !630
+  %7 = sext i32 %6 to i64, !dbg !630
   %int_cast_to_i64 = bitcast i64 64 to i64
-  call void @klee_div_zero_check(i64 %int_cast_to_i64), !dbg !626
-  %8 = udiv i64 %7, 64, !dbg !626
-  store i64 %8, i64* %__word, align 8, !dbg !626
-  %9 = load i64* %__word, align 8, !dbg !626
-  %10 = load i64* %__word, align 8, !dbg !626
-  %11 = load %struct.__sigset_t** %__set_addr, align 8, !dbg !626
-  %12 = getelementptr inbounds %struct.__sigset_t* %11, i32 0, i32 0, !dbg !626
-  %13 = getelementptr inbounds [16 x i64]* %12, i64 0, i64 %10, !dbg !626
-  %14 = load i64* %13, align 8, !dbg !626
-  %15 = load i64* %__mask, align 8, !dbg !626
-  %16 = or i64 %14, %15, !dbg !626
-  %17 = load %struct.__sigset_t** %__set_addr, align 8, !dbg !626
-  %18 = getelementptr inbounds %struct.__sigset_t* %17, i32 0, i32 0, !dbg !626
-  %19 = getelementptr inbounds [16 x i64]* %18, i64 0, i64 %9, !dbg !626
-  store i64 %16, i64* %19, align 8, !dbg !626
-  store i32 0, i32* %0, align 4, !dbg !626
-  %20 = load i32* %0, align 4, !dbg !626
-  store i32 %20, i32* %retval, align 4, !dbg !626
-  %retval1 = load i32* %retval, !dbg !626
-  ret i32 %retval1, !dbg !627
+  call void @klee_div_zero_check(i64 %int_cast_to_i64), !dbg !630
+  %8 = udiv i64 %7, 64, !dbg !630
+  store i64 %8, i64* %__word, align 8, !dbg !630
+  %9 = load i64* %__word, align 8, !dbg !630
+  %10 = load i64* %__word, align 8, !dbg !630
+  %11 = load %struct.__sigset_t** %__set_addr, align 8, !dbg !630
+  %12 = getelementptr inbounds %struct.__sigset_t* %11, i32 0, i32 0, !dbg !630
+  %13 = getelementptr inbounds [16 x i64]* %12, i64 0, i64 %10, !dbg !630
+  %14 = load i64* %13, align 8, !dbg !630
+  %15 = load i64* %__mask, align 8, !dbg !630
+  %16 = or i64 %14, %15, !dbg !630
+  %17 = load %struct.__sigset_t** %__set_addr, align 8, !dbg !630
+  %18 = getelementptr inbounds %struct.__sigset_t* %17, i32 0, i32 0, !dbg !630
+  %19 = getelementptr inbounds [16 x i64]* %18, i64 0, i64 %9, !dbg !630
+  store i64 %16, i64* %19, align 8, !dbg !630
+  store i32 0, i32* %0, align 4, !dbg !630
+  %20 = load i32* %0, align 4, !dbg !630
+  store i32 %20, i32* %retval, align 4, !dbg !630
+  %retval1 = load i32* %retval, !dbg !630
+  ret i32 %retval1, !dbg !631
 }
 
 define i32 @__sigdelset(%struct.__sigset_t* %__set, i32 %__sig) nounwind {
@@ -838,39 +875,39 @@ entry:
   %"alloca point" = bitcast i32 0 to i32
   store %struct.__sigset_t* %__set, %struct.__sigset_t** %__set_addr
   store i32 %__sig, i32* %__sig_addr
-  %1 = load i32* %__sig_addr, align 4, !dbg !629
-  %2 = sub nsw i32 %1, 1, !dbg !629
-  %3 = and i32 %2, 63, !dbg !629
-  %.cast = zext i32 %3 to i64, !dbg !629
+  %1 = load i32* %__sig_addr, align 4, !dbg !633
+  %2 = sub nsw i32 %1, 1, !dbg !633
+  %3 = and i32 %2, 63, !dbg !633
+  %.cast = zext i32 %3 to i64, !dbg !633
   %int_cast_to_i641 = bitcast i64 %.cast to i64
-  call void @klee_overshift_check(i64 64, i64 %int_cast_to_i641), !dbg !629
-  %4 = shl i64 1, %.cast, !dbg !629
-  store i64 %4, i64* %__mask, align 8, !dbg !629
-  %5 = load i32* %__sig_addr, align 4, !dbg !629
-  %6 = sub nsw i32 %5, 1, !dbg !629
-  %7 = sext i32 %6 to i64, !dbg !629
+  call void @klee_overshift_check(i64 64, i64 %int_cast_to_i641), !dbg !633
+  %4 = shl i64 1, %.cast, !dbg !633
+  store i64 %4, i64* %__mask, align 8, !dbg !633
+  %5 = load i32* %__sig_addr, align 4, !dbg !633
+  %6 = sub nsw i32 %5, 1, !dbg !633
+  %7 = sext i32 %6 to i64, !dbg !633
   %int_cast_to_i64 = bitcast i64 64 to i64
-  call void @klee_div_zero_check(i64 %int_cast_to_i64), !dbg !629
-  %8 = udiv i64 %7, 64, !dbg !629
-  store i64 %8, i64* %__word, align 8, !dbg !629
-  %9 = load i64* %__word, align 8, !dbg !629
-  %10 = load i64* %__word, align 8, !dbg !629
-  %11 = load %struct.__sigset_t** %__set_addr, align 8, !dbg !629
-  %12 = getelementptr inbounds %struct.__sigset_t* %11, i32 0, i32 0, !dbg !629
-  %13 = getelementptr inbounds [16 x i64]* %12, i64 0, i64 %10, !dbg !629
-  %14 = load i64* %13, align 8, !dbg !629
-  %15 = load i64* %__mask, align 8, !dbg !629
-  %not = xor i64 %15, -1, !dbg !629
-  %16 = and i64 %14, %not, !dbg !629
-  %17 = load %struct.__sigset_t** %__set_addr, align 8, !dbg !629
-  %18 = getelementptr inbounds %struct.__sigset_t* %17, i32 0, i32 0, !dbg !629
-  %19 = getelementptr inbounds [16 x i64]* %18, i64 0, i64 %9, !dbg !629
-  store i64 %16, i64* %19, align 8, !dbg !629
-  store i32 0, i32* %0, align 4, !dbg !629
-  %20 = load i32* %0, align 4, !dbg !629
-  store i32 %20, i32* %retval, align 4, !dbg !629
-  %retval2 = load i32* %retval, !dbg !629
-  ret i32 %retval2, !dbg !630
+  call void @klee_div_zero_check(i64 %int_cast_to_i64), !dbg !633
+  %8 = udiv i64 %7, 64, !dbg !633
+  store i64 %8, i64* %__word, align 8, !dbg !633
+  %9 = load i64* %__word, align 8, !dbg !633
+  %10 = load i64* %__word, align 8, !dbg !633
+  %11 = load %struct.__sigset_t** %__set_addr, align 8, !dbg !633
+  %12 = getelementptr inbounds %struct.__sigset_t* %11, i32 0, i32 0, !dbg !633
+  %13 = getelementptr inbounds [16 x i64]* %12, i64 0, i64 %10, !dbg !633
+  %14 = load i64* %13, align 8, !dbg !633
+  %15 = load i64* %__mask, align 8, !dbg !633
+  %not = xor i64 %15, -1, !dbg !633
+  %16 = and i64 %14, %not, !dbg !633
+  %17 = load %struct.__sigset_t** %__set_addr, align 8, !dbg !633
+  %18 = getelementptr inbounds %struct.__sigset_t* %17, i32 0, i32 0, !dbg !633
+  %19 = getelementptr inbounds [16 x i64]* %18, i64 0, i64 %9, !dbg !633
+  store i64 %16, i64* %19, align 8, !dbg !633
+  store i32 0, i32* %0, align 4, !dbg !633
+  %20 = load i32* %0, align 4, !dbg !633
+  store i32 %20, i32* %retval, align 4, !dbg !633
+  %retval2 = load i32* %retval, !dbg !633
+  ret i32 %retval2, !dbg !634
 }
 
 define hidden i64 @__stdio_wcommit(%struct.FILE* noalias %stream) nounwind {
@@ -881,50 +918,50 @@ entry:
   %bufsize = alloca i64
   %"alloca point" = bitcast i32 0 to i32
   store %struct.FILE* %stream, %struct.FILE** %stream_addr
-  %1 = load %struct.FILE** %stream_addr, align 8, !dbg !632
-  %2 = getelementptr inbounds %struct.FILE* %1, i32 0, i32 5, !dbg !632
-  %3 = load i8** %2, align 8, !dbg !632
-  %4 = ptrtoint i8* %3 to i64, !dbg !632
-  %5 = load %struct.FILE** %stream_addr, align 8, !dbg !632
-  %6 = getelementptr inbounds %struct.FILE* %5, i32 0, i32 3, !dbg !632
-  %7 = load i8** %6, align 8, !dbg !632
-  %8 = ptrtoint i8* %7 to i64, !dbg !632
-  %9 = sub nsw i64 %4, %8, !dbg !632
-  store i64 %9, i64* %bufsize, align 8, !dbg !632
-  %10 = load i64* %bufsize, align 8, !dbg !632
-  %11 = icmp ne i64 %10, 0, !dbg !632
-  br i1 %11, label %bb, label %bb1, !dbg !632
+  %1 = load %struct.FILE** %stream_addr, align 8, !dbg !636
+  %2 = getelementptr inbounds %struct.FILE* %1, i32 0, i32 5, !dbg !636
+  %3 = load i8** %2, align 8, !dbg !636
+  %4 = ptrtoint i8* %3 to i64, !dbg !636
+  %5 = load %struct.FILE** %stream_addr, align 8, !dbg !636
+  %6 = getelementptr inbounds %struct.FILE* %5, i32 0, i32 3, !dbg !636
+  %7 = load i8** %6, align 8, !dbg !636
+  %8 = ptrtoint i8* %7 to i64, !dbg !636
+  %9 = sub nsw i64 %4, %8, !dbg !636
+  store i64 %9, i64* %bufsize, align 8, !dbg !636
+  %10 = load i64* %bufsize, align 8, !dbg !636
+  %11 = icmp ne i64 %10, 0, !dbg !636
+  br i1 %11, label %bb, label %bb1, !dbg !636
 
 bb:                                               ; preds = %entry
-  %12 = load %struct.FILE** %stream_addr, align 8, !dbg !634
-  %13 = getelementptr inbounds %struct.FILE* %12, i32 0, i32 3, !dbg !634
-  %14 = load i8** %13, align 8, !dbg !634
-  %15 = load %struct.FILE** %stream_addr, align 8, !dbg !634
-  %16 = getelementptr inbounds %struct.FILE* %15, i32 0, i32 5, !dbg !634
-  store i8* %14, i8** %16, align 8, !dbg !634
-  %17 = load %struct.FILE** %stream_addr, align 8, !dbg !635
-  %18 = getelementptr inbounds %struct.FILE* %17, i32 0, i32 3, !dbg !635
-  %19 = load i8** %18, align 8, !dbg !635
-  %20 = load %struct.FILE** %stream_addr, align 8, !dbg !635
-  %21 = load i64* %bufsize, align 8, !dbg !635
-  %22 = call i64 @__stdio_WRITE(%struct.FILE* %20, i8* %19, i64 %21) nounwind, !dbg !635
-  br label %bb1, !dbg !635
+  %12 = load %struct.FILE** %stream_addr, align 8, !dbg !638
+  %13 = getelementptr inbounds %struct.FILE* %12, i32 0, i32 3, !dbg !638
+  %14 = load i8** %13, align 8, !dbg !638
+  %15 = load %struct.FILE** %stream_addr, align 8, !dbg !638
+  %16 = getelementptr inbounds %struct.FILE* %15, i32 0, i32 5, !dbg !638
+  store i8* %14, i8** %16, align 8, !dbg !638
+  %17 = load %struct.FILE** %stream_addr, align 8, !dbg !639
+  %18 = getelementptr inbounds %struct.FILE* %17, i32 0, i32 3, !dbg !639
+  %19 = load i8** %18, align 8, !dbg !639
+  %20 = load %struct.FILE** %stream_addr, align 8, !dbg !639
+  %21 = load i64* %bufsize, align 8, !dbg !639
+  %22 = call i64 @__stdio_WRITE(%struct.FILE* %20, i8* %19, i64 %21) nounwind, !dbg !639
+  br label %bb1, !dbg !639
 
 bb1:                                              ; preds = %bb, %entry
-  %23 = load %struct.FILE** %stream_addr, align 8, !dbg !636
-  %24 = getelementptr inbounds %struct.FILE* %23, i32 0, i32 5, !dbg !636
-  %25 = load i8** %24, align 8, !dbg !636
-  %26 = ptrtoint i8* %25 to i64, !dbg !636
-  %27 = load %struct.FILE** %stream_addr, align 8, !dbg !636
-  %28 = getelementptr inbounds %struct.FILE* %27, i32 0, i32 3, !dbg !636
-  %29 = load i8** %28, align 8, !dbg !636
-  %30 = ptrtoint i8* %29 to i64, !dbg !636
-  %31 = sub nsw i64 %26, %30, !dbg !636
-  store i64 %31, i64* %0, align 8, !dbg !636
-  %32 = load i64* %0, align 8, !dbg !636
-  store i64 %32, i64* %retval, align 8, !dbg !636
-  %retval2 = load i64* %retval, !dbg !636
-  ret i64 %retval2, !dbg !636
+  %23 = load %struct.FILE** %stream_addr, align 8, !dbg !640
+  %24 = getelementptr inbounds %struct.FILE* %23, i32 0, i32 5, !dbg !640
+  %25 = load i8** %24, align 8, !dbg !640
+  %26 = ptrtoint i8* %25 to i64, !dbg !640
+  %27 = load %struct.FILE** %stream_addr, align 8, !dbg !640
+  %28 = getelementptr inbounds %struct.FILE* %27, i32 0, i32 3, !dbg !640
+  %29 = load i8** %28, align 8, !dbg !640
+  %30 = ptrtoint i8* %29 to i64, !dbg !640
+  %31 = sub nsw i64 %26, %30, !dbg !640
+  store i64 %31, i64* %0, align 8, !dbg !640
+  %32 = load i64* %0, align 8, !dbg !640
+  store i64 %32, i64* %retval, align 8, !dbg !640
+  %retval2 = load i64* %retval, !dbg !640
+  ret i64 %retval2, !dbg !640
 }
 
 define i32 @isatty(i32 %fd) nounwind {
@@ -935,37 +972,16 @@ entry:
   %term = alloca %struct.termios
   %"alloca point" = bitcast i32 0 to i32
   store i32 %fd, i32* %fd_addr
-  %1 = load i32* %fd_addr, align 4, !dbg !637
-  %2 = call i32 @tcgetattr(i32 %1, %struct.termios* %term) nounwind, !dbg !637
-  %3 = icmp eq i32 %2, 0, !dbg !637
-  %4 = zext i1 %3 to i32, !dbg !637
-  store i32 %4, i32* %0, align 4, !dbg !637
-  %5 = load i32* %0, align 4, !dbg !637
-  store i32 %5, i32* %retval, align 4, !dbg !637
-  %retval1 = load i32* %retval, !dbg !637
-  ret i32 %retval1, !dbg !637
+  %1 = load i32* %fd_addr, align 4, !dbg !641
+  %2 = call i32 @tcgetattr(i32 %1, %struct.termios* %term) nounwind, !dbg !641
+  %3 = icmp eq i32 %2, 0, !dbg !641
+  %4 = zext i1 %3 to i32, !dbg !641
+  store i32 %4, i32* %0, align 4, !dbg !641
+  %5 = load i32* %0, align 4, !dbg !641
+  store i32 %5, i32* %retval, align 4, !dbg !641
+  %retval1 = load i32* %retval, !dbg !641
+  ret i32 %retval1, !dbg !641
 }
-
-define hidden i32 @__raise(i32 %signo) nounwind {
-entry:
-  %signo_addr = alloca i32, align 4
-  %retval = alloca i32
-  %0 = alloca i32
-  %"alloca point" = bitcast i32 0 to i32
-  store i32 %signo, i32* %signo_addr
-  %1 = call i32 @getpid() nounwind, !dbg !639
-  %2 = load i32* %signo_addr, align 4, !dbg !639
-  %3 = call i32 @kill(i32 %1, i32 %2) nounwind, !dbg !639
-  store i32 %3, i32* %0, align 4, !dbg !639
-  %4 = load i32* %0, align 4, !dbg !639
-  store i32 %4, i32* %retval, align 4, !dbg !639
-  %retval1 = load i32* %retval, !dbg !639
-  ret i32 %retval1, !dbg !639
-}
-
-declare i32 @getpid() nounwind
-
-declare i32 @kill(i32, i32) nounwind
 
 define i32 @__libc_sigaction(i32 %sig, %struct.sigaction* %act, %struct.sigaction* %oact) nounwind {
 entry:
@@ -983,113 +999,190 @@ entry:
   store i32 %sig, i32* %sig_addr
   store %struct.sigaction* %act, %struct.sigaction** %act_addr
   store %struct.sigaction* %oact, %struct.sigaction** %oact_addr
-  %1 = load %struct.sigaction** %act_addr, align 8, !dbg !641
-  %2 = icmp ne %struct.sigaction* %1, null, !dbg !641
-  br i1 %2, label %bb, label %bb1, !dbg !641
+  %1 = load %struct.sigaction** %act_addr, align 8, !dbg !643
+  %2 = icmp ne %struct.sigaction* %1, null, !dbg !643
+  br i1 %2, label %bb, label %bb1, !dbg !643
 
 bb:                                               ; preds = %entry
-  %3 = load %struct.sigaction** %act_addr, align 8, !dbg !643
-  %4 = getelementptr inbounds %struct.sigaction* %3, i32 0, i32 0, !dbg !643
-  %5 = getelementptr inbounds %0* %4, i32 0, i32 0, !dbg !643
-  %6 = load void (i32)** %5, align 8, !dbg !643
-  %7 = getelementptr inbounds %struct.kernel_sigaction* %kact, i32 0, i32 0, !dbg !643
-  store void (i32)* %6, void (i32)** %7, align 8, !dbg !643
-  %8 = load %struct.sigaction** %act_addr, align 8, !dbg !644
-  %9 = getelementptr inbounds %struct.sigaction* %8, i32 0, i32 1, !dbg !644
-  %10 = getelementptr inbounds %struct.kernel_sigaction* %kact, i32 0, i32 3, !dbg !644
-  %11 = bitcast %struct.__sigset_t* %10 to i8*, !dbg !644
-  %12 = bitcast %struct.__sigset_t* %9 to i8*, !dbg !644
-  %13 = call i8* @memcpy(i8* noalias %11, i8* noalias %12, i64 128) nounwind, !dbg !644
-  %14 = load %struct.sigaction** %act_addr, align 8, !dbg !645
-  %15 = getelementptr inbounds %struct.sigaction* %14, i32 0, i32 2, !dbg !645
-  %16 = load i32* %15, align 8, !dbg !645
-  %17 = sext i32 %16 to i64, !dbg !645
-  %18 = getelementptr inbounds %struct.kernel_sigaction* %kact, i32 0, i32 1, !dbg !645
-  store i64 %17, i64* %18, align 8, !dbg !645
-  %19 = load %struct.sigaction** %act_addr, align 8, !dbg !646
-  %20 = getelementptr inbounds %struct.sigaction* %19, i32 0, i32 3, !dbg !646
-  %21 = load void ()** %20, align 8, !dbg !646
-  %22 = getelementptr inbounds %struct.kernel_sigaction* %kact, i32 0, i32 2, !dbg !646
-  store void ()* %21, void ()** %22, align 8, !dbg !646
-  br label %bb1, !dbg !646
+  %3 = load %struct.sigaction** %act_addr, align 8, !dbg !645
+  %4 = getelementptr inbounds %struct.sigaction* %3, i32 0, i32 0, !dbg !645
+  %5 = getelementptr inbounds %0* %4, i32 0, i32 0, !dbg !645
+  %6 = load void (i32)** %5, align 8, !dbg !645
+  %7 = getelementptr inbounds %struct.kernel_sigaction* %kact, i32 0, i32 0, !dbg !645
+  store void (i32)* %6, void (i32)** %7, align 8, !dbg !645
+  %8 = load %struct.sigaction** %act_addr, align 8, !dbg !646
+  %9 = getelementptr inbounds %struct.sigaction* %8, i32 0, i32 1, !dbg !646
+  %10 = getelementptr inbounds %struct.kernel_sigaction* %kact, i32 0, i32 3, !dbg !646
+  %11 = bitcast %struct.__sigset_t* %10 to i8*, !dbg !646
+  %12 = bitcast %struct.__sigset_t* %9 to i8*, !dbg !646
+  %13 = call i8* @memcpy(i8* noalias %11, i8* noalias %12, i64 128) nounwind, !dbg !646
+  %14 = load %struct.sigaction** %act_addr, align 8, !dbg !647
+  %15 = getelementptr inbounds %struct.sigaction* %14, i32 0, i32 2, !dbg !647
+  %16 = load i32* %15, align 8, !dbg !647
+  %17 = sext i32 %16 to i64, !dbg !647
+  %18 = getelementptr inbounds %struct.kernel_sigaction* %kact, i32 0, i32 1, !dbg !647
+  store i64 %17, i64* %18, align 8, !dbg !647
+  %19 = load %struct.sigaction** %act_addr, align 8, !dbg !648
+  %20 = getelementptr inbounds %struct.sigaction* %19, i32 0, i32 3, !dbg !648
+  %21 = load void ()** %20, align 8, !dbg !648
+  %22 = getelementptr inbounds %struct.kernel_sigaction* %kact, i32 0, i32 2, !dbg !648
+  store void ()* %21, void ()** %22, align 8, !dbg !648
+  br label %bb1, !dbg !648
 
 bb1:                                              ; preds = %bb, %entry
-  %23 = load %struct.sigaction** %oact_addr, align 8, !dbg !647
-  %24 = icmp ne %struct.sigaction* %23, null, !dbg !647
-  br i1 %24, label %bb2, label %bb3, !dbg !647
+  %23 = load %struct.sigaction** %oact_addr, align 8, !dbg !649
+  %24 = icmp ne %struct.sigaction* %23, null, !dbg !649
+  br i1 %24, label %bb2, label %bb3, !dbg !649
 
 bb2:                                              ; preds = %bb1
-  store %struct.kernel_sigaction* %koact, %struct.kernel_sigaction** %iftmp.0, align 8, !dbg !647
-  br label %bb4, !dbg !647
+  store %struct.kernel_sigaction* %koact, %struct.kernel_sigaction** %iftmp.0, align 8, !dbg !649
+  br label %bb4, !dbg !649
 
 bb3:                                              ; preds = %bb1
-  store %struct.kernel_sigaction* null, %struct.kernel_sigaction** %iftmp.0, align 8, !dbg !647
-  br label %bb4, !dbg !647
+  store %struct.kernel_sigaction* null, %struct.kernel_sigaction** %iftmp.0, align 8, !dbg !649
+  br label %bb4, !dbg !649
 
 bb4:                                              ; preds = %bb3, %bb2
-  %25 = load %struct.sigaction** %act_addr, align 8, !dbg !647
-  %26 = icmp ne %struct.sigaction* %25, null, !dbg !647
-  br i1 %26, label %bb5, label %bb6, !dbg !647
+  %25 = load %struct.sigaction** %act_addr, align 8, !dbg !649
+  %26 = icmp ne %struct.sigaction* %25, null, !dbg !649
+  br i1 %26, label %bb5, label %bb6, !dbg !649
 
 bb5:                                              ; preds = %bb4
-  store %struct.kernel_sigaction* %kact, %struct.kernel_sigaction** %iftmp.1, align 8, !dbg !647
-  br label %bb7, !dbg !647
+  store %struct.kernel_sigaction* %kact, %struct.kernel_sigaction** %iftmp.1, align 8, !dbg !649
+  br label %bb7, !dbg !649
 
 bb6:                                              ; preds = %bb4
-  store %struct.kernel_sigaction* null, %struct.kernel_sigaction** %iftmp.1, align 8, !dbg !647
-  br label %bb7, !dbg !647
+  store %struct.kernel_sigaction* null, %struct.kernel_sigaction** %iftmp.1, align 8, !dbg !649
+  br label %bb7, !dbg !649
 
 bb7:                                              ; preds = %bb6, %bb5
-  %27 = load i32* %sig_addr, align 4, !dbg !647
-  %28 = load %struct.kernel_sigaction** %iftmp.1, align 8, !dbg !647
-  %29 = load %struct.kernel_sigaction** %iftmp.0, align 8, !dbg !647
-  %30 = call i32 @__syscall_rt_sigaction(i32 %27, %struct.kernel_sigaction* %28, %struct.kernel_sigaction* %29, i64 8) nounwind, !dbg !647
-  store i32 %30, i32* %result, align 4, !dbg !647
-  %31 = load %struct.sigaction** %oact_addr, align 8, !dbg !648
-  %32 = icmp ne %struct.sigaction* %31, null, !dbg !648
-  br i1 %32, label %bb8, label %bb10, !dbg !648
+  %27 = load i32* %sig_addr, align 4, !dbg !649
+  %28 = load %struct.kernel_sigaction** %iftmp.1, align 8, !dbg !649
+  %29 = load %struct.kernel_sigaction** %iftmp.0, align 8, !dbg !649
+  %30 = call i32 @__syscall_rt_sigaction(i32 %27, %struct.kernel_sigaction* %28, %struct.kernel_sigaction* %29, i64 8) nounwind, !dbg !649
+  store i32 %30, i32* %result, align 4, !dbg !649
+  %31 = load %struct.sigaction** %oact_addr, align 8, !dbg !650
+  %32 = icmp ne %struct.sigaction* %31, null, !dbg !650
+  br i1 %32, label %bb8, label %bb10, !dbg !650
 
 bb8:                                              ; preds = %bb7
-  %33 = load i32* %result, align 4, !dbg !648
-  %34 = icmp sge i32 %33, 0, !dbg !648
-  br i1 %34, label %bb9, label %bb10, !dbg !648
+  %33 = load i32* %result, align 4, !dbg !650
+  %34 = icmp sge i32 %33, 0, !dbg !650
+  br i1 %34, label %bb9, label %bb10, !dbg !650
 
 bb9:                                              ; preds = %bb8
-  %35 = getelementptr inbounds %struct.kernel_sigaction* %koact, i32 0, i32 0, !dbg !649
-  %36 = load void (i32)** %35, align 8, !dbg !649
-  %37 = load %struct.sigaction** %oact_addr, align 8, !dbg !649
-  %38 = getelementptr inbounds %struct.sigaction* %37, i32 0, i32 0, !dbg !649
-  %39 = getelementptr inbounds %0* %38, i32 0, i32 0, !dbg !649
-  store void (i32)* %36, void (i32)** %39, align 8, !dbg !649
-  %40 = load %struct.sigaction** %oact_addr, align 8, !dbg !650
-  %41 = getelementptr inbounds %struct.sigaction* %40, i32 0, i32 1, !dbg !650
-  %42 = bitcast %struct.__sigset_t* %41 to i8*, !dbg !650
-  %43 = getelementptr inbounds %struct.kernel_sigaction* %koact, i32 0, i32 3, !dbg !650
-  %44 = bitcast %struct.__sigset_t* %43 to i8*, !dbg !650
-  %45 = call i8* @memcpy(i8* noalias %42, i8* noalias %44, i64 128) nounwind, !dbg !650
-  %46 = getelementptr inbounds %struct.kernel_sigaction* %koact, i32 0, i32 1, !dbg !651
-  %47 = load i64* %46, align 8, !dbg !651
-  %48 = trunc i64 %47 to i32, !dbg !651
-  %49 = load %struct.sigaction** %oact_addr, align 8, !dbg !651
-  %50 = getelementptr inbounds %struct.sigaction* %49, i32 0, i32 2, !dbg !651
-  store i32 %48, i32* %50, align 8, !dbg !651
-  %51 = getelementptr inbounds %struct.kernel_sigaction* %koact, i32 0, i32 2, !dbg !652
-  %52 = load void ()** %51, align 8, !dbg !652
-  %53 = load %struct.sigaction** %oact_addr, align 8, !dbg !652
-  %54 = getelementptr inbounds %struct.sigaction* %53, i32 0, i32 3, !dbg !652
-  store void ()* %52, void ()** %54, align 8, !dbg !652
-  br label %bb10, !dbg !652
+  %35 = getelementptr inbounds %struct.kernel_sigaction* %koact, i32 0, i32 0, !dbg !651
+  %36 = load void (i32)** %35, align 8, !dbg !651
+  %37 = load %struct.sigaction** %oact_addr, align 8, !dbg !651
+  %38 = getelementptr inbounds %struct.sigaction* %37, i32 0, i32 0, !dbg !651
+  %39 = getelementptr inbounds %0* %38, i32 0, i32 0, !dbg !651
+  store void (i32)* %36, void (i32)** %39, align 8, !dbg !651
+  %40 = load %struct.sigaction** %oact_addr, align 8, !dbg !652
+  %41 = getelementptr inbounds %struct.sigaction* %40, i32 0, i32 1, !dbg !652
+  %42 = bitcast %struct.__sigset_t* %41 to i8*, !dbg !652
+  %43 = getelementptr inbounds %struct.kernel_sigaction* %koact, i32 0, i32 3, !dbg !652
+  %44 = bitcast %struct.__sigset_t* %43 to i8*, !dbg !652
+  %45 = call i8* @memcpy(i8* noalias %42, i8* noalias %44, i64 128) nounwind, !dbg !652
+  %46 = getelementptr inbounds %struct.kernel_sigaction* %koact, i32 0, i32 1, !dbg !653
+  %47 = load i64* %46, align 8, !dbg !653
+  %48 = trunc i64 %47 to i32, !dbg !653
+  %49 = load %struct.sigaction** %oact_addr, align 8, !dbg !653
+  %50 = getelementptr inbounds %struct.sigaction* %49, i32 0, i32 2, !dbg !653
+  store i32 %48, i32* %50, align 8, !dbg !653
+  %51 = getelementptr inbounds %struct.kernel_sigaction* %koact, i32 0, i32 2, !dbg !654
+  %52 = load void ()** %51, align 8, !dbg !654
+  %53 = load %struct.sigaction** %oact_addr, align 8, !dbg !654
+  %54 = getelementptr inbounds %struct.sigaction* %53, i32 0, i32 3, !dbg !654
+  store void ()* %52, void ()** %54, align 8, !dbg !654
+  br label %bb10, !dbg !654
 
 bb10:                                             ; preds = %bb9, %bb8, %bb7
-  %55 = load i32* %result, align 4, !dbg !653
-  store i32 %55, i32* %0, align 4, !dbg !653
-  %56 = load i32* %0, align 4, !dbg !653
-  store i32 %56, i32* %retval, align 4, !dbg !653
-  %retval11 = load i32* %retval, !dbg !653
-  ret i32 %retval11, !dbg !653
+  %55 = load i32* %result, align 4, !dbg !655
+  store i32 %55, i32* %0, align 4, !dbg !655
+  %56 = load i32* %0, align 4, !dbg !655
+  store i32 %56, i32* %retval, align 4, !dbg !655
+  %retval11 = load i32* %retval, !dbg !655
+  ret i32 %retval11, !dbg !655
 }
 
 declare hidden i32 @__syscall_rt_sigaction(i32, %struct.kernel_sigaction*, %struct.kernel_sigaction*, i64)
+
+define hidden i32 @__raise(i32 %signo) nounwind {
+entry:
+  %signo_addr = alloca i32, align 4
+  %retval = alloca i32
+  %0 = alloca i32
+  %"alloca point" = bitcast i32 0 to i32
+  store i32 %signo, i32* %signo_addr
+  %1 = call i32 @getpid() nounwind, !dbg !656
+  %2 = load i32* %signo_addr, align 4, !dbg !656
+  %3 = call i32 @kill(i32 %1, i32 %2) nounwind, !dbg !656
+  store i32 %3, i32* %0, align 4, !dbg !656
+  %4 = load i32* %0, align 4, !dbg !656
+  store i32 %4, i32* %retval, align 4, !dbg !656
+  %retval1 = load i32* %retval, !dbg !656
+  ret i32 %retval1, !dbg !656
+}
+
+declare i32 @getpid() nounwind
+
+declare i32 @kill(i32, i32) nounwind
+
+define i32 @tcgetattr(i32 %fd, %struct.termios* %termios_p) nounwind {
+entry:
+  %fd_addr = alloca i32, align 4
+  %termios_p_addr = alloca %struct.termios*, align 8
+  %retval = alloca i32
+  %0 = alloca i32
+  %k_termios = alloca %struct.__kernel_termios
+  %retval1 = alloca i32
+  %"alloca point" = bitcast i32 0 to i32
+  store i32 %fd, i32* %fd_addr
+  store %struct.termios* %termios_p, %struct.termios** %termios_p_addr
+  %1 = load i32* %fd_addr, align 4, !dbg !658
+  %2 = call i32 (i32, i64, ...)* @ioctl(i32 %1, i64 21505, %struct.__kernel_termios* %k_termios) nounwind, !dbg !658
+  store i32 %2, i32* %retval1, align 4, !dbg !658
+  %3 = getelementptr inbounds %struct.__kernel_termios* %k_termios, i32 0, i32 0, !dbg !660
+  %4 = load i32* %3, align 4, !dbg !660
+  %5 = load %struct.termios** %termios_p_addr, align 8, !dbg !660
+  %6 = getelementptr inbounds %struct.termios* %5, i32 0, i32 0, !dbg !660
+  store i32 %4, i32* %6, align 4, !dbg !660
+  %7 = getelementptr inbounds %struct.__kernel_termios* %k_termios, i32 0, i32 1, !dbg !661
+  %8 = load i32* %7, align 4, !dbg !661
+  %9 = load %struct.termios** %termios_p_addr, align 8, !dbg !661
+  %10 = getelementptr inbounds %struct.termios* %9, i32 0, i32 1, !dbg !661
+  store i32 %8, i32* %10, align 4, !dbg !661
+  %11 = getelementptr inbounds %struct.__kernel_termios* %k_termios, i32 0, i32 2, !dbg !662
+  %12 = load i32* %11, align 4, !dbg !662
+  %13 = load %struct.termios** %termios_p_addr, align 8, !dbg !662
+  %14 = getelementptr inbounds %struct.termios* %13, i32 0, i32 2, !dbg !662
+  store i32 %12, i32* %14, align 4, !dbg !662
+  %15 = getelementptr inbounds %struct.__kernel_termios* %k_termios, i32 0, i32 3, !dbg !663
+  %16 = load i32* %15, align 4, !dbg !663
+  %17 = load %struct.termios** %termios_p_addr, align 8, !dbg !663
+  %18 = getelementptr inbounds %struct.termios* %17, i32 0, i32 3, !dbg !663
+  store i32 %16, i32* %18, align 4, !dbg !663
+  %19 = getelementptr inbounds %struct.__kernel_termios* %k_termios, i32 0, i32 4, !dbg !664
+  %20 = load i8* %19, align 4, !dbg !664
+  %21 = load %struct.termios** %termios_p_addr, align 8, !dbg !664
+  %22 = getelementptr inbounds %struct.termios* %21, i32 0, i32 4, !dbg !664
+  store i8 %20, i8* %22, align 4, !dbg !664
+  %23 = load %struct.termios** %termios_p_addr, align 8, !dbg !665
+  %24 = getelementptr inbounds %struct.termios* %23, i32 0, i32 5, !dbg !665
+  %25 = getelementptr inbounds [32 x i8]* %24, i64 0, i64 0, !dbg !665
+  %26 = getelementptr inbounds %struct.__kernel_termios* %k_termios, i32 0, i32 5, !dbg !665
+  %27 = getelementptr inbounds [19 x i8]* %26, i64 0, i64 0, !dbg !665
+  %28 = call i8* @mempcpy(i8* noalias %25, i8* noalias %27, i64 19) nounwind, !dbg !665
+  %29 = call i8* @memset(i8* %28, i32 0, i64 13) nounwind, !dbg !665
+  %30 = load i32* %retval1, align 4, !dbg !666
+  store i32 %30, i32* %0, align 4, !dbg !666
+  %31 = load i32* %0, align 4, !dbg !666
+  store i32 %31, i32* %retval, align 4, !dbg !666
+  %retval2 = load i32* %retval, !dbg !666
+  ret i32 %retval2, !dbg !666
+}
+
+declare i32 @ioctl(i32, i64, ...) nounwind
 
 define hidden i64 @__stdio_WRITE(%struct.FILE* %stream, i8* %buf, i64 %bufsize) nounwind {
 entry:
@@ -1107,220 +1200,164 @@ entry:
   store %struct.FILE* %stream, %struct.FILE** %stream_addr
   store i8* %buf, i8** %buf_addr
   store i64 %bufsize, i64* %bufsize_addr
-  %1 = load i64* %bufsize_addr, align 8, !dbg !654
-  store i64 %1, i64* %todo, align 8, !dbg !654
-  br label %bb, !dbg !654
+  %1 = load i64* %bufsize_addr, align 8, !dbg !667
+  store i64 %1, i64* %todo, align 8, !dbg !667
+  br label %bb, !dbg !667
 
 bb:                                               ; preds = %bb6, %entry
-  %2 = load i64* %todo, align 8, !dbg !656
-  %3 = icmp eq i64 %2, 0, !dbg !656
-  br i1 %3, label %bb1, label %bb2, !dbg !656
+  %2 = load i64* %todo, align 8, !dbg !669
+  %3 = icmp eq i64 %2, 0, !dbg !669
+  br i1 %3, label %bb1, label %bb2, !dbg !669
 
 bb1:                                              ; preds = %bb
-  %4 = load i64* %bufsize_addr, align 8, !dbg !657
-  store i64 %4, i64* %0, align 8, !dbg !657
-  br label %bb16, !dbg !657
+  %4 = load i64* %bufsize_addr, align 8, !dbg !670
+  store i64 %4, i64* %0, align 8, !dbg !670
+  br label %bb16, !dbg !670
 
 bb2:                                              ; preds = %bb
-  %5 = load i64* %todo, align 8, !dbg !658
-  %6 = icmp sge i64 %5, 0, !dbg !658
-  br i1 %6, label %bb3, label %bb4, !dbg !658
+  %5 = load i64* %todo, align 8, !dbg !671
+  %6 = icmp sge i64 %5, 0, !dbg !671
+  br i1 %6, label %bb3, label %bb4, !dbg !671
 
 bb3:                                              ; preds = %bb2
-  %7 = load i64* %todo, align 8, !dbg !658
-  store i64 %7, i64* %iftmp.0, align 8, !dbg !658
-  br label %bb5, !dbg !658
+  %7 = load i64* %todo, align 8, !dbg !671
+  store i64 %7, i64* %iftmp.0, align 8, !dbg !671
+  br label %bb5, !dbg !671
 
 bb4:                                              ; preds = %bb2
-  store i64 9223372036854775807, i64* %iftmp.0, align 8, !dbg !658
-  br label %bb5, !dbg !658
+  store i64 9223372036854775807, i64* %iftmp.0, align 8, !dbg !671
+  br label %bb5, !dbg !671
 
 bb5:                                              ; preds = %bb4, %bb3
-  %8 = load i64* %iftmp.0, align 8, !dbg !658
-  store i64 %8, i64* %stodo, align 8, !dbg !658
-  %9 = load i64* %stodo, align 8, !dbg !659
-  %10 = load %struct.FILE** %stream_addr, align 8, !dbg !659
-  %11 = getelementptr inbounds %struct.FILE* %10, i32 0, i32 2, !dbg !659
-  %12 = load i32* %11, align 4, !dbg !659
-  %13 = load i8** %buf_addr, align 8, !dbg !659
-  %14 = call i64 @write(i32 %12, i8* %13, i64 %9) nounwind, !dbg !659
-  store i64 %14, i64* %rv, align 8, !dbg !659
-  %15 = load i64* %rv, align 8, !dbg !659
-  %16 = icmp sge i64 %15, 0, !dbg !659
-  br i1 %16, label %bb6, label %bb7, !dbg !659
+  %8 = load i64* %iftmp.0, align 8, !dbg !671
+  store i64 %8, i64* %stodo, align 8, !dbg !671
+  %9 = load i64* %stodo, align 8, !dbg !672
+  %10 = load %struct.FILE** %stream_addr, align 8, !dbg !672
+  %11 = getelementptr inbounds %struct.FILE* %10, i32 0, i32 2, !dbg !672
+  %12 = load i32* %11, align 4, !dbg !672
+  %13 = load i8** %buf_addr, align 8, !dbg !672
+  %14 = call i64 @write(i32 %12, i8* %13, i64 %9) nounwind, !dbg !672
+  store i64 %14, i64* %rv, align 8, !dbg !672
+  %15 = load i64* %rv, align 8, !dbg !672
+  %16 = icmp sge i64 %15, 0, !dbg !672
+  br i1 %16, label %bb6, label %bb7, !dbg !672
 
 bb6:                                              ; preds = %bb5
-  %17 = load i64* %rv, align 8, !dbg !660
-  %18 = load i64* %todo, align 8, !dbg !660
-  %19 = sub i64 %18, %17, !dbg !660
-  store i64 %19, i64* %todo, align 8, !dbg !660
-  %20 = load i8** %buf_addr, align 8, !dbg !661
-  %21 = load i64* %rv, align 8, !dbg !661
-  %22 = getelementptr inbounds i8* %20, i64 %21, !dbg !661
-  store i8* %22, i8** %buf_addr, align 8, !dbg !661
-  br label %bb, !dbg !661
+  %17 = load i64* %rv, align 8, !dbg !673
+  %18 = load i64* %todo, align 8, !dbg !673
+  %19 = sub i64 %18, %17, !dbg !673
+  store i64 %19, i64* %todo, align 8, !dbg !673
+  %20 = load i8** %buf_addr, align 8, !dbg !674
+  %21 = load i64* %rv, align 8, !dbg !674
+  %22 = getelementptr inbounds i8* %20, i64 %21, !dbg !674
+  store i8* %22, i8** %buf_addr, align 8, !dbg !674
+  br label %bb, !dbg !674
 
 bb7:                                              ; preds = %bb5
-  %23 = load %struct.FILE** %stream_addr, align 8, !dbg !662
-  %24 = getelementptr inbounds %struct.FILE* %23, i32 0, i32 0, !dbg !662
-  %25 = load i16* %24, align 8, !dbg !662
-  %26 = or i16 %25, 8, !dbg !662
-  %27 = load %struct.FILE** %stream_addr, align 8, !dbg !662
-  %28 = getelementptr inbounds %struct.FILE* %27, i32 0, i32 0, !dbg !662
-  store i16 %26, i16* %28, align 8, !dbg !662
-  %29 = load %struct.FILE** %stream_addr, align 8, !dbg !663
-  %30 = getelementptr inbounds %struct.FILE* %29, i32 0, i32 4, !dbg !663
-  %31 = load i8** %30, align 8, !dbg !663
-  %32 = ptrtoint i8* %31 to i64, !dbg !663
-  %33 = load %struct.FILE** %stream_addr, align 8, !dbg !663
-  %34 = getelementptr inbounds %struct.FILE* %33, i32 0, i32 3, !dbg !663
-  %35 = load i8** %34, align 8, !dbg !663
-  %36 = ptrtoint i8* %35 to i64, !dbg !663
-  %37 = sub nsw i64 %32, %36, !dbg !663
-  store i64 %37, i64* %stodo, align 8, !dbg !663
-  %38 = load i64* %stodo, align 8, !dbg !663
-  %39 = icmp ne i64 %38, 0, !dbg !663
-  br i1 %39, label %bb8, label %bb15, !dbg !663
+  %23 = load %struct.FILE** %stream_addr, align 8, !dbg !675
+  %24 = getelementptr inbounds %struct.FILE* %23, i32 0, i32 0, !dbg !675
+  %25 = load i16* %24, align 8, !dbg !675
+  %26 = or i16 %25, 8, !dbg !675
+  %27 = load %struct.FILE** %stream_addr, align 8, !dbg !675
+  %28 = getelementptr inbounds %struct.FILE* %27, i32 0, i32 0, !dbg !675
+  store i16 %26, i16* %28, align 8, !dbg !675
+  %29 = load %struct.FILE** %stream_addr, align 8, !dbg !676
+  %30 = getelementptr inbounds %struct.FILE* %29, i32 0, i32 4, !dbg !676
+  %31 = load i8** %30, align 8, !dbg !676
+  %32 = ptrtoint i8* %31 to i64, !dbg !676
+  %33 = load %struct.FILE** %stream_addr, align 8, !dbg !676
+  %34 = getelementptr inbounds %struct.FILE* %33, i32 0, i32 3, !dbg !676
+  %35 = load i8** %34, align 8, !dbg !676
+  %36 = ptrtoint i8* %35 to i64, !dbg !676
+  %37 = sub nsw i64 %32, %36, !dbg !676
+  store i64 %37, i64* %stodo, align 8, !dbg !676
+  %38 = load i64* %stodo, align 8, !dbg !676
+  %39 = icmp ne i64 %38, 0, !dbg !676
+  br i1 %39, label %bb8, label %bb15, !dbg !676
 
 bb8:                                              ; preds = %bb7
-  %40 = load i64* %stodo, align 8, !dbg !664
-  %41 = load i64* %todo, align 8, !dbg !664
-  %42 = icmp ugt i64 %40, %41, !dbg !664
-  br i1 %42, label %bb9, label %bb10, !dbg !664
+  %40 = load i64* %stodo, align 8, !dbg !677
+  %41 = load i64* %todo, align 8, !dbg !677
+  %42 = icmp ugt i64 %40, %41, !dbg !677
+  br i1 %42, label %bb9, label %bb10, !dbg !677
 
 bb9:                                              ; preds = %bb8
-  %43 = load i64* %todo, align 8, !dbg !666
-  store i64 %43, i64* %stodo, align 8, !dbg !666
-  br label %bb10, !dbg !666
+  %43 = load i64* %todo, align 8, !dbg !679
+  store i64 %43, i64* %stodo, align 8, !dbg !679
+  br label %bb10, !dbg !679
 
 bb10:                                             ; preds = %bb9, %bb8
-  %44 = load %struct.FILE** %stream_addr, align 8, !dbg !667
-  %45 = getelementptr inbounds %struct.FILE* %44, i32 0, i32 3, !dbg !667
-  %46 = load i8** %45, align 8, !dbg !667
-  store i8* %46, i8** %s, align 8, !dbg !667
-  br label %bb11, !dbg !667
+  %44 = load %struct.FILE** %stream_addr, align 8, !dbg !680
+  %45 = getelementptr inbounds %struct.FILE* %44, i32 0, i32 3, !dbg !680
+  %46 = load i8** %45, align 8, !dbg !680
+  store i8* %46, i8** %s, align 8, !dbg !680
+  br label %bb11, !dbg !680
 
 bb11:                                             ; preds = %bb13, %bb10
-  %47 = load i8** %buf_addr, align 8, !dbg !668
-  %48 = load i8* %47, align 1, !dbg !668
-  %49 = load i8** %s, align 8, !dbg !668
-  store i8 %48, i8* %49, align 1, !dbg !668
-  %50 = load i8** %s, align 8, !dbg !668
-  %51 = load i8* %50, align 1, !dbg !668
-  %52 = icmp eq i8 %51, 10, !dbg !668
-  br i1 %52, label %bb12, label %bb13, !dbg !668
+  %47 = load i8** %buf_addr, align 8, !dbg !681
+  %48 = load i8* %47, align 1, !dbg !681
+  %49 = load i8** %s, align 8, !dbg !681
+  store i8 %48, i8* %49, align 1, !dbg !681
+  %50 = load i8** %s, align 8, !dbg !681
+  %51 = load i8* %50, align 1, !dbg !681
+  %52 = icmp eq i8 %51, 10, !dbg !681
+  br i1 %52, label %bb12, label %bb13, !dbg !681
 
 bb12:                                             ; preds = %bb11
-  %53 = load %struct.FILE** %stream_addr, align 8, !dbg !668
-  %54 = getelementptr inbounds %struct.FILE* %53, i32 0, i32 0, !dbg !668
-  %55 = load i16* %54, align 8, !dbg !668
-  %56 = zext i16 %55 to i32, !dbg !668
-  %57 = and i32 %56, 256, !dbg !668
-  %58 = icmp ne i32 %57, 0, !dbg !668
-  br i1 %58, label %bb14, label %bb13, !dbg !668
+  %53 = load %struct.FILE** %stream_addr, align 8, !dbg !681
+  %54 = getelementptr inbounds %struct.FILE* %53, i32 0, i32 0, !dbg !681
+  %55 = load i16* %54, align 8, !dbg !681
+  %56 = zext i16 %55 to i32, !dbg !681
+  %57 = and i32 %56, 256, !dbg !681
+  %58 = icmp ne i32 %57, 0, !dbg !681
+  br i1 %58, label %bb14, label %bb13, !dbg !681
 
 bb13:                                             ; preds = %bb12, %bb11
-  %59 = load i8** %s, align 8, !dbg !669
-  %60 = getelementptr inbounds i8* %59, i64 1, !dbg !669
-  store i8* %60, i8** %s, align 8, !dbg !669
-  %61 = load i8** %buf_addr, align 8, !dbg !670
-  %62 = getelementptr inbounds i8* %61, i64 1, !dbg !670
-  store i8* %62, i8** %buf_addr, align 8, !dbg !670
-  %63 = load i64* %stodo, align 8, !dbg !671
-  %64 = sub nsw i64 %63, 1, !dbg !671
-  store i64 %64, i64* %stodo, align 8, !dbg !671
-  %65 = load i64* %stodo, align 8, !dbg !671
-  %66 = icmp ne i64 %65, 0, !dbg !671
-  br i1 %66, label %bb11, label %bb14, !dbg !671
+  %59 = load i8** %s, align 8, !dbg !682
+  %60 = getelementptr inbounds i8* %59, i64 1, !dbg !682
+  store i8* %60, i8** %s, align 8, !dbg !682
+  %61 = load i8** %buf_addr, align 8, !dbg !683
+  %62 = getelementptr inbounds i8* %61, i64 1, !dbg !683
+  store i8* %62, i8** %buf_addr, align 8, !dbg !683
+  %63 = load i64* %stodo, align 8, !dbg !684
+  %64 = sub nsw i64 %63, 1, !dbg !684
+  store i64 %64, i64* %stodo, align 8, !dbg !684
+  %65 = load i64* %stodo, align 8, !dbg !684
+  %66 = icmp ne i64 %65, 0, !dbg !684
+  br i1 %66, label %bb11, label %bb14, !dbg !684
 
 bb14:                                             ; preds = %bb13, %bb12
-  %67 = load %struct.FILE** %stream_addr, align 8, !dbg !672
-  %68 = getelementptr inbounds %struct.FILE* %67, i32 0, i32 5, !dbg !672
-  %69 = load i8** %s, align 8, !dbg !672
-  store i8* %69, i8** %68, align 8, !dbg !672
-  %70 = load i8** %s, align 8, !dbg !673
-  %71 = ptrtoint i8* %70 to i64, !dbg !673
-  %72 = load %struct.FILE** %stream_addr, align 8, !dbg !673
-  %73 = getelementptr inbounds %struct.FILE* %72, i32 0, i32 3, !dbg !673
-  %74 = load i8** %73, align 8, !dbg !673
-  %75 = ptrtoint i8* %74 to i64, !dbg !673
-  %76 = sub nsw i64 %71, %75, !dbg !673
-  %77 = load i64* %todo, align 8, !dbg !673
-  %78 = sub i64 %77, %76, !dbg !673
-  store i64 %78, i64* %todo, align 8, !dbg !673
-  br label %bb15, !dbg !673
+  %67 = load %struct.FILE** %stream_addr, align 8, !dbg !685
+  %68 = getelementptr inbounds %struct.FILE* %67, i32 0, i32 5, !dbg !685
+  %69 = load i8** %s, align 8, !dbg !685
+  store i8* %69, i8** %68, align 8, !dbg !685
+  %70 = load i8** %s, align 8, !dbg !686
+  %71 = ptrtoint i8* %70 to i64, !dbg !686
+  %72 = load %struct.FILE** %stream_addr, align 8, !dbg !686
+  %73 = getelementptr inbounds %struct.FILE* %72, i32 0, i32 3, !dbg !686
+  %74 = load i8** %73, align 8, !dbg !686
+  %75 = ptrtoint i8* %74 to i64, !dbg !686
+  %76 = sub nsw i64 %71, %75, !dbg !686
+  %77 = load i64* %todo, align 8, !dbg !686
+  %78 = sub i64 %77, %76, !dbg !686
+  store i64 %78, i64* %todo, align 8, !dbg !686
+  br label %bb15, !dbg !686
 
 bb15:                                             ; preds = %bb14, %bb7
-  %79 = load i64* %bufsize_addr, align 8, !dbg !674
-  %80 = load i64* %todo, align 8, !dbg !674
-  %81 = sub i64 %79, %80, !dbg !674
-  store i64 %81, i64* %0, align 8, !dbg !674
-  br label %bb16, !dbg !674
+  %79 = load i64* %bufsize_addr, align 8, !dbg !687
+  %80 = load i64* %todo, align 8, !dbg !687
+  %81 = sub i64 %79, %80, !dbg !687
+  store i64 %81, i64* %0, align 8, !dbg !687
+  br label %bb16, !dbg !687
 
 bb16:                                             ; preds = %bb15, %bb1
-  %82 = load i64* %0, align 8, !dbg !657
-  store i64 %82, i64* %retval, align 8, !dbg !657
-  %retval17 = load i64* %retval, !dbg !657
-  ret i64 %retval17, !dbg !657
+  %82 = load i64* %0, align 8, !dbg !670
+  store i64 %82, i64* %retval, align 8, !dbg !670
+  %retval17 = load i64* %retval, !dbg !670
+  ret i64 %retval17, !dbg !670
 }
 
 declare i64 @write(i32, i8*, i64)
-
-define i32 @tcgetattr(i32 %fd, %struct.termios* %termios_p) nounwind {
-entry:
-  %fd_addr = alloca i32, align 4
-  %termios_p_addr = alloca %struct.termios*, align 8
-  %retval = alloca i32
-  %0 = alloca i32
-  %k_termios = alloca %struct.__kernel_termios
-  %retval1 = alloca i32
-  %"alloca point" = bitcast i32 0 to i32
-  store i32 %fd, i32* %fd_addr
-  store %struct.termios* %termios_p, %struct.termios** %termios_p_addr
-  %1 = load i32* %fd_addr, align 4, !dbg !675
-  %2 = call i32 (i32, i64, ...)* @ioctl(i32 %1, i64 21505, %struct.__kernel_termios* %k_termios) nounwind, !dbg !675
-  store i32 %2, i32* %retval1, align 4, !dbg !675
-  %3 = getelementptr inbounds %struct.__kernel_termios* %k_termios, i32 0, i32 0, !dbg !677
-  %4 = load i32* %3, align 4, !dbg !677
-  %5 = load %struct.termios** %termios_p_addr, align 8, !dbg !677
-  %6 = getelementptr inbounds %struct.termios* %5, i32 0, i32 0, !dbg !677
-  store i32 %4, i32* %6, align 4, !dbg !677
-  %7 = getelementptr inbounds %struct.__kernel_termios* %k_termios, i32 0, i32 1, !dbg !678
-  %8 = load i32* %7, align 4, !dbg !678
-  %9 = load %struct.termios** %termios_p_addr, align 8, !dbg !678
-  %10 = getelementptr inbounds %struct.termios* %9, i32 0, i32 1, !dbg !678
-  store i32 %8, i32* %10, align 4, !dbg !678
-  %11 = getelementptr inbounds %struct.__kernel_termios* %k_termios, i32 0, i32 2, !dbg !679
-  %12 = load i32* %11, align 4, !dbg !679
-  %13 = load %struct.termios** %termios_p_addr, align 8, !dbg !679
-  %14 = getelementptr inbounds %struct.termios* %13, i32 0, i32 2, !dbg !679
-  store i32 %12, i32* %14, align 4, !dbg !679
-  %15 = getelementptr inbounds %struct.__kernel_termios* %k_termios, i32 0, i32 3, !dbg !680
-  %16 = load i32* %15, align 4, !dbg !680
-  %17 = load %struct.termios** %termios_p_addr, align 8, !dbg !680
-  %18 = getelementptr inbounds %struct.termios* %17, i32 0, i32 3, !dbg !680
-  store i32 %16, i32* %18, align 4, !dbg !680
-  %19 = getelementptr inbounds %struct.__kernel_termios* %k_termios, i32 0, i32 4, !dbg !681
-  %20 = load i8* %19, align 4, !dbg !681
-  %21 = load %struct.termios** %termios_p_addr, align 8, !dbg !681
-  %22 = getelementptr inbounds %struct.termios* %21, i32 0, i32 4, !dbg !681
-  store i8 %20, i8* %22, align 4, !dbg !681
-  %23 = load %struct.termios** %termios_p_addr, align 8, !dbg !682
-  %24 = getelementptr inbounds %struct.termios* %23, i32 0, i32 5, !dbg !682
-  %25 = getelementptr inbounds [32 x i8]* %24, i64 0, i64 0, !dbg !682
-  %26 = getelementptr inbounds %struct.__kernel_termios* %k_termios, i32 0, i32 5, !dbg !682
-  %27 = getelementptr inbounds [19 x i8]* %26, i64 0, i64 0, !dbg !682
-  %28 = call i8* @mempcpy(i8* noalias %25, i8* noalias %27, i64 19) nounwind, !dbg !682
-  %29 = call i8* @memset(i8* %28, i32 0, i64 13) nounwind, !dbg !682
-  %30 = load i32* %retval1, align 4, !dbg !683
-  store i32 %30, i32* %0, align 4, !dbg !683
-  %31 = load i32* %0, align 4, !dbg !683
-  store i32 %31, i32* %retval, align 4, !dbg !683
-  %retval2 = load i32* %retval, !dbg !683
-  ret i32 %retval2, !dbg !683
-}
-
-declare i32 @ioctl(i32, i64, ...) nounwind
 
 define i8* @mempcpy(i8* noalias %s1, i8* noalias %s2, i64 %n) nounwind {
 entry:
@@ -1335,40 +1372,40 @@ entry:
   store i8* %s1, i8** %s1_addr
   store i8* %s2, i8** %s2_addr
   store i64 %n, i64* %n_addr
-  %1 = load i8** %s1_addr, align 8, !dbg !684
-  store i8* %1, i8** %r1, align 8, !dbg !684
-  %2 = load i8** %s2_addr, align 8, !dbg !686
-  store i8* %2, i8** %r2, align 8, !dbg !686
-  br label %bb1, !dbg !686
+  %1 = load i8** %s1_addr, align 8, !dbg !688
+  store i8* %1, i8** %r1, align 8, !dbg !688
+  %2 = load i8** %s2_addr, align 8, !dbg !690
+  store i8* %2, i8** %r2, align 8, !dbg !690
+  br label %bb1, !dbg !690
 
 bb:                                               ; preds = %bb1
-  %3 = load i8** %r2, align 8, !dbg !687
-  %4 = load i8* %3, align 1, !dbg !687
-  %5 = load i8** %r1, align 8, !dbg !687
-  store i8 %4, i8* %5, align 1, !dbg !687
-  %6 = load i8** %r1, align 8, !dbg !687
-  %7 = getelementptr inbounds i8* %6, i64 1, !dbg !687
-  store i8* %7, i8** %r1, align 8, !dbg !687
-  %8 = load i8** %r2, align 8, !dbg !687
-  %9 = getelementptr inbounds i8* %8, i64 1, !dbg !687
-  store i8* %9, i8** %r2, align 8, !dbg !687
-  %10 = load i64* %n_addr, align 8, !dbg !688
-  %11 = sub i64 %10, 1, !dbg !688
-  store i64 %11, i64* %n_addr, align 8, !dbg !688
-  br label %bb1, !dbg !688
+  %3 = load i8** %r2, align 8, !dbg !691
+  %4 = load i8* %3, align 1, !dbg !691
+  %5 = load i8** %r1, align 8, !dbg !691
+  store i8 %4, i8* %5, align 1, !dbg !691
+  %6 = load i8** %r1, align 8, !dbg !691
+  %7 = getelementptr inbounds i8* %6, i64 1, !dbg !691
+  store i8* %7, i8** %r1, align 8, !dbg !691
+  %8 = load i8** %r2, align 8, !dbg !691
+  %9 = getelementptr inbounds i8* %8, i64 1, !dbg !691
+  store i8* %9, i8** %r2, align 8, !dbg !691
+  %10 = load i64* %n_addr, align 8, !dbg !692
+  %11 = sub i64 %10, 1, !dbg !692
+  store i64 %11, i64* %n_addr, align 8, !dbg !692
+  br label %bb1, !dbg !692
 
 bb1:                                              ; preds = %bb, %entry
-  %12 = load i64* %n_addr, align 8, !dbg !689
-  %13 = icmp ne i64 %12, 0, !dbg !689
-  br i1 %13, label %bb, label %bb2, !dbg !689
+  %12 = load i64* %n_addr, align 8, !dbg !693
+  %13 = icmp ne i64 %12, 0, !dbg !693
+  br i1 %13, label %bb, label %bb2, !dbg !693
 
 bb2:                                              ; preds = %bb1
-  %14 = load i8** %r1, align 8, !dbg !690
-  store i8* %14, i8** %0, align 8, !dbg !690
-  %15 = load i8** %0, align 8, !dbg !690
-  store i8* %15, i8** %retval, align 8, !dbg !690
-  %retval3 = load i8** %retval, !dbg !690
-  ret i8* %retval3, !dbg !690
+  %14 = load i8** %r1, align 8, !dbg !694
+  store i8* %14, i8** %0, align 8, !dbg !694
+  %15 = load i8** %0, align 8, !dbg !694
+  store i8* %15, i8** %retval, align 8, !dbg !694
+  %retval3 = load i8** %retval, !dbg !694
+  ret i8* %retval3, !dbg !694
 }
 
 define i32 @main(i32, i8**) {
@@ -1379,15 +1416,15 @@ entry:
 
 define void @klee_div_zero_check(i64 %z) nounwind {
 entry:
-  %0 = icmp eq i64 %z, 0, !dbg !691
-  br i1 %0, label %bb, label %return, !dbg !691
+  %0 = icmp eq i64 %z, 0, !dbg !695
+  br i1 %0, label %bb, label %return, !dbg !695
 
 bb:                                               ; preds = %entry
-  tail call void @klee_report_error(i8* getelementptr inbounds ([22 x i8]* @.str27, i64 0, i64 0), i32 14, i8* getelementptr inbounds ([15 x i8]* @.str128, i64 0, i64 0), i8* getelementptr inbounds ([8 x i8]* @.str229, i64 0, i64 0)) noreturn nounwind, !
-  unreachable, !dbg !693
+  tail call void @klee_report_error(i8* getelementptr inbounds ([22 x i8]* @.str23, i64 0, i64 0), i32 14, i8* getelementptr inbounds ([15 x i8]* @.str124, i64 0, i64 0), i8* getelementptr inbounds ([8 x i8]* @.str225, i64 0, i64 0)) noreturn nounwind, !
+  unreachable, !dbg !697
 
 return:                                           ; preds = %entry
-  ret void, !dbg !694
+  ret void, !dbg !698
 }
 
 declare void @klee_report_error(i8*, i32, i8*, i8*) noreturn
@@ -1397,75 +1434,75 @@ declare void @llvm.dbg.value(metadata, i64, metadata) nounwind readnone
 define i32 @klee_int(i8* %name) nounwind {
 entry:
   %x = alloca i32, align 4
-  %x1 = bitcast i32* %x to i8*, !dbg !695
-  call void @klee_make_symbolic(i8* %x1, i64 4, i8* %name) nounwind, !dbg !695
-  %0 = load i32* %x, align 4, !dbg !696
-  ret i32 %0, !dbg !696
+  %x1 = bitcast i32* %x to i8*, !dbg !699
+  call void @klee_make_symbolic(i8* %x1, i64 4, i8* %name) nounwind, !dbg !699
+  %0 = load i32* %x, align 4, !dbg !700
+  ret i32 %0, !dbg !700
 }
 
 define void @klee_overshift_check(i64 %bitWidth, i64 %shift) nounwind {
 entry:
-  %0 = icmp ult i64 %shift, %bitWidth, !dbg !697
-  br i1 %0, label %return, label %bb, !dbg !697
+  %0 = icmp ult i64 %shift, %bitWidth, !dbg !701
+  br i1 %0, label %return, label %bb, !dbg !701
 
 bb:                                               ; preds = %entry
-  tail call void @klee_report_error(i8* getelementptr inbounds ([8 x i8]* @.str330, i64 0, i64 0), i32 0, i8* getelementptr inbounds ([16 x i8]* @.str14, i64 0, i64 0), i8* getelementptr inbounds ([14 x i8]* @.str25, i64 0, i64 0)) noreturn nounwind, !db
-  unreachable, !dbg !699
+  tail call void @klee_report_error(i8* getelementptr inbounds ([8 x i8]* @.str3, i64 0, i64 0), i32 0, i8* getelementptr inbounds ([16 x i8]* @.str14, i64 0, i64 0), i8* getelementptr inbounds ([14 x i8]* @.str25, i64 0, i64 0)) noreturn nounwind, !dbg 
+  unreachable, !dbg !703
 
 return:                                           ; preds = %entry
-  ret void, !dbg !700
+  ret void, !dbg !704
 }
 
 define i32 @klee_range(i32 %start, i32 %end, i8* %name) nounwind {
 entry:
   %x = alloca i32, align 4
-  %0 = icmp slt i32 %start, %end, !dbg !701
-  br i1 %0, label %bb1, label %bb, !dbg !701
+  %0 = icmp slt i32 %start, %end, !dbg !705
+  br i1 %0, label %bb1, label %bb, !dbg !705
 
 bb:                                               ; preds = %entry
-  call void @klee_report_error(i8* getelementptr inbounds ([13 x i8]* @.str631, i64 0, i64 0), i32 17, i8* getelementptr inbounds ([14 x i8]* @.str1732, i64 0, i64 0), i8* getelementptr inbounds ([5 x i8]* @.str28, i64 0, i64 0)) noreturn nounwind, !dbg 
-  unreachable, !dbg !702
+  call void @klee_report_error(i8* getelementptr inbounds ([13 x i8]* @.str6, i64 0, i64 0), i32 17, i8* getelementptr inbounds ([14 x i8]* @.str17, i64 0, i64 0), i8* getelementptr inbounds ([5 x i8]* @.str28, i64 0, i64 0)) noreturn nounwind, !dbg !706
+  unreachable, !dbg !706
 
 bb1:                                              ; preds = %entry
-  %1 = add nsw i32 %start, 1, !dbg !703
-  %2 = icmp eq i32 %1, %end, !dbg !703
-  br i1 %2, label %bb8, label %bb3, !dbg !703
+  %1 = add nsw i32 %start, 1, !dbg !707
+  %2 = icmp eq i32 %1, %end, !dbg !707
+  br i1 %2, label %bb8, label %bb3, !dbg !707
 
 bb3:                                              ; preds = %bb1
-  %x4 = bitcast i32* %x to i8*, !dbg !704
-  call void @klee_make_symbolic(i8* %x4, i64 4, i8* %name) nounwind, !dbg !704
-  %3 = icmp eq i32 %start, 0, !dbg !705
-  %4 = load i32* %x, align 4, !dbg !706
-  br i1 %3, label %bb5, label %bb6, !dbg !705
+  %x4 = bitcast i32* %x to i8*, !dbg !708
+  call void @klee_make_symbolic(i8* %x4, i64 4, i8* %name) nounwind, !dbg !708
+  %3 = icmp eq i32 %start, 0, !dbg !709
+  %4 = load i32* %x, align 4, !dbg !710
+  br i1 %3, label %bb5, label %bb6, !dbg !709
 
 bb5:                                              ; preds = %bb3
-  %5 = icmp ult i32 %4, %end, !dbg !706
-  %6 = zext i1 %5 to i64, !dbg !706
-  call void @klee_assume(i64 %6) nounwind, !dbg !706
-  br label %bb7, !dbg !706
+  %5 = icmp ult i32 %4, %end, !dbg !710
+  %6 = zext i1 %5 to i64, !dbg !710
+  call void @klee_assume(i64 %6) nounwind, !dbg !710
+  br label %bb7, !dbg !710
 
 bb6:                                              ; preds = %bb3
-  %7 = icmp sge i32 %4, %start, !dbg !707
-  %8 = zext i1 %7 to i64, !dbg !707
-  call void @klee_assume(i64 %8) nounwind, !dbg !707
-  %9 = load i32* %x, align 4, !dbg !708
-  %10 = icmp slt i32 %9, %end, !dbg !708
-  %11 = zext i1 %10 to i64, !dbg !708
-  call void @klee_assume(i64 %11) nounwind, !dbg !708
-  br label %bb7, !dbg !708
+  %7 = icmp sge i32 %4, %start, !dbg !711
+  %8 = zext i1 %7 to i64, !dbg !711
+  call void @klee_assume(i64 %8) nounwind, !dbg !711
+  %9 = load i32* %x, align 4, !dbg !712
+  %10 = icmp slt i32 %9, %end, !dbg !712
+  %11 = zext i1 %10 to i64, !dbg !712
+  call void @klee_assume(i64 %11) nounwind, !dbg !712
+  br label %bb7, !dbg !712
 
 bb7:                                              ; preds = %bb6, %bb5
-  %12 = load i32* %x, align 4, !dbg !709
-  br label %bb8, !dbg !709
+  %12 = load i32* %x, align 4, !dbg !713
+  br label %bb8, !dbg !713
 
 bb8:                                              ; preds = %bb7, %bb1
   %.0 = phi i32 [ %12, %bb7 ], [ %start, %bb1 ]
-  ret i32 %.0, !dbg !710
+  ret i32 %.0, !dbg !714
 }
 
 declare void @klee_assume(i64)
 
-!llvm.dbg.sp = !{!0, !6, !12, !18, !21, !24, !25, !36, !45, !52, !59, !63, !64, !68, !75, !84, !94, !110, !111, !112, !154, !160, !166, !264, !306, !332, !341, !347, !356, !362, !371, !380, !389, !398}
+!llvm.dbg.sp = !{!0, !6, !12, !18, !21, !24, !25, !36, !45, !52, !59, !63, !64, !68, !75, !84, !94, !110, !111, !112, !154, !160, !258, !264, !290, !332, !341, !347, !356, !362, !371, !380, !389, !398}
 !llvm.dbg.gv = !{!408, !409, !412, !413, !417, !418, !419, !420, !456, !458, !459, !460, !461, !462, !463, !465, !467, !471}
 !llvm.dbg.lv.klee_div_zero_check = !{!472}
 !llvm.dbg.lv.klee_int = !{!473, !474}
@@ -1636,178 +1673,178 @@ declare void @klee_assume(i64)
 !157 = metadata !{i32 589845, metadata !155, metadata !"", metadata !155, i32 0, i64 0, i64 0, i64 0, i32 0, null, metadata !158, i32 0, null} ; [ DW_TAG_subroutine_type ]
 !158 = metadata !{metadata !159, metadata !159}
 !159 = metadata !{i32 589860, metadata !155, metadata !"int", metadata !155, i32 0, i64 32, i64 32, i64 0, i32 0, i32 5} ; [ DW_TAG_base_type ]
-!160 = metadata !{i32 589870, i32 0, metadata !161, metadata !"__raise", metadata !"__raise", metadata !"__raise", metadata !161, i32 16, metadata !163, i1 false, i1 true, i32 0, i32 0, null, i32 256, i1 false, i32 (i32)* @__raise} ; [ DW_TAG_subprogram 
-!161 = metadata !{i32 589865, metadata !"raise.c", metadata !"/home/zehranaz/kleestr/klee-uclibc/libc/signal", metadata !162} ; [ DW_TAG_file_type ]
-!162 = metadata !{i32 589841, i32 0, i32 1, metadata !"raise.c", metadata !"/home/zehranaz/kleestr/klee-uclibc/libc/signal", metadata !"4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2.9)", i1 true, i1 false, metadata !"", i32 0} ; [ DW_TAG_compile_u
+!160 = metadata !{i32 589870, i32 0, metadata !161, metadata !"__libc_sigaction", metadata !"__libc_sigaction", metadata !"__libc_sigaction", metadata !161, i32 43, metadata !163, i1 false, i1 true, i32 0, i32 0, null, i32 256, i1 false, i32 (i32, %struc
+!161 = metadata !{i32 589865, metadata !"sigaction.c", metadata !"/home/zehranaz/kleestr/klee-uclibc/libc/signal", metadata !162} ; [ DW_TAG_file_type ]
+!162 = metadata !{i32 589841, i32 0, i32 1, metadata !"sigaction.c", metadata !"/home/zehranaz/kleestr/klee-uclibc/libc/signal", metadata !"4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2.9)", i1 true, i1 false, metadata !"", i32 0} ; [ DW_TAG_compi
 !163 = metadata !{i32 589845, metadata !161, metadata !"", metadata !161, i32 0, i64 0, i64 0, i64 0, i32 0, null, metadata !164, i32 0, null} ; [ DW_TAG_subroutine_type ]
-!164 = metadata !{metadata !165, metadata !165}
+!164 = metadata !{metadata !165, metadata !165, metadata !166, metadata !257}
 !165 = metadata !{i32 589860, metadata !161, metadata !"int", metadata !161, i32 0, i64 32, i64 32, i64 0, i32 0, i32 5} ; [ DW_TAG_base_type ]
-!166 = metadata !{i32 589870, i32 0, metadata !167, metadata !"__libc_sigaction", metadata !"__libc_sigaction", metadata !"__libc_sigaction", metadata !167, i32 43, metadata !169, i1 false, i1 true, i32 0, i32 0, null, i32 256, i1 false, i32 (i32, %struc
-!167 = metadata !{i32 589865, metadata !"sigaction.c", metadata !"/home/zehranaz/kleestr/klee-uclibc/libc/signal", metadata !168} ; [ DW_TAG_file_type ]
-!168 = metadata !{i32 589841, i32 0, i32 1, metadata !"sigaction.c", metadata !"/home/zehranaz/kleestr/klee-uclibc/libc/signal", metadata !"4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2.9)", i1 true, i1 false, metadata !"", i32 0} ; [ DW_TAG_compi
-!169 = metadata !{i32 589845, metadata !167, metadata !"", metadata !167, i32 0, i64 0, i64 0, i64 0, i32 0, null, metadata !170, i32 0, null} ; [ DW_TAG_subroutine_type ]
-!170 = metadata !{metadata !171, metadata !171, metadata !172, metadata !263}
-!171 = metadata !{i32 589860, metadata !167, metadata !"int", metadata !167, i32 0, i64 32, i64 32, i64 0, i32 0, i32 5} ; [ DW_TAG_base_type ]
-!172 = metadata !{i32 589839, metadata !167, metadata !"", metadata !167, i32 0, i64 64, i64 64, i64 0, i32 0, metadata !173} ; [ DW_TAG_pointer_type ]
-!173 = metadata !{i32 589862, metadata !167, metadata !"", metadata !167, i32 0, i64 1216, i64 64, i64 0, i32 0, metadata !174} ; [ DW_TAG_const_type ]
-!174 = metadata !{i32 589843, metadata !167, metadata !"sigaction", metadata !175, i32 26, i64 1216, i64 64, i64 0, i32 0, null, metadata !176, i32 0, null} ; [ DW_TAG_structure_type ]
-!175 = metadata !{i32 589865, metadata !"sigaction.h", metadata !"/home/zehranaz/kleestr/klee-uclibc/./include/bits", metadata !168} ; [ DW_TAG_file_type ]
-!176 = metadata !{metadata !177, metadata !251, metadata !259, metadata !260}
-!177 = metadata !{i32 589837, metadata !174, metadata !"__sigaction_handler", metadata !175, i32 36, i64 64, i64 64, i64 0, i32 0, metadata !178} ; [ DW_TAG_member ]
-!178 = metadata !{i32 589847, metadata !167, metadata !"", metadata !175, i32 30, i64 64, i64 64, i64 0, i32 0, null, metadata !179, i32 0, null} ; [ DW_TAG_union_type ]
-!179 = metadata !{metadata !180, metadata !186}
-!180 = metadata !{i32 589837, metadata !178, metadata !"sa_handler", metadata !175, i32 32, i64 64, i64 64, i64 0, i32 0, metadata !181} ; [ DW_TAG_member ]
-!181 = metadata !{i32 589846, metadata !182, metadata !"__sighandler_t", metadata !182, i32 75, i64 0, i64 0, i64 0, i32 0, metadata !183} ; [ DW_TAG_typedef ]
-!182 = metadata !{i32 589865, metadata !"signal.h", metadata !"/home/zehranaz/kleestr/klee-uclibc/./include", metadata !168} ; [ DW_TAG_file_type ]
-!183 = metadata !{i32 589839, metadata !167, metadata !"", metadata !167, i32 0, i64 64, i64 64, i64 0, i32 0, metadata !184} ; [ DW_TAG_pointer_type ]
-!184 = metadata !{i32 589845, metadata !167, metadata !"", metadata !167, i32 0, i64 0, i64 0, i64 0, i32 0, null, metadata !185, i32 0, null} ; [ DW_TAG_subroutine_type ]
-!185 = metadata !{null, metadata !171}
-!186 = metadata !{i32 589837, metadata !178, metadata !"sa_sigaction", metadata !175, i32 34, i64 64, i64 64, i64 0, i32 0, metadata !187} ; [ DW_TAG_member ]
-!187 = metadata !{i32 589839, metadata !167, metadata !"", metadata !167, i32 0, i64 64, i64 64, i64 0, i32 0, metadata !188} ; [ DW_TAG_pointer_type ]
-!188 = metadata !{i32 589845, metadata !167, metadata !"", metadata !167, i32 0, i64 0, i64 0, i64 0, i32 0, null, metadata !189, i32 0, null} ; [ DW_TAG_subroutine_type ]
-!189 = metadata !{null, metadata !171, metadata !190, metadata !225}
-!190 = metadata !{i32 589839, metadata !167, metadata !"", metadata !167, i32 0, i64 64, i64 64, i64 0, i32 0, metadata !191} ; [ DW_TAG_pointer_type ]
-!191 = metadata !{i32 589846, metadata !192, metadata !"siginfo_t", metadata !192, i32 108, i64 0, i64 0, i64 0, i32 0, metadata !193} ; [ DW_TAG_typedef ]
-!192 = metadata !{i32 589865, metadata !"siginfo.h", metadata !"/home/zehranaz/kleestr/klee-uclibc/./include/bits", metadata !168} ; [ DW_TAG_file_type ]
-!193 = metadata !{i32 589843, metadata !167, metadata !"siginfo", metadata !192, i32 52, i64 1024, i64 64, i64 0, i32 0, null, metadata !194, i32 0, null} ; [ DW_TAG_structure_type ]
-!194 = metadata !{metadata !195, metadata !196, metadata !197, metadata !198}
-!195 = metadata !{i32 589837, metadata !193, metadata !"si_signo", metadata !192, i32 53, i64 32, i64 32, i64 0, i32 0, metadata !171} ; [ DW_TAG_member ]
-!196 = metadata !{i32 589837, metadata !193, metadata !"si_errno", metadata !192, i32 54, i64 32, i64 32, i64 32, i32 0, metadata !171} ; [ DW_TAG_member ]
-!197 = metadata !{i32 589837, metadata !193, metadata !"si_code", metadata !192, i32 56, i64 32, i64 32, i64 64, i32 0, metadata !171} ; [ DW_TAG_member ]
-!198 = metadata !{i32 589837, metadata !193, metadata !"_sifields", metadata !192, i32 107, i64 896, i64 64, i64 128, i32 0, metadata !199} ; [ DW_TAG_member ]
-!199 = metadata !{i32 589847, metadata !167, metadata !"", metadata !192, i32 59, i64 896, i64 64, i64 0, i32 0, null, metadata !200, i32 0, null} ; [ DW_TAG_union_type ]
-!200 = metadata !{metadata !201, metadata !205, metadata !214, metadata !226, metadata !232, metadata !242, metadata !246}
-!201 = metadata !{i32 589837, metadata !199, metadata !"_pad", metadata !192, i32 60, i64 896, i64 32, i64 0, i32 0, metadata !202} ; [ DW_TAG_member ]
-!202 = metadata !{i32 589825, metadata !167, metadata !"", metadata !167, i32 0, i64 896, i64 32, i64 0, i32 0, metadata !171, metadata !203, i32 0, null} ; [ DW_TAG_array_type ]
-!203 = metadata !{metadata !204}
-!204 = metadata !{i32 589857, i64 0, i64 27}      ; [ DW_TAG_subrange_type ]
-!205 = metadata !{i32 589837, metadata !199, metadata !"_kill", metadata !192, i32 67, i64 64, i64 32, i64 0, i32 0, metadata !206} ; [ DW_TAG_member ]
-!206 = metadata !{i32 589843, metadata !167, metadata !"", metadata !192, i32 64, i64 64, i64 32, i64 0, i32 0, null, metadata !207, i32 0, null} ; [ DW_TAG_structure_type ]
-!207 = metadata !{metadata !208, metadata !211}
-!208 = metadata !{i32 589837, metadata !206, metadata !"si_pid", metadata !192, i32 65, i64 32, i64 32, i64 0, i32 0, metadata !209} ; [ DW_TAG_member ]
-!209 = metadata !{i32 589846, metadata !210, metadata !"__pid_t", metadata !210, i32 147, i64 0, i64 0, i64 0, i32 0, metadata !171} ; [ DW_TAG_typedef ]
-!210 = metadata !{i32 589865, metadata !"types.h", metadata !"/home/zehranaz/kleestr/klee-uclibc/./include/bits", metadata !168} ; [ DW_TAG_file_type ]
-!211 = metadata !{i32 589837, metadata !206, metadata !"si_uid", metadata !192, i32 66, i64 32, i64 32, i64 32, i32 0, metadata !212} ; [ DW_TAG_member ]
-!212 = metadata !{i32 589846, metadata !210, metadata !"__uid_t", metadata !210, i32 139, i64 0, i64 0, i64 0, i32 0, metadata !213} ; [ DW_TAG_typedef ]
-!213 = metadata !{i32 589860, metadata !167, metadata !"unsigned int", metadata !167, i32 0, i64 32, i64 32, i64 0, i32 0, i32 7} ; [ DW_TAG_base_type ]
-!214 = metadata !{i32 589837, metadata !199, metadata !"_timer", metadata !192, i32 75, i64 128, i64 64, i64 0, i32 0, metadata !215} ; [ DW_TAG_member ]
-!215 = metadata !{i32 589843, metadata !167, metadata !"", metadata !192, i32 71, i64 128, i64 64, i64 0, i32 0, null, metadata !216, i32 0, null} ; [ DW_TAG_structure_type ]
-!216 = metadata !{metadata !217, metadata !218, metadata !219}
-!217 = metadata !{i32 589837, metadata !215, metadata !"si_tid", metadata !192, i32 72, i64 32, i64 32, i64 0, i32 0, metadata !171} ; [ DW_TAG_member ]
-!218 = metadata !{i32 589837, metadata !215, metadata !"si_overrun", metadata !192, i32 73, i64 32, i64 32, i64 32, i32 0, metadata !171} ; [ DW_TAG_member ]
-!219 = metadata !{i32 589837, metadata !215, metadata !"si_sigval", metadata !192, i32 74, i64 64, i64 64, i64 64, i32 0, metadata !220} ; [ DW_TAG_member ]
-!220 = metadata !{i32 589846, metadata !192, metadata !"sigval_t", metadata !192, i32 37, i64 0, i64 0, i64 0, i32 0, metadata !221} ; [ DW_TAG_typedef ]
-!221 = metadata !{i32 589847, metadata !167, metadata !"sigval", metadata !192, i32 34, i64 64, i64 64, i64 0, i32 0, null, metadata !222, i32 0, null} ; [ DW_TAG_union_type ]
-!222 = metadata !{metadata !223, metadata !224}
-!223 = metadata !{i32 589837, metadata !221, metadata !"sival_int", metadata !192, i32 35, i64 32, i64 32, i64 0, i32 0, metadata !171} ; [ DW_TAG_member ]
-!224 = metadata !{i32 589837, metadata !221, metadata !"sival_ptr", metadata !192, i32 36, i64 64, i64 64, i64 0, i32 0, metadata !225} ; [ DW_TAG_member ]
-!225 = metadata !{i32 589839, metadata !167, metadata !"", metadata !167, i32 0, i64 64, i64 64, i64 0, i32 0, null} ; [ DW_TAG_pointer_type ]
-!226 = metadata !{i32 589837, metadata !199, metadata !"_rt", metadata !192, i32 83, i64 128, i64 64, i64 0, i32 0, metadata !227} ; [ DW_TAG_member ]
-!227 = metadata !{i32 589843, metadata !167, metadata !"", metadata !192, i32 79, i64 128, i64 64, i64 0, i32 0, null, metadata !228, i32 0, null} ; [ DW_TAG_structure_type ]
-!228 = metadata !{metadata !229, metadata !230, metadata !231}
-!229 = metadata !{i32 589837, metadata !227, metadata !"si_pid", metadata !192, i32 80, i64 32, i64 32, i64 0, i32 0, metadata !209} ; [ DW_TAG_member ]
-!230 = metadata !{i32 589837, metadata !227, metadata !"si_uid", metadata !192, i32 81, i64 32, i64 32, i64 32, i32 0, metadata !212} ; [ DW_TAG_member ]
-!231 = metadata !{i32 589837, metadata !227, metadata !"si_sigval", metadata !192, i32 82, i64 64, i64 64, i64 64, i32 0, metadata !220} ; [ DW_TAG_member ]
-!232 = metadata !{i32 589837, metadata !199, metadata !"_sigchld", metadata !192, i32 93, i64 256, i64 64, i64 0, i32 0, metadata !233} ; [ DW_TAG_member ]
-!233 = metadata !{i32 589843, metadata !167, metadata !"", metadata !192, i32 87, i64 256, i64 64, i64 0, i32 0, null, metadata !234, i32 0, null} ; [ DW_TAG_structure_type ]
-!234 = metadata !{metadata !235, metadata !236, metadata !237, metadata !238, metadata !241}
-!235 = metadata !{i32 589837, metadata !233, metadata !"si_pid", metadata !192, i32 88, i64 32, i64 32, i64 0, i32 0, metadata !209} ; [ DW_TAG_member ]
-!236 = metadata !{i32 589837, metadata !233, metadata !"si_uid", metadata !192, i32 89, i64 32, i64 32, i64 32, i32 0, metadata !212} ; [ DW_TAG_member ]
-!237 = metadata !{i32 589837, metadata !233, metadata !"si_status", metadata !192, i32 90, i64 32, i64 32, i64 64, i32 0, metadata !171} ; [ DW_TAG_member ]
-!238 = metadata !{i32 589837, metadata !233, metadata !"si_utime", metadata !192, i32 91, i64 64, i64 64, i64 128, i32 0, metadata !239} ; [ DW_TAG_member ]
-!239 = metadata !{i32 589846, metadata !210, metadata !"__clock_t", metadata !210, i32 149, i64 0, i64 0, i64 0, i32 0, metadata !240} ; [ DW_TAG_typedef ]
-!240 = metadata !{i32 589860, metadata !167, metadata !"long int", metadata !167, i32 0, i64 64, i64 64, i64 0, i32 0, i32 5} ; [ DW_TAG_base_type ]
-!241 = metadata !{i32 589837, metadata !233, metadata !"si_stime", metadata !192, i32 92, i64 64, i64 64, i64 192, i32 0, metadata !239} ; [ DW_TAG_member ]
-!242 = metadata !{i32 589837, metadata !199, metadata !"_sigfault", metadata !192, i32 99, i64 64, i64 64, i64 0, i32 0, metadata !243} ; [ DW_TAG_member ]
-!243 = metadata !{i32 589843, metadata !167, metadata !"", metadata !192, i32 97, i64 64, i64 64, i64 0, i32 0, null, metadata !244, i32 0, null} ; [ DW_TAG_structure_type ]
-!244 = metadata !{metadata !245}
-!245 = metadata !{i32 589837, metadata !243, metadata !"si_addr", metadata !192, i32 98, i64 64, i64 64, i64 0, i32 0, metadata !225} ; [ DW_TAG_member ]
-!246 = metadata !{i32 589837, metadata !199, metadata !"_sigpoll", metadata !192, i32 106, i64 128, i64 64, i64 0, i32 0, metadata !247} ; [ DW_TAG_member ]
-!247 = metadata !{i32 589843, metadata !167, metadata !"", metadata !192, i32 103, i64 128, i64 64, i64 0, i32 0, null, metadata !248, i32 0, null} ; [ DW_TAG_structure_type ]
-!248 = metadata !{metadata !249, metadata !250}
-!249 = metadata !{i32 589837, metadata !247, metadata !"si_band", metadata !192, i32 104, i64 64, i64 64, i64 0, i32 0, metadata !240} ; [ DW_TAG_member ]
-!250 = metadata !{i32 589837, metadata !247, metadata !"si_fd", metadata !192, i32 105, i64 32, i64 32, i64 64, i32 0, metadata !171} ; [ DW_TAG_member ]
-!251 = metadata !{i32 589837, metadata !174, metadata !"sa_mask", metadata !175, i32 44, i64 1024, i64 64, i64 64, i32 0, metadata !252} ; [ DW_TAG_member ]
-!252 = metadata !{i32 589846, metadata !253, metadata !"__sigset_t", metadata !253, i32 31, i64 0, i64 0, i64 0, i32 0, metadata !254} ; [ DW_TAG_typedef ]
-!253 = metadata !{i32 589865, metadata !"sigset.h", metadata !"/home/zehranaz/kleestr/klee-uclibc/./include/bits", metadata !168} ; [ DW_TAG_file_type ]
-!254 = metadata !{i32 589843, metadata !167, metadata !"", metadata !253, i32 29, i64 1024, i64 64, i64 0, i32 0, null, metadata !255, i32 0, null} ; [ DW_TAG_structure_type ]
-!255 = metadata !{metadata !256}
-!256 = metadata !{i32 589837, metadata !254, metadata !"__val", metadata !253, i32 30, i64 1024, i64 64, i64 0, i32 0, metadata !257} ; [ DW_TAG_member ]
-!257 = metadata !{i32 589825, metadata !167, metadata !"", metadata !167, i32 0, i64 1024, i64 64, i64 0, i32 0, metadata !258, metadata !108, i32 0, null} ; [ DW_TAG_array_type ]
-!258 = metadata !{i32 589860, metadata !167, metadata !"long unsigned int", metadata !167, i32 0, i64 64, i64 64, i64 0, i32 0, i32 7} ; [ DW_TAG_base_type ]
-!259 = metadata !{i32 589837, metadata !174, metadata !"sa_flags", metadata !175, i32 47, i64 32, i64 32, i64 1088, i32 0, metadata !171} ; [ DW_TAG_member ]
-!260 = metadata !{i32 589837, metadata !174, metadata !"sa_restorer", metadata !175, i32 50, i64 64, i64 64, i64 1152, i32 0, metadata !261} ; [ DW_TAG_member ]
-!261 = metadata !{i32 589839, metadata !167, metadata !"", metadata !167, i32 0, i64 64, i64 64, i64 0, i32 0, metadata !262} ; [ DW_TAG_pointer_type ]
-!262 = metadata !{i32 589845, metadata !167, metadata !"", metadata !167, i32 0, i64 0, i64 0, i64 0, i32 0, null, metadata !23, i32 0, null} ; [ DW_TAG_subroutine_type ]
-!263 = metadata !{i32 589839, metadata !167, metadata !"", metadata !167, i32 0, i64 64, i64 64, i64 0, i32 0, metadata !174} ; [ DW_TAG_pointer_type ]
-!264 = metadata !{i32 589870, i32 0, metadata !265, metadata !"__stdio_WRITE", metadata !"__stdio_WRITE", metadata !"__stdio_WRITE", metadata !265, i32 35, metadata !267, i1 false, i1 true, i32 0, i32 0, null, i32 256, i1 false, i64 (%struct.FILE*, i8*, 
-!265 = metadata !{i32 589865, metadata !"_WRITE.c", metadata !"/home/zehranaz/kleestr/klee-uclibc/libc/stdio", metadata !266} ; [ DW_TAG_file_type ]
-!266 = metadata !{i32 589841, i32 0, i32 1, metadata !"_WRITE.c", metadata !"/home/zehranaz/kleestr/klee-uclibc/libc/stdio", metadata !"4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2.9)", i1 true, i1 false, metadata !"", i32 0} ; [ DW_TAG_compile_u
+!166 = metadata !{i32 589839, metadata !161, metadata !"", metadata !161, i32 0, i64 64, i64 64, i64 0, i32 0, metadata !167} ; [ DW_TAG_pointer_type ]
+!167 = metadata !{i32 589862, metadata !161, metadata !"", metadata !161, i32 0, i64 1216, i64 64, i64 0, i32 0, metadata !168} ; [ DW_TAG_const_type ]
+!168 = metadata !{i32 589843, metadata !161, metadata !"sigaction", metadata !169, i32 26, i64 1216, i64 64, i64 0, i32 0, null, metadata !170, i32 0, null} ; [ DW_TAG_structure_type ]
+!169 = metadata !{i32 589865, metadata !"sigaction.h", metadata !"/home/zehranaz/kleestr/klee-uclibc/./include/bits", metadata !162} ; [ DW_TAG_file_type ]
+!170 = metadata !{metadata !171, metadata !245, metadata !253, metadata !254}
+!171 = metadata !{i32 589837, metadata !168, metadata !"__sigaction_handler", metadata !169, i32 36, i64 64, i64 64, i64 0, i32 0, metadata !172} ; [ DW_TAG_member ]
+!172 = metadata !{i32 589847, metadata !161, metadata !"", metadata !169, i32 30, i64 64, i64 64, i64 0, i32 0, null, metadata !173, i32 0, null} ; [ DW_TAG_union_type ]
+!173 = metadata !{metadata !174, metadata !180}
+!174 = metadata !{i32 589837, metadata !172, metadata !"sa_handler", metadata !169, i32 32, i64 64, i64 64, i64 0, i32 0, metadata !175} ; [ DW_TAG_member ]
+!175 = metadata !{i32 589846, metadata !176, metadata !"__sighandler_t", metadata !176, i32 75, i64 0, i64 0, i64 0, i32 0, metadata !177} ; [ DW_TAG_typedef ]
+!176 = metadata !{i32 589865, metadata !"signal.h", metadata !"/home/zehranaz/kleestr/klee-uclibc/./include", metadata !162} ; [ DW_TAG_file_type ]
+!177 = metadata !{i32 589839, metadata !161, metadata !"", metadata !161, i32 0, i64 64, i64 64, i64 0, i32 0, metadata !178} ; [ DW_TAG_pointer_type ]
+!178 = metadata !{i32 589845, metadata !161, metadata !"", metadata !161, i32 0, i64 0, i64 0, i64 0, i32 0, null, metadata !179, i32 0, null} ; [ DW_TAG_subroutine_type ]
+!179 = metadata !{null, metadata !165}
+!180 = metadata !{i32 589837, metadata !172, metadata !"sa_sigaction", metadata !169, i32 34, i64 64, i64 64, i64 0, i32 0, metadata !181} ; [ DW_TAG_member ]
+!181 = metadata !{i32 589839, metadata !161, metadata !"", metadata !161, i32 0, i64 64, i64 64, i64 0, i32 0, metadata !182} ; [ DW_TAG_pointer_type ]
+!182 = metadata !{i32 589845, metadata !161, metadata !"", metadata !161, i32 0, i64 0, i64 0, i64 0, i32 0, null, metadata !183, i32 0, null} ; [ DW_TAG_subroutine_type ]
+!183 = metadata !{null, metadata !165, metadata !184, metadata !219}
+!184 = metadata !{i32 589839, metadata !161, metadata !"", metadata !161, i32 0, i64 64, i64 64, i64 0, i32 0, metadata !185} ; [ DW_TAG_pointer_type ]
+!185 = metadata !{i32 589846, metadata !186, metadata !"siginfo_t", metadata !186, i32 108, i64 0, i64 0, i64 0, i32 0, metadata !187} ; [ DW_TAG_typedef ]
+!186 = metadata !{i32 589865, metadata !"siginfo.h", metadata !"/home/zehranaz/kleestr/klee-uclibc/./include/bits", metadata !162} ; [ DW_TAG_file_type ]
+!187 = metadata !{i32 589843, metadata !161, metadata !"siginfo", metadata !186, i32 52, i64 1024, i64 64, i64 0, i32 0, null, metadata !188, i32 0, null} ; [ DW_TAG_structure_type ]
+!188 = metadata !{metadata !189, metadata !190, metadata !191, metadata !192}
+!189 = metadata !{i32 589837, metadata !187, metadata !"si_signo", metadata !186, i32 53, i64 32, i64 32, i64 0, i32 0, metadata !165} ; [ DW_TAG_member ]
+!190 = metadata !{i32 589837, metadata !187, metadata !"si_errno", metadata !186, i32 54, i64 32, i64 32, i64 32, i32 0, metadata !165} ; [ DW_TAG_member ]
+!191 = metadata !{i32 589837, metadata !187, metadata !"si_code", metadata !186, i32 56, i64 32, i64 32, i64 64, i32 0, metadata !165} ; [ DW_TAG_member ]
+!192 = metadata !{i32 589837, metadata !187, metadata !"_sifields", metadata !186, i32 107, i64 896, i64 64, i64 128, i32 0, metadata !193} ; [ DW_TAG_member ]
+!193 = metadata !{i32 589847, metadata !161, metadata !"", metadata !186, i32 59, i64 896, i64 64, i64 0, i32 0, null, metadata !194, i32 0, null} ; [ DW_TAG_union_type ]
+!194 = metadata !{metadata !195, metadata !199, metadata !208, metadata !220, metadata !226, metadata !236, metadata !240}
+!195 = metadata !{i32 589837, metadata !193, metadata !"_pad", metadata !186, i32 60, i64 896, i64 32, i64 0, i32 0, metadata !196} ; [ DW_TAG_member ]
+!196 = metadata !{i32 589825, metadata !161, metadata !"", metadata !161, i32 0, i64 896, i64 32, i64 0, i32 0, metadata !165, metadata !197, i32 0, null} ; [ DW_TAG_array_type ]
+!197 = metadata !{metadata !198}
+!198 = metadata !{i32 589857, i64 0, i64 27}      ; [ DW_TAG_subrange_type ]
+!199 = metadata !{i32 589837, metadata !193, metadata !"_kill", metadata !186, i32 67, i64 64, i64 32, i64 0, i32 0, metadata !200} ; [ DW_TAG_member ]
+!200 = metadata !{i32 589843, metadata !161, metadata !"", metadata !186, i32 64, i64 64, i64 32, i64 0, i32 0, null, metadata !201, i32 0, null} ; [ DW_TAG_structure_type ]
+!201 = metadata !{metadata !202, metadata !205}
+!202 = metadata !{i32 589837, metadata !200, metadata !"si_pid", metadata !186, i32 65, i64 32, i64 32, i64 0, i32 0, metadata !203} ; [ DW_TAG_member ]
+!203 = metadata !{i32 589846, metadata !204, metadata !"__pid_t", metadata !204, i32 147, i64 0, i64 0, i64 0, i32 0, metadata !165} ; [ DW_TAG_typedef ]
+!204 = metadata !{i32 589865, metadata !"types.h", metadata !"/home/zehranaz/kleestr/klee-uclibc/./include/bits", metadata !162} ; [ DW_TAG_file_type ]
+!205 = metadata !{i32 589837, metadata !200, metadata !"si_uid", metadata !186, i32 66, i64 32, i64 32, i64 32, i32 0, metadata !206} ; [ DW_TAG_member ]
+!206 = metadata !{i32 589846, metadata !204, metadata !"__uid_t", metadata !204, i32 139, i64 0, i64 0, i64 0, i32 0, metadata !207} ; [ DW_TAG_typedef ]
+!207 = metadata !{i32 589860, metadata !161, metadata !"unsigned int", metadata !161, i32 0, i64 32, i64 32, i64 0, i32 0, i32 7} ; [ DW_TAG_base_type ]
+!208 = metadata !{i32 589837, metadata !193, metadata !"_timer", metadata !186, i32 75, i64 128, i64 64, i64 0, i32 0, metadata !209} ; [ DW_TAG_member ]
+!209 = metadata !{i32 589843, metadata !161, metadata !"", metadata !186, i32 71, i64 128, i64 64, i64 0, i32 0, null, metadata !210, i32 0, null} ; [ DW_TAG_structure_type ]
+!210 = metadata !{metadata !211, metadata !212, metadata !213}
+!211 = metadata !{i32 589837, metadata !209, metadata !"si_tid", metadata !186, i32 72, i64 32, i64 32, i64 0, i32 0, metadata !165} ; [ DW_TAG_member ]
+!212 = metadata !{i32 589837, metadata !209, metadata !"si_overrun", metadata !186, i32 73, i64 32, i64 32, i64 32, i32 0, metadata !165} ; [ DW_TAG_member ]
+!213 = metadata !{i32 589837, metadata !209, metadata !"si_sigval", metadata !186, i32 74, i64 64, i64 64, i64 64, i32 0, metadata !214} ; [ DW_TAG_member ]
+!214 = metadata !{i32 589846, metadata !186, metadata !"sigval_t", metadata !186, i32 37, i64 0, i64 0, i64 0, i32 0, metadata !215} ; [ DW_TAG_typedef ]
+!215 = metadata !{i32 589847, metadata !161, metadata !"sigval", metadata !186, i32 34, i64 64, i64 64, i64 0, i32 0, null, metadata !216, i32 0, null} ; [ DW_TAG_union_type ]
+!216 = metadata !{metadata !217, metadata !218}
+!217 = metadata !{i32 589837, metadata !215, metadata !"sival_int", metadata !186, i32 35, i64 32, i64 32, i64 0, i32 0, metadata !165} ; [ DW_TAG_member ]
+!218 = metadata !{i32 589837, metadata !215, metadata !"sival_ptr", metadata !186, i32 36, i64 64, i64 64, i64 0, i32 0, metadata !219} ; [ DW_TAG_member ]
+!219 = metadata !{i32 589839, metadata !161, metadata !"", metadata !161, i32 0, i64 64, i64 64, i64 0, i32 0, null} ; [ DW_TAG_pointer_type ]
+!220 = metadata !{i32 589837, metadata !193, metadata !"_rt", metadata !186, i32 83, i64 128, i64 64, i64 0, i32 0, metadata !221} ; [ DW_TAG_member ]
+!221 = metadata !{i32 589843, metadata !161, metadata !"", metadata !186, i32 79, i64 128, i64 64, i64 0, i32 0, null, metadata !222, i32 0, null} ; [ DW_TAG_structure_type ]
+!222 = metadata !{metadata !223, metadata !224, metadata !225}
+!223 = metadata !{i32 589837, metadata !221, metadata !"si_pid", metadata !186, i32 80, i64 32, i64 32, i64 0, i32 0, metadata !203} ; [ DW_TAG_member ]
+!224 = metadata !{i32 589837, metadata !221, metadata !"si_uid", metadata !186, i32 81, i64 32, i64 32, i64 32, i32 0, metadata !206} ; [ DW_TAG_member ]
+!225 = metadata !{i32 589837, metadata !221, metadata !"si_sigval", metadata !186, i32 82, i64 64, i64 64, i64 64, i32 0, metadata !214} ; [ DW_TAG_member ]
+!226 = metadata !{i32 589837, metadata !193, metadata !"_sigchld", metadata !186, i32 93, i64 256, i64 64, i64 0, i32 0, metadata !227} ; [ DW_TAG_member ]
+!227 = metadata !{i32 589843, metadata !161, metadata !"", metadata !186, i32 87, i64 256, i64 64, i64 0, i32 0, null, metadata !228, i32 0, null} ; [ DW_TAG_structure_type ]
+!228 = metadata !{metadata !229, metadata !230, metadata !231, metadata !232, metadata !235}
+!229 = metadata !{i32 589837, metadata !227, metadata !"si_pid", metadata !186, i32 88, i64 32, i64 32, i64 0, i32 0, metadata !203} ; [ DW_TAG_member ]
+!230 = metadata !{i32 589837, metadata !227, metadata !"si_uid", metadata !186, i32 89, i64 32, i64 32, i64 32, i32 0, metadata !206} ; [ DW_TAG_member ]
+!231 = metadata !{i32 589837, metadata !227, metadata !"si_status", metadata !186, i32 90, i64 32, i64 32, i64 64, i32 0, metadata !165} ; [ DW_TAG_member ]
+!232 = metadata !{i32 589837, metadata !227, metadata !"si_utime", metadata !186, i32 91, i64 64, i64 64, i64 128, i32 0, metadata !233} ; [ DW_TAG_member ]
+!233 = metadata !{i32 589846, metadata !204, metadata !"__clock_t", metadata !204, i32 149, i64 0, i64 0, i64 0, i32 0, metadata !234} ; [ DW_TAG_typedef ]
+!234 = metadata !{i32 589860, metadata !161, metadata !"long int", metadata !161, i32 0, i64 64, i64 64, i64 0, i32 0, i32 5} ; [ DW_TAG_base_type ]
+!235 = metadata !{i32 589837, metadata !227, metadata !"si_stime", metadata !186, i32 92, i64 64, i64 64, i64 192, i32 0, metadata !233} ; [ DW_TAG_member ]
+!236 = metadata !{i32 589837, metadata !193, metadata !"_sigfault", metadata !186, i32 99, i64 64, i64 64, i64 0, i32 0, metadata !237} ; [ DW_TAG_member ]
+!237 = metadata !{i32 589843, metadata !161, metadata !"", metadata !186, i32 97, i64 64, i64 64, i64 0, i32 0, null, metadata !238, i32 0, null} ; [ DW_TAG_structure_type ]
+!238 = metadata !{metadata !239}
+!239 = metadata !{i32 589837, metadata !237, metadata !"si_addr", metadata !186, i32 98, i64 64, i64 64, i64 0, i32 0, metadata !219} ; [ DW_TAG_member ]
+!240 = metadata !{i32 589837, metadata !193, metadata !"_sigpoll", metadata !186, i32 106, i64 128, i64 64, i64 0, i32 0, metadata !241} ; [ DW_TAG_member ]
+!241 = metadata !{i32 589843, metadata !161, metadata !"", metadata !186, i32 103, i64 128, i64 64, i64 0, i32 0, null, metadata !242, i32 0, null} ; [ DW_TAG_structure_type ]
+!242 = metadata !{metadata !243, metadata !244}
+!243 = metadata !{i32 589837, metadata !241, metadata !"si_band", metadata !186, i32 104, i64 64, i64 64, i64 0, i32 0, metadata !234} ; [ DW_TAG_member ]
+!244 = metadata !{i32 589837, metadata !241, metadata !"si_fd", metadata !186, i32 105, i64 32, i64 32, i64 64, i32 0, metadata !165} ; [ DW_TAG_member ]
+!245 = metadata !{i32 589837, metadata !168, metadata !"sa_mask", metadata !169, i32 44, i64 1024, i64 64, i64 64, i32 0, metadata !246} ; [ DW_TAG_member ]
+!246 = metadata !{i32 589846, metadata !247, metadata !"__sigset_t", metadata !247, i32 31, i64 0, i64 0, i64 0, i32 0, metadata !248} ; [ DW_TAG_typedef ]
+!247 = metadata !{i32 589865, metadata !"sigset.h", metadata !"/home/zehranaz/kleestr/klee-uclibc/./include/bits", metadata !162} ; [ DW_TAG_file_type ]
+!248 = metadata !{i32 589843, metadata !161, metadata !"", metadata !247, i32 29, i64 1024, i64 64, i64 0, i32 0, null, metadata !249, i32 0, null} ; [ DW_TAG_structure_type ]
+!249 = metadata !{metadata !250}
+!250 = metadata !{i32 589837, metadata !248, metadata !"__val", metadata !247, i32 30, i64 1024, i64 64, i64 0, i32 0, metadata !251} ; [ DW_TAG_member ]
+!251 = metadata !{i32 589825, metadata !161, metadata !"", metadata !161, i32 0, i64 1024, i64 64, i64 0, i32 0, metadata !252, metadata !108, i32 0, null} ; [ DW_TAG_array_type ]
+!252 = metadata !{i32 589860, metadata !161, metadata !"long unsigned int", metadata !161, i32 0, i64 64, i64 64, i64 0, i32 0, i32 7} ; [ DW_TAG_base_type ]
+!253 = metadata !{i32 589837, metadata !168, metadata !"sa_flags", metadata !169, i32 47, i64 32, i64 32, i64 1088, i32 0, metadata !165} ; [ DW_TAG_member ]
+!254 = metadata !{i32 589837, metadata !168, metadata !"sa_restorer", metadata !169, i32 50, i64 64, i64 64, i64 1152, i32 0, metadata !255} ; [ DW_TAG_member ]
+!255 = metadata !{i32 589839, metadata !161, metadata !"", metadata !161, i32 0, i64 64, i64 64, i64 0, i32 0, metadata !256} ; [ DW_TAG_pointer_type ]
+!256 = metadata !{i32 589845, metadata !161, metadata !"", metadata !161, i32 0, i64 0, i64 0, i64 0, i32 0, null, metadata !23, i32 0, null} ; [ DW_TAG_subroutine_type ]
+!257 = metadata !{i32 589839, metadata !161, metadata !"", metadata !161, i32 0, i64 64, i64 64, i64 0, i32 0, metadata !168} ; [ DW_TAG_pointer_type ]
+!258 = metadata !{i32 589870, i32 0, metadata !259, metadata !"__raise", metadata !"__raise", metadata !"__raise", metadata !259, i32 16, metadata !261, i1 false, i1 true, i32 0, i32 0, null, i32 256, i1 false, i32 (i32)* @__raise} ; [ DW_TAG_subprogram 
+!259 = metadata !{i32 589865, metadata !"raise.c", metadata !"/home/zehranaz/kleestr/klee-uclibc/libc/signal", metadata !260} ; [ DW_TAG_file_type ]
+!260 = metadata !{i32 589841, i32 0, i32 1, metadata !"raise.c", metadata !"/home/zehranaz/kleestr/klee-uclibc/libc/signal", metadata !"4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2.9)", i1 true, i1 false, metadata !"", i32 0} ; [ DW_TAG_compile_u
+!261 = metadata !{i32 589845, metadata !259, metadata !"", metadata !259, i32 0, i64 0, i64 0, i64 0, i32 0, null, metadata !262, i32 0, null} ; [ DW_TAG_subroutine_type ]
+!262 = metadata !{metadata !263, metadata !263}
+!263 = metadata !{i32 589860, metadata !259, metadata !"int", metadata !259, i32 0, i64 32, i64 32, i64 0, i32 0, i32 5} ; [ DW_TAG_base_type ]
+!264 = metadata !{i32 589870, i32 0, metadata !265, metadata !"tcgetattr", metadata !"tcgetattr", metadata !"tcgetattr", metadata !265, i32 39, metadata !267, i1 false, i1 true, i32 0, i32 0, null, i32 256, i1 false, i32 (i32, %struct.termios*)* @tcgetat
+!265 = metadata !{i32 589865, metadata !"tcgetattr.c", metadata !"/home/zehranaz/kleestr/klee-uclibc/libc/termios", metadata !266} ; [ DW_TAG_file_type ]
+!266 = metadata !{i32 589841, i32 0, i32 1, metadata !"tcgetattr.c", metadata !"/home/zehranaz/kleestr/klee-uclibc/libc/termios", metadata !"4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2.9)", i1 true, i1 false, metadata !"", i32 0} ; [ DW_TAG_comp
 !267 = metadata !{i32 589845, metadata !265, metadata !"", metadata !265, i32 0, i64 0, i64 0, i64 0, i32 0, null, metadata !268, i32 0, null} ; [ DW_TAG_subroutine_type ]
-!268 = metadata !{metadata !269, metadata !272, metadata !304, metadata !269}
-!269 = metadata !{i32 589846, metadata !270, metadata !"size_t", metadata !270, i32 214, i64 0, i64 0, i64 0, i32 0, metadata !271} ; [ DW_TAG_typedef ]
-!270 = metadata !{i32 589865, metadata !"stddef.h", metadata !"/home/zehranaz/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.1/include", metadata !266} ; [ DW_TAG_file_type ]
-!271 = metadata !{i32 589860, metadata !265, metadata !"long unsigned int", metadata !265, i32 0, i64 64, i64 64, i64 0, i32 0, i32 7} ; [ DW_TAG_base_type ]
-!272 = metadata !{i32 589839, metadata !265, metadata !"", metadata !265, i32 0, i64 64, i64 64, i64 0, i32 0, metadata !273} ; [ DW_TAG_pointer_type ]
-!273 = metadata !{i32 589846, metadata !274, metadata !"FILE", metadata !274, i32 46, i64 0, i64 0, i64 0, i32 0, metadata !275} ; [ DW_TAG_typedef ]
-!274 = metadata !{i32 589865, metadata !"stdio.h", metadata !"/home/zehranaz/kleestr/klee-uclibc/./include", metadata !266} ; [ DW_TAG_file_type ]
-!275 = metadata !{i32 589843, metadata !265, metadata !"__STDIO_FILE_STRUCT", metadata !274, i32 46, i64 640, i64 64, i64 0, i32 0, null, metadata !276, i32 0, null} ; [ DW_TAG_structure_type ]
-!276 = metadata !{metadata !277, metadata !280, metadata !283, metadata !285, metadata !287, metadata !288, metadata !289, metadata !290, metadata !291, metadata !292, metadata !294, metadata !297}
-!277 = metadata !{i32 589837, metadata !275, metadata !"__modeflags", metadata !278, i32 234, i64 16, i64 16, i64 0, i32 0, metadata !279} ; [ DW_TAG_member ]
-!278 = metadata !{i32 589865, metadata !"uClibc_stdio.h", metadata !"/home/zehranaz/kleestr/klee-uclibc/./include/bits", metadata !266} ; [ DW_TAG_file_type ]
-!279 = metadata !{i32 589860, metadata !265, metadata !"short unsigned int", metadata !265, i32 0, i64 16, i64 16, i64 0, i32 0, i32 7} ; [ DW_TAG_base_type ]
-!280 = metadata !{i32 589837, metadata !275, metadata !"__ungot_width", metadata !278, i32 237, i64 16, i64 8, i64 16, i32 0, metadata !281} ; [ DW_TAG_member ]
-!281 = metadata !{i32 589825, metadata !265, metadata !"", metadata !265, i32 0, i64 16, i64 8, i64 0, i32 0, metadata !282, metadata !131, i32 0, null} ; [ DW_TAG_array_type ]
+!268 = metadata !{metadata !269, metadata !269, metadata !270}
+!269 = metadata !{i32 589860, metadata !265, metadata !"int", metadata !265, i32 0, i64 32, i64 32, i64 0, i32 0, i32 5} ; [ DW_TAG_base_type ]
+!270 = metadata !{i32 589839, metadata !265, metadata !"", metadata !265, i32 0, i64 64, i64 64, i64 0, i32 0, metadata !271} ; [ DW_TAG_pointer_type ]
+!271 = metadata !{i32 589843, metadata !265, metadata !"termios", metadata !272, i32 31, i64 480, i64 32, i64 0, i32 0, null, metadata !273, i32 0, null} ; [ DW_TAG_structure_type ]
+!272 = metadata !{i32 589865, metadata !"termios.h", metadata !"/home/zehranaz/kleestr/klee-uclibc/./include/bits", metadata !266} ; [ DW_TAG_file_type ]
+!273 = metadata !{metadata !274, metadata !277, metadata !278, metadata !279, metadata !280, metadata !283, metadata !287, metadata !289}
+!274 = metadata !{i32 589837, metadata !271, metadata !"c_iflag", metadata !272, i32 32, i64 32, i64 32, i64 0, i32 0, metadata !275} ; [ DW_TAG_member ]
+!275 = metadata !{i32 589846, metadata !272, metadata !"tcflag_t", metadata !272, i32 27, i64 0, i64 0, i64 0, i32 0, metadata !276} ; [ DW_TAG_typedef ]
+!276 = metadata !{i32 589860, metadata !265, metadata !"unsigned int", metadata !265, i32 0, i64 32, i64 32, i64 0, i32 0, i32 7} ; [ DW_TAG_base_type ]
+!277 = metadata !{i32 589837, metadata !271, metadata !"c_oflag", metadata !272, i32 33, i64 32, i64 32, i64 32, i32 0, metadata !275} ; [ DW_TAG_member ]
+!278 = metadata !{i32 589837, metadata !271, metadata !"c_cflag", metadata !272, i32 34, i64 32, i64 32, i64 64, i32 0, metadata !275} ; [ DW_TAG_member ]
+!279 = metadata !{i32 589837, metadata !271, metadata !"c_lflag", metadata !272, i32 35, i64 32, i64 32, i64 96, i32 0, metadata !275} ; [ DW_TAG_member ]
+!280 = metadata !{i32 589837, metadata !271, metadata !"c_line", metadata !272, i32 36, i64 8, i64 8, i64 128, i32 0, metadata !281} ; [ DW_TAG_member ]
+!281 = metadata !{i32 589846, metadata !272, metadata !"cc_t", metadata !272, i32 25, i64 0, i64 0, i64 0, i32 0, metadata !282} ; [ DW_TAG_typedef ]
 !282 = metadata !{i32 589860, metadata !265, metadata !"unsigned char", metadata !265, i32 0, i64 8, i64 8, i64 0, i32 0, i32 8} ; [ DW_TAG_base_type ]
-!283 = metadata !{i32 589837, metadata !275, metadata !"__filedes", metadata !278, i32 244, i64 32, i64 32, i64 32, i32 0, metadata !284} ; [ DW_TAG_member ]
-!284 = metadata !{i32 589860, metadata !265, metadata !"int", metadata !265, i32 0, i64 32, i64 32, i64 0, i32 0, i32 5} ; [ DW_TAG_base_type ]
-!285 = metadata !{i32 589837, metadata !275, metadata !"__bufstart", metadata !278, i32 246, i64 64, i64 64, i64 64, i32 0, metadata !286} ; [ DW_TAG_member ]
-!286 = metadata !{i32 589839, metadata !265, metadata !"", metadata !265, i32 0, i64 64, i64 64, i64 0, i32 0, metadata !282} ; [ DW_TAG_pointer_type ]
-!287 = metadata !{i32 589837, metadata !275, metadata !"__bufend", metadata !278, i32 247, i64 64, i64 64, i64 128, i32 0, metadata !286} ; [ DW_TAG_member ]
-!288 = metadata !{i32 589837, metadata !275, metadata !"__bufpos", metadata !278, i32 248, i64 64, i64 64, i64 192, i32 0, metadata !286} ; [ DW_TAG_member ]
-!289 = metadata !{i32 589837, metadata !275, metadata !"__bufread", metadata !278, i32 249, i64 64, i64 64, i64 256, i32 0, metadata !286} ; [ DW_TAG_member ]
-!290 = metadata !{i32 589837, metadata !275, metadata !"__bufgetc_u", metadata !278, i32 252, i64 64, i64 64, i64 320, i32 0, metadata !286} ; [ DW_TAG_member ]
-!291 = metadata !{i32 589837, metadata !275, metadata !"__bufputc_u", metadata !278, i32 255, i64 64, i64 64, i64 384, i32 0, metadata !286} ; [ DW_TAG_member ]
-!292 = metadata !{i32 589837, metadata !275, metadata !"__nextopen", metadata !278, i32 261, i64 64, i64 64, i64 448, i32 0, metadata !293} ; [ DW_TAG_member ]
-!293 = metadata !{i32 589839, metadata !265, metadata !"", metadata !265, i32 0, i64 64, i64 64, i64 0, i32 0, metadata !275} ; [ DW_TAG_pointer_type ]
-!294 = metadata !{i32 589837, metadata !275, metadata !"__ungot", metadata !278, i32 268, i64 64, i64 32, i64 512, i32 0, metadata !295} ; [ DW_TAG_member ]
-!295 = metadata !{i32 589825, metadata !265, metadata !"", metadata !265, i32 0, i64 64, i64 32, i64 0, i32 0, metadata !296, metadata !131, i32 0, null} ; [ DW_TAG_array_type ]
-!296 = metadata !{i32 589846, metadata !270, metadata !"wchar_t", metadata !270, i32 326, i64 0, i64 0, i64 0, i32 0, metadata !284} ; [ DW_TAG_typedef ]
-!297 = metadata !{i32 589837, metadata !275, metadata !"__state", metadata !278, i32 271, i64 64, i64 32, i64 576, i32 0, metadata !298} ; [ DW_TAG_member ]
-!298 = metadata !{i32 589846, metadata !299, metadata !"__mbstate_t", metadata !299, i32 85, i64 0, i64 0, i64 0, i32 0, metadata !300} ; [ DW_TAG_typedef ]
-!299 = metadata !{i32 589865, metadata !"wchar.h", metadata !"/home/zehranaz/kleestr/klee-uclibc/./include", metadata !266} ; [ DW_TAG_file_type ]
-!300 = metadata !{i32 589843, metadata !265, metadata !"", metadata !299, i32 82, i64 64, i64 32, i64 0, i32 0, null, metadata !301, i32 0, null} ; [ DW_TAG_structure_type ]
-!301 = metadata !{metadata !302, metadata !303}
-!302 = metadata !{i32 589837, metadata !300, metadata !"__mask", metadata !299, i32 83, i64 32, i64 32, i64 0, i32 0, metadata !296} ; [ DW_TAG_member ]
-!303 = metadata !{i32 589837, metadata !300, metadata !"__wc", metadata !299, i32 84, i64 32, i64 32, i64 32, i32 0, metadata !296} ; [ DW_TAG_member ]
-!304 = metadata !{i32 589839, metadata !265, metadata !"", metadata !265, i32 0, i64 64, i64 64, i64 0, i32 0, metadata !305} ; [ DW_TAG_pointer_type ]
-!305 = metadata !{i32 589862, metadata !265, metadata !"", metadata !265, i32 0, i64 8, i64 8, i64 0, i32 0, metadata !282} ; [ DW_TAG_const_type ]
-!306 = metadata !{i32 589870, i32 0, metadata !307, metadata !"tcgetattr", metadata !"tcgetattr", metadata !"tcgetattr", metadata !307, i32 39, metadata !309, i1 false, i1 true, i32 0, i32 0, null, i32 256, i1 false, i32 (i32, %struct.termios*)* @tcgetat
-!307 = metadata !{i32 589865, metadata !"tcgetattr.c", metadata !"/home/zehranaz/kleestr/klee-uclibc/libc/termios", metadata !308} ; [ DW_TAG_file_type ]
-!308 = metadata !{i32 589841, i32 0, i32 1, metadata !"tcgetattr.c", metadata !"/home/zehranaz/kleestr/klee-uclibc/libc/termios", metadata !"4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2.9)", i1 true, i1 false, metadata !"", i32 0} ; [ DW_TAG_comp
-!309 = metadata !{i32 589845, metadata !307, metadata !"", metadata !307, i32 0, i64 0, i64 0, i64 0, i32 0, null, metadata !310, i32 0, null} ; [ DW_TAG_subroutine_type ]
-!310 = metadata !{metadata !311, metadata !311, metadata !312}
-!311 = metadata !{i32 589860, metadata !307, metadata !"int", metadata !307, i32 0, i64 32, i64 32, i64 0, i32 0, i32 5} ; [ DW_TAG_base_type ]
-!312 = metadata !{i32 589839, metadata !307, metadata !"", metadata !307, i32 0, i64 64, i64 64, i64 0, i32 0, metadata !313} ; [ DW_TAG_pointer_type ]
-!313 = metadata !{i32 589843, metadata !307, metadata !"termios", metadata !314, i32 31, i64 480, i64 32, i64 0, i32 0, null, metadata !315, i32 0, null} ; [ DW_TAG_structure_type ]
-!314 = metadata !{i32 589865, metadata !"termios.h", metadata !"/home/zehranaz/kleestr/klee-uclibc/./include/bits", metadata !308} ; [ DW_TAG_file_type ]
-!315 = metadata !{metadata !316, metadata !319, metadata !320, metadata !321, metadata !322, metadata !325, metadata !329, metadata !331}
-!316 = metadata !{i32 589837, metadata !313, metadata !"c_iflag", metadata !314, i32 32, i64 32, i64 32, i64 0, i32 0, metadata !317} ; [ DW_TAG_member ]
-!317 = metadata !{i32 589846, metadata !314, metadata !"tcflag_t", metadata !314, i32 27, i64 0, i64 0, i64 0, i32 0, metadata !318} ; [ DW_TAG_typedef ]
-!318 = metadata !{i32 589860, metadata !307, metadata !"unsigned int", metadata !307, i32 0, i64 32, i64 32, i64 0, i32 0, i32 7} ; [ DW_TAG_base_type ]
-!319 = metadata !{i32 589837, metadata !313, metadata !"c_oflag", metadata !314, i32 33, i64 32, i64 32, i64 32, i32 0, metadata !317} ; [ DW_TAG_member ]
-!320 = metadata !{i32 589837, metadata !313, metadata !"c_cflag", metadata !314, i32 34, i64 32, i64 32, i64 64, i32 0, metadata !317} ; [ DW_TAG_member ]
-!321 = metadata !{i32 589837, metadata !313, metadata !"c_lflag", metadata !314, i32 35, i64 32, i64 32, i64 96, i32 0, metadata !317} ; [ DW_TAG_member ]
-!322 = metadata !{i32 589837, metadata !313, metadata !"c_line", metadata !314, i32 36, i64 8, i64 8, i64 128, i32 0, metadata !323} ; [ DW_TAG_member ]
-!323 = metadata !{i32 589846, metadata !314, metadata !"cc_t", metadata !314, i32 25, i64 0, i64 0, i64 0, i32 0, metadata !324} ; [ DW_TAG_typedef ]
-!324 = metadata !{i32 589860, metadata !307, metadata !"unsigned char", metadata !307, i32 0, i64 8, i64 8, i64 0, i32 0, i32 8} ; [ DW_TAG_base_type ]
-!325 = metadata !{i32 589837, metadata !313, metadata !"c_cc", metadata !314, i32 37, i64 256, i64 8, i64 136, i32 0, metadata !326} ; [ DW_TAG_member ]
-!326 = metadata !{i32 589825, metadata !307, metadata !"", metadata !307, i32 0, i64 256, i64 8, i64 0, i32 0, metadata !323, metadata !327, i32 0, null} ; [ DW_TAG_array_type ]
-!327 = metadata !{metadata !328}
-!328 = metadata !{i32 589857, i64 0, i64 31}      ; [ DW_TAG_subrange_type ]
-!329 = metadata !{i32 589837, metadata !313, metadata !"c_ispeed", metadata !314, i32 38, i64 32, i64 32, i64 416, i32 0, metadata !330} ; [ DW_TAG_member ]
-!330 = metadata !{i32 589846, metadata !314, metadata !"speed_t", metadata !314, i32 26, i64 0, i64 0, i64 0, i32 0, metadata !318} ; [ DW_TAG_typedef ]
-!331 = metadata !{i32 589837, metadata !313, metadata !"c_ospeed", metadata !314, i32 39, i64 32, i64 32, i64 448, i32 0, metadata !330} ; [ DW_TAG_member ]
+!283 = metadata !{i32 589837, metadata !271, metadata !"c_cc", metadata !272, i32 37, i64 256, i64 8, i64 136, i32 0, metadata !284} ; [ DW_TAG_member ]
+!284 = metadata !{i32 589825, metadata !265, metadata !"", metadata !265, i32 0, i64 256, i64 8, i64 0, i32 0, metadata !281, metadata !285, i32 0, null} ; [ DW_TAG_array_type ]
+!285 = metadata !{metadata !286}
+!286 = metadata !{i32 589857, i64 0, i64 31}      ; [ DW_TAG_subrange_type ]
+!287 = metadata !{i32 589837, metadata !271, metadata !"c_ispeed", metadata !272, i32 38, i64 32, i64 32, i64 416, i32 0, metadata !288} ; [ DW_TAG_member ]
+!288 = metadata !{i32 589846, metadata !272, metadata !"speed_t", metadata !272, i32 26, i64 0, i64 0, i64 0, i32 0, metadata !276} ; [ DW_TAG_typedef ]
+!289 = metadata !{i32 589837, metadata !271, metadata !"c_ospeed", metadata !272, i32 39, i64 32, i64 32, i64 448, i32 0, metadata !288} ; [ DW_TAG_member ]
+!290 = metadata !{i32 589870, i32 0, metadata !291, metadata !"__stdio_WRITE", metadata !"__stdio_WRITE", metadata !"__stdio_WRITE", metadata !291, i32 35, metadata !293, i1 false, i1 true, i32 0, i32 0, null, i32 256, i1 false, i64 (%struct.FILE*, i8*, 
+!291 = metadata !{i32 589865, metadata !"_WRITE.c", metadata !"/home/zehranaz/kleestr/klee-uclibc/libc/stdio", metadata !292} ; [ DW_TAG_file_type ]
+!292 = metadata !{i32 589841, i32 0, i32 1, metadata !"_WRITE.c", metadata !"/home/zehranaz/kleestr/klee-uclibc/libc/stdio", metadata !"4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2.9)", i1 true, i1 false, metadata !"", i32 0} ; [ DW_TAG_compile_u
+!293 = metadata !{i32 589845, metadata !291, metadata !"", metadata !291, i32 0, i64 0, i64 0, i64 0, i32 0, null, metadata !294, i32 0, null} ; [ DW_TAG_subroutine_type ]
+!294 = metadata !{metadata !295, metadata !298, metadata !330, metadata !295}
+!295 = metadata !{i32 589846, metadata !296, metadata !"size_t", metadata !296, i32 214, i64 0, i64 0, i64 0, i32 0, metadata !297} ; [ DW_TAG_typedef ]
+!296 = metadata !{i32 589865, metadata !"stddef.h", metadata !"/home/zehranaz/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.1/include", metadata !292} ; [ DW_TAG_file_type ]
+!297 = metadata !{i32 589860, metadata !291, metadata !"long unsigned int", metadata !291, i32 0, i64 64, i64 64, i64 0, i32 0, i32 7} ; [ DW_TAG_base_type ]
+!298 = metadata !{i32 589839, metadata !291, metadata !"", metadata !291, i32 0, i64 64, i64 64, i64 0, i32 0, metadata !299} ; [ DW_TAG_pointer_type ]
+!299 = metadata !{i32 589846, metadata !300, metadata !"FILE", metadata !300, i32 46, i64 0, i64 0, i64 0, i32 0, metadata !301} ; [ DW_TAG_typedef ]
+!300 = metadata !{i32 589865, metadata !"stdio.h", metadata !"/home/zehranaz/kleestr/klee-uclibc/./include", metadata !292} ; [ DW_TAG_file_type ]
+!301 = metadata !{i32 589843, metadata !291, metadata !"__STDIO_FILE_STRUCT", metadata !300, i32 46, i64 640, i64 64, i64 0, i32 0, null, metadata !302, i32 0, null} ; [ DW_TAG_structure_type ]
+!302 = metadata !{metadata !303, metadata !306, metadata !309, metadata !311, metadata !313, metadata !314, metadata !315, metadata !316, metadata !317, metadata !318, metadata !320, metadata !323}
+!303 = metadata !{i32 589837, metadata !301, metadata !"__modeflags", metadata !304, i32 234, i64 16, i64 16, i64 0, i32 0, metadata !305} ; [ DW_TAG_member ]
+!304 = metadata !{i32 589865, metadata !"uClibc_stdio.h", metadata !"/home/zehranaz/kleestr/klee-uclibc/./include/bits", metadata !292} ; [ DW_TAG_file_type ]
+!305 = metadata !{i32 589860, metadata !291, metadata !"short unsigned int", metadata !291, i32 0, i64 16, i64 16, i64 0, i32 0, i32 7} ; [ DW_TAG_base_type ]
+!306 = metadata !{i32 589837, metadata !301, metadata !"__ungot_width", metadata !304, i32 237, i64 16, i64 8, i64 16, i32 0, metadata !307} ; [ DW_TAG_member ]
+!307 = metadata !{i32 589825, metadata !291, metadata !"", metadata !291, i32 0, i64 16, i64 8, i64 0, i32 0, metadata !308, metadata !131, i32 0, null} ; [ DW_TAG_array_type ]
+!308 = metadata !{i32 589860, metadata !291, metadata !"unsigned char", metadata !291, i32 0, i64 8, i64 8, i64 0, i32 0, i32 8} ; [ DW_TAG_base_type ]
+!309 = metadata !{i32 589837, metadata !301, metadata !"__filedes", metadata !304, i32 244, i64 32, i64 32, i64 32, i32 0, metadata !310} ; [ DW_TAG_member ]
+!310 = metadata !{i32 589860, metadata !291, metadata !"int", metadata !291, i32 0, i64 32, i64 32, i64 0, i32 0, i32 5} ; [ DW_TAG_base_type ]
+!311 = metadata !{i32 589837, metadata !301, metadata !"__bufstart", metadata !304, i32 246, i64 64, i64 64, i64 64, i32 0, metadata !312} ; [ DW_TAG_member ]
+!312 = metadata !{i32 589839, metadata !291, metadata !"", metadata !291, i32 0, i64 64, i64 64, i64 0, i32 0, metadata !308} ; [ DW_TAG_pointer_type ]
+!313 = metadata !{i32 589837, metadata !301, metadata !"__bufend", metadata !304, i32 247, i64 64, i64 64, i64 128, i32 0, metadata !312} ; [ DW_TAG_member ]
+!314 = metadata !{i32 589837, metadata !301, metadata !"__bufpos", metadata !304, i32 248, i64 64, i64 64, i64 192, i32 0, metadata !312} ; [ DW_TAG_member ]
+!315 = metadata !{i32 589837, metadata !301, metadata !"__bufread", metadata !304, i32 249, i64 64, i64 64, i64 256, i32 0, metadata !312} ; [ DW_TAG_member ]
+!316 = metadata !{i32 589837, metadata !301, metadata !"__bufgetc_u", metadata !304, i32 252, i64 64, i64 64, i64 320, i32 0, metadata !312} ; [ DW_TAG_member ]
+!317 = metadata !{i32 589837, metadata !301, metadata !"__bufputc_u", metadata !304, i32 255, i64 64, i64 64, i64 384, i32 0, metadata !312} ; [ DW_TAG_member ]
+!318 = metadata !{i32 589837, metadata !301, metadata !"__nextopen", metadata !304, i32 261, i64 64, i64 64, i64 448, i32 0, metadata !319} ; [ DW_TAG_member ]
+!319 = metadata !{i32 589839, metadata !291, metadata !"", metadata !291, i32 0, i64 64, i64 64, i64 0, i32 0, metadata !301} ; [ DW_TAG_pointer_type ]
+!320 = metadata !{i32 589837, metadata !301, metadata !"__ungot", metadata !304, i32 268, i64 64, i64 32, i64 512, i32 0, metadata !321} ; [ DW_TAG_member ]
+!321 = metadata !{i32 589825, metadata !291, metadata !"", metadata !291, i32 0, i64 64, i64 32, i64 0, i32 0, metadata !322, metadata !131, i32 0, null} ; [ DW_TAG_array_type ]
+!322 = metadata !{i32 589846, metadata !296, metadata !"wchar_t", metadata !296, i32 326, i64 0, i64 0, i64 0, i32 0, metadata !310} ; [ DW_TAG_typedef ]
+!323 = metadata !{i32 589837, metadata !301, metadata !"__state", metadata !304, i32 271, i64 64, i64 32, i64 576, i32 0, metadata !324} ; [ DW_TAG_member ]
+!324 = metadata !{i32 589846, metadata !325, metadata !"__mbstate_t", metadata !325, i32 85, i64 0, i64 0, i64 0, i32 0, metadata !326} ; [ DW_TAG_typedef ]
+!325 = metadata !{i32 589865, metadata !"wchar.h", metadata !"/home/zehranaz/kleestr/klee-uclibc/./include", metadata !292} ; [ DW_TAG_file_type ]
+!326 = metadata !{i32 589843, metadata !291, metadata !"", metadata !325, i32 82, i64 64, i64 32, i64 0, i32 0, null, metadata !327, i32 0, null} ; [ DW_TAG_structure_type ]
+!327 = metadata !{metadata !328, metadata !329}
+!328 = metadata !{i32 589837, metadata !326, metadata !"__mask", metadata !325, i32 83, i64 32, i64 32, i64 0, i32 0, metadata !322} ; [ DW_TAG_member ]
+!329 = metadata !{i32 589837, metadata !326, metadata !"__wc", metadata !325, i32 84, i64 32, i64 32, i64 32, i32 0, metadata !322} ; [ DW_TAG_member ]
+!330 = metadata !{i32 589839, metadata !291, metadata !"", metadata !291, i32 0, i64 64, i64 64, i64 0, i32 0, metadata !331} ; [ DW_TAG_pointer_type ]
+!331 = metadata !{i32 589862, metadata !291, metadata !"", metadata !291, i32 0, i64 8, i64 8, i64 0, i32 0, metadata !308} ; [ DW_TAG_const_type ]
 !332 = metadata !{i32 589870, i32 0, metadata !333, metadata !"mempcpy", metadata !"mempcpy", metadata !"mempcpy", metadata !333, i32 21, metadata !335, i1 false, i1 true, i32 0, i32 0, null, i32 256, i1 false, i8* (i8*, i8*, i64)* @mempcpy} ; [ DW_TAG_s
 !333 = metadata !{i32 589865, metadata !"mempcpy.c", metadata !"/home/zehranaz/kleestr/klee-uclibc/libc/string", metadata !334} ; [ DW_TAG_file_type ]
 !334 = metadata !{i32 589841, i32 0, i32 1, metadata !"mempcpy.c", metadata !"/home/zehranaz/kleestr/klee-uclibc/libc/string", metadata !"4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2.9)", i1 true, i1 false, metadata !"", i32 0} ; [ DW_TAG_compile
@@ -1999,191 +2036,195 @@ declare void @klee_assume(i64)
 !520 = metadata !{i32 589860, metadata !399, metadata !"char", metadata !399, i32 0, i64 8, i64 8, i64 0, i32 0, i32 6} ; [ DW_TAG_base_type ]
 !521 = metadata !{i32 15, i32 0, metadata !522, null}
 !522 = metadata !{i32 589835, metadata !0, i32 12, i32 0, metadata !1, i32 0} ; [ DW_TAG_lexical_block ]
-!523 = metadata !{i32 16, i32 0, metadata !522, null}
-!524 = metadata !{i32 17, i32 0, metadata !522, null}
-!525 = metadata !{i32 18, i32 0, metadata !522, null}
-!526 = metadata !{i32 20, i32 0, metadata !522, null}
-!527 = metadata !{i32 21, i32 0, metadata !522, null}
-!528 = metadata !{i32 22, i32 0, metadata !522, null}
-!529 = metadata !{i32 139, i32 0, metadata !530, null}
-!530 = metadata !{i32 589835, metadata !6, i32 137, i32 0, metadata !7, i32 0} ; [ DW_TAG_lexical_block ]
-!531 = metadata !{i32 143, i32 0, metadata !532, null}
-!532 = metadata !{i32 589835, metadata !530, i32 137, i32 0, metadata !7, i32 1} ; [ DW_TAG_lexical_block ]
-!533 = metadata !{i32 147, i32 0, metadata !532, null}
-!534 = metadata !{i32 150, i32 0, metadata !532, null}
-!535 = metadata !{i32 153, i32 0, metadata !532, null}
-!536 = metadata !{i32 56, i32 0, metadata !537, null}
-!537 = metadata !{i32 589835, metadata !12, i32 55, i32 0, metadata !13, i32 2} ; [ DW_TAG_lexical_block ]
-!538 = metadata !{i32 160, i32 0, metadata !539, null}
-!539 = metadata !{i32 589835, metadata !18, i32 156, i32 0, metadata !7, i32 3} ; [ DW_TAG_lexical_block ]
-!540 = metadata !{i32 161, i32 0, metadata !539, null}
-!541 = metadata !{i32 162, i32 0, metadata !539, null}
-!542 = metadata !{i32 163, i32 0, metadata !539, null}
-!543 = metadata !{i32 165, i32 0, metadata !539, null}
-!544 = metadata !{i32 166, i32 0, metadata !539, null}
-!545 = metadata !{i32 168, i32 0, metadata !539, null}
-!546 = metadata !{i32 191, i32 0, metadata !547, null}
-!547 = metadata !{i32 589835, metadata !21, i32 188, i32 0, metadata !7, i32 4} ; [ DW_TAG_lexical_block ]
-!548 = metadata !{i32 193, i32 0, metadata !547, null}
-!549 = metadata !{i32 197, i32 0, metadata !547, null}
-!550 = metadata !{i32 239, i32 0, metadata !547, null}
-!551 = metadata !{i32 192, i32 0, metadata !547, null}
-!552 = metadata !{i32 263, i32 0, metadata !553, null}
-!553 = metadata !{i32 589835, metadata !24, i32 252, i32 0, metadata !7, i32 5} ; [ DW_TAG_lexical_block ]
-!554 = metadata !{i32 264, i32 0, metadata !553, null}
-!555 = metadata !{i32 266, i32 0, metadata !553, null}
-!556 = metadata !{i32 267, i32 0, metadata !553, null}
-!557 = metadata !{i32 268, i32 0, metadata !553, null}
-!558 = metadata !{i32 288, i32 0, metadata !559, null}
-!559 = metadata !{i32 589835, metadata !25, i32 281, i32 0, metadata !7, i32 6} ; [ DW_TAG_lexical_block ]
-!560 = metadata !{i32 291, i32 0, metadata !559, null}
-!561 = metadata !{i32 294, i32 0, metadata !559, null}
-!562 = metadata !{i32 298, i32 0, metadata !559, null}
-!563 = metadata !{i32 300, i32 0, metadata !559, null}
-!564 = metadata !{i32 305, i32 0, metadata !559, null}
-!565 = metadata !{i32 306, i32 0, metadata !559, null}
-!566 = metadata !{i32 307, i32 0, metadata !559, null}
-!567 = metadata !{i32 308, i32 0, metadata !559, null}
-!568 = metadata !{i32 312, i32 0, metadata !569, null}
-!569 = metadata !{i32 589835, metadata !559, i32 312, i32 0, metadata !7, i32 7} ; [ DW_TAG_lexical_block ]
-!570 = metadata !{i32 313, i32 0, metadata !569, null}
-!571 = metadata !{i32 314, i32 0, metadata !569, null}
-!572 = metadata !{i32 316, i32 0, metadata !569, null}
-!573 = metadata !{i32 311, i32 0, metadata !559, null}
-!574 = metadata !{i32 323, i32 0, metadata !559, null}
-!575 = metadata !{i32 327, i32 0, metadata !559, null}
-!576 = metadata !{i32 331, i32 0, metadata !559, null}
-!577 = metadata !{i32 336, i32 0, metadata !559, null}
-!578 = metadata !{i32 337, i32 0, metadata !559, null}
-!579 = metadata !{i32 338, i32 0, metadata !559, null}
-!580 = metadata !{i32 342, i32 0, metadata !559, null}
-!581 = metadata !{i32 354, i32 0, metadata !559, null}
-!582 = metadata !{i32 370, i32 0, metadata !559, null}
-!583 = metadata !{i32 371, i32 0, metadata !559, null}
-!584 = metadata !{i32 391, i32 0, metadata !559, null}
-!585 = metadata !{i32 392, i32 0, metadata !559, null}
-!586 = metadata !{i32 395, i32 0, metadata !559, null}
-!587 = metadata !{i32 396, i32 0, metadata !559, null}
-!588 = metadata !{i32 401, i32 0, metadata !559, null}
-!589 = metadata !{i32 13, i32 0, metadata !590, null}
-!590 = metadata !{i32 589835, metadata !45, i32 12, i32 0, metadata !46, i32 0} ; [ DW_TAG_lexical_block ]
-!591 = metadata !{i32 12, i32 0, metadata !592, null}
-!592 = metadata !{i32 589835, metadata !52, i32 11, i32 0, metadata !53, i32 0} ; [ DW_TAG_lexical_block ]
-!593 = metadata !{i32 258, i32 0, metadata !594, null}
-!594 = metadata !{i32 589835, metadata !59, i32 211, i32 0, metadata !60, i32 0} ; [ DW_TAG_lexical_block ]
-!595 = metadata !{i32 261, i32 0, metadata !594, null}
-!596 = metadata !{i32 262, i32 0, metadata !594, null}
-!597 = metadata !{i32 274, i32 0, metadata !594, null}
-!598 = metadata !{i32 280, i32 0, metadata !599, null}
-!599 = metadata !{i32 589835, metadata !63, i32 278, i32 0, metadata !60, i32 1} ; [ DW_TAG_lexical_block ]
-!600 = metadata !{i32 282, i32 0, metadata !599, null}
-!601 = metadata !{i32 283, i32 0, metadata !599, null}
-!602 = metadata !{i32 284, i32 0, metadata !599, null}
-!603 = metadata !{i32 291, i32 0, metadata !599, null}
-!604 = metadata !{i32 322, i32 0, metadata !605, null}
-!605 = metadata !{i32 589835, metadata !68, i32 319, i32 0, metadata !71, i32 0} ; [ DW_TAG_lexical_block ]
-!606 = metadata !{i32 323, i32 0, metadata !605, null}
-!607 = metadata !{i32 327, i32 0, metadata !605, null}
-!608 = metadata !{i32 334, i32 0, metadata !605, null}
-!609 = metadata !{i32 336, i32 0, metadata !605, null}
-!610 = metadata !{i32 20, i32 0, metadata !611, null}
-!611 = metadata !{i32 589835, metadata !75, i32 19, i32 0, metadata !76, i32 0} ; [ DW_TAG_lexical_block ]
-!612 = metadata !{i32 21, i32 0, metadata !611, null}
-!613 = metadata !{i32 29, i32 0, metadata !611, null}
-!614 = metadata !{i32 30, i32 0, metadata !611, null}
-!615 = metadata !{i32 28, i32 0, metadata !611, null}
-!616 = metadata !{i32 34, i32 0, metadata !611, null}
-!617 = metadata !{i32 19, i32 0, metadata !618, null}
-!618 = metadata !{i32 589835, metadata !84, i32 18, i32 0, metadata !85, i32 0} ; [ DW_TAG_lexical_block ]
-!619 = metadata !{i32 28, i32 0, metadata !618, null}
-!620 = metadata !{i32 29, i32 0, metadata !618, null}
-!621 = metadata !{i32 27, i32 0, metadata !618, null}
-!622 = metadata !{i32 32, i32 0, metadata !618, null}
-!623 = metadata !{i32 117, i32 0, metadata !94, null}
-!624 = metadata !{i32 117, i32 0, metadata !625, null}
-!625 = metadata !{i32 589835, metadata !94, i32 117, i32 0, metadata !97, i32 0} ; [ DW_TAG_lexical_block ]
-!626 = metadata !{i32 118, i32 0, metadata !110, null}
-!627 = metadata !{i32 118, i32 0, metadata !628, null}
-!628 = metadata !{i32 589835, metadata !110, i32 118, i32 0, metadata !97, i32 1} ; [ DW_TAG_lexical_block ]
-!629 = metadata !{i32 119, i32 0, metadata !111, null}
-!630 = metadata !{i32 119, i32 0, metadata !631, null}
-!631 = metadata !{i32 589835, metadata !111, i32 119, i32 0, metadata !97, i32 2} ; [ DW_TAG_lexical_block ]
-!632 = metadata !{i32 23, i32 0, metadata !633, null}
-!633 = metadata !{i32 589835, metadata !112, i32 18, i32 0, metadata !113, i32 0} ; [ DW_TAG_lexical_block ]
-!634 = metadata !{i32 24, i32 0, metadata !633, null}
-!635 = metadata !{i32 25, i32 0, metadata !633, null}
-!636 = metadata !{i32 28, i32 0, metadata !633, null}
-!637 = metadata !{i32 30, i32 0, metadata !638, null}
-!638 = metadata !{i32 589835, metadata !154, i32 27, i32 0, metadata !155, i32 0} ; [ DW_TAG_lexical_block ]
-!639 = metadata !{i32 17, i32 0, metadata !640, null}
-!640 = metadata !{i32 589835, metadata !160, i32 16, i32 0, metadata !161, i32 0} ; [ DW_TAG_lexical_block ]
-!641 = metadata !{i32 47, i32 0, metadata !642, null}
-!642 = metadata !{i32 589835, metadata !166, i32 43, i32 0, metadata !167, i32 0} ; [ DW_TAG_lexical_block ]
-!643 = metadata !{i32 48, i32 0, metadata !642, null}
-!644 = metadata !{i32 49, i32 0, metadata !642, null}
-!645 = metadata !{i32 50, i32 0, metadata !642, null}
-!646 = metadata !{i32 52, i32 0, metadata !642, null}
-!647 = metadata !{i32 58, i32 0, metadata !642, null}
-!648 = metadata !{i32 62, i32 0, metadata !642, null}
-!649 = metadata !{i32 63, i32 0, metadata !642, null}
-!650 = metadata !{i32 64, i32 0, metadata !642, null}
-!651 = metadata !{i32 65, i32 0, metadata !642, null}
-!652 = metadata !{i32 67, i32 0, metadata !642, null}
-!653 = metadata !{i32 71, i32 0, metadata !642, null}
-!654 = metadata !{i32 44, i32 0, metadata !655, null}
-!655 = metadata !{i32 589835, metadata !264, i32 35, i32 0, metadata !265, i32 0} ; [ DW_TAG_lexical_block ]
-!656 = metadata !{i32 47, i32 0, metadata !655, null}
-!657 = metadata !{i32 49, i32 0, metadata !655, null}
-!658 = metadata !{i32 51, i32 0, metadata !655, null}
-!659 = metadata !{i32 52, i32 0, metadata !655, null}
-!660 = metadata !{i32 62, i32 0, metadata !655, null}
-!661 = metadata !{i32 63, i32 0, metadata !655, null}
-!662 = metadata !{i32 70, i32 0, metadata !655, null}
-!663 = metadata !{i32 73, i32 0, metadata !655, null}
-!664 = metadata !{i32 76, i32 0, metadata !665, null}
-!665 = metadata !{i32 589835, metadata !655, i32 76, i32 0, metadata !265, i32 1} ; [ DW_TAG_lexical_block ]
-!666 = metadata !{i32 77, i32 0, metadata !665, null}
-!667 = metadata !{i32 80, i32 0, metadata !665, null}
-!668 = metadata !{i32 83, i32 0, metadata !665, null}
-!669 = metadata !{i32 88, i32 0, metadata !665, null}
-!670 = metadata !{i32 89, i32 0, metadata !665, null}
-!671 = metadata !{i32 90, i32 0, metadata !665, null}
-!672 = metadata !{i32 92, i32 0, metadata !665, null}
-!673 = metadata !{i32 94, i32 0, metadata !665, null}
-!674 = metadata !{i32 99, i32 0, metadata !655, null}
-!675 = metadata !{i32 43, i32 0, metadata !676, null}
-!676 = metadata !{i32 589835, metadata !306, i32 39, i32 0, metadata !307, i32 0} ; [ DW_TAG_lexical_block ]
-!677 = metadata !{i32 45, i32 0, metadata !676, null}
-!678 = metadata !{i32 46, i32 0, metadata !676, null}
-!679 = metadata !{i32 47, i32 0, metadata !676, null}
-!680 = metadata !{i32 48, i32 0, metadata !676, null}
-!681 = metadata !{i32 49, i32 0, metadata !676, null}
-!682 = metadata !{i32 61, i32 0, metadata !676, null}
-!683 = metadata !{i32 79, i32 0, metadata !676, null}
-!684 = metadata !{i32 22, i32 0, metadata !685, null}
-!685 = metadata !{i32 589835, metadata !332, i32 21, i32 0, metadata !333, i32 0} ; [ DW_TAG_lexical_block ]
-!686 = metadata !{i32 23, i32 0, metadata !685, null}
-!687 = metadata !{i32 31, i32 0, metadata !685, null}
-!688 = metadata !{i32 32, i32 0, metadata !685, null}
-!689 = metadata !{i32 30, i32 0, metadata !685, null}
-!690 = metadata !{i32 36, i32 0, metadata !685, null}
-!691 = metadata !{i32 13, i32 0, metadata !692, null}
-!692 = metadata !{i32 589835, metadata !341, i32 12, i32 0, metadata !342, i32 0} ; [ DW_TAG_lexical_block ]
-!693 = metadata !{i32 14, i32 0, metadata !692, null}
-!694 = metadata !{i32 15, i32 0, metadata !692, null}
-!695 = metadata !{i32 15, i32 0, metadata !475, null}
-!696 = metadata !{i32 16, i32 0, metadata !475, null}
-!697 = metadata !{i32 21, i32 0, metadata !698, null}
-!698 = metadata !{i32 589835, metadata !356, i32 20, i32 0, metadata !357, i32 0} ; [ DW_TAG_lexical_block ]
-!699 = metadata !{i32 27, i32 0, metadata !698, null}
-!700 = metadata !{i32 29, i32 0, metadata !698, null}
-!701 = metadata !{i32 16, i32 0, metadata !482, null}
-!702 = metadata !{i32 17, i32 0, metadata !482, null}
-!703 = metadata !{i32 19, i32 0, metadata !482, null}
-!704 = metadata !{i32 22, i32 0, metadata !482, null}
-!705 = metadata !{i32 25, i32 0, metadata !482, null}
-!706 = metadata !{i32 26, i32 0, metadata !482, null}
-!707 = metadata !{i32 28, i32 0, metadata !482, null}
-!708 = metadata !{i32 29, i32 0, metadata !482, null}
-!709 = metadata !{i32 32, i32 0, metadata !482, null}
-!710 = metadata !{i32 20, i32 0, metadata !482, null}
+!523 = metadata !{i32 17, i32 0, metadata !522, null}
+!524 = metadata !{i32 18, i32 0, metadata !522, null}
+!525 = metadata !{i32 21, i32 0, metadata !522, null}
+!526 = metadata !{i32 23, i32 0, metadata !522, null}
+!527 = metadata !{i32 139, i32 0, metadata !528, null}
+!528 = metadata !{i32 589835, metadata !6, i32 137, i32 0, metadata !7, i32 0} ; [ DW_TAG_lexical_block ]
+!529 = metadata !{i32 143, i32 0, metadata !530, null}
+!530 = metadata !{i32 589835, metadata !528, i32 137, i32 0, metadata !7, i32 1} ; [ DW_TAG_lexical_block ]
+!531 = metadata !{i32 147, i32 0, metadata !530, null}
+!532 = metadata !{i32 150, i32 0, metadata !530, null}
+!533 = metadata !{i32 153, i32 0, metadata !530, null}
+!534 = metadata !{i32 56, i32 0, metadata !535, null}
+!535 = metadata !{i32 589835, metadata !12, i32 55, i32 0, metadata !13, i32 2} ; [ DW_TAG_lexical_block ]
+!536 = metadata !{i32 160, i32 0, metadata !537, null}
+!537 = metadata !{i32 589835, metadata !18, i32 156, i32 0, metadata !7, i32 3} ; [ DW_TAG_lexical_block ]
+!538 = metadata !{i32 161, i32 0, metadata !537, null}
+!539 = metadata !{i32 162, i32 0, metadata !537, null}
+!540 = metadata !{i32 163, i32 0, metadata !537, null}
+!541 = metadata !{i32 165, i32 0, metadata !537, null}
+!542 = metadata !{i32 166, i32 0, metadata !537, null}
+!543 = metadata !{i32 168, i32 0, metadata !537, null}
+!544 = metadata !{i32 191, i32 0, metadata !545, null}
+!545 = metadata !{i32 589835, metadata !21, i32 188, i32 0, metadata !7, i32 4} ; [ DW_TAG_lexical_block ]
+!546 = metadata !{i32 193, i32 0, metadata !545, null}
+!547 = metadata !{i32 197, i32 0, metadata !545, null}
+!548 = metadata !{i32 239, i32 0, metadata !545, null}
+!549 = metadata !{i32 192, i32 0, metadata !545, null}
+!550 = metadata !{i32 263, i32 0, metadata !551, null}
+!551 = metadata !{i32 589835, metadata !24, i32 252, i32 0, metadata !7, i32 5} ; [ DW_TAG_lexical_block ]
+!552 = metadata !{i32 264, i32 0, metadata !551, null}
+!553 = metadata !{i32 266, i32 0, metadata !551, null}
+!554 = metadata !{i32 267, i32 0, metadata !551, null}
+!555 = metadata !{i32 268, i32 0, metadata !551, null}
+!556 = metadata !{i32 288, i32 0, metadata !557, null}
+!557 = metadata !{i32 589835, metadata !25, i32 281, i32 0, metadata !7, i32 6} ; [ DW_TAG_lexical_block ]
+!558 = metadata !{i32 291, i32 0, metadata !557, null}
+!559 = metadata !{i32 294, i32 0, metadata !557, null}
+!560 = metadata !{i32 298, i32 0, metadata !557, null}
+!561 = metadata !{i32 300, i32 0, metadata !557, null}
+!562 = metadata !{i32 305, i32 0, metadata !557, null}
+!563 = metadata !{i32 306, i32 0, metadata !557, null}
+!564 = metadata !{i32 307, i32 0, metadata !557, null}
+!565 = metadata !{i32 308, i32 0, metadata !557, null}
+!566 = metadata !{i32 312, i32 0, metadata !567, null}
+!567 = metadata !{i32 589835, metadata !557, i32 312, i32 0, metadata !7, i32 7} ; [ DW_TAG_lexical_block ]
+!568 = metadata !{i32 313, i32 0, metadata !567, null}
+!569 = metadata !{i32 314, i32 0, metadata !567, null}
+!570 = metadata !{i32 316, i32 0, metadata !567, null}
+!571 = metadata !{i32 311, i32 0, metadata !557, null}
+!572 = metadata !{i32 323, i32 0, metadata !557, null}
+!573 = metadata !{i32 327, i32 0, metadata !557, null}
+!574 = metadata !{i32 331, i32 0, metadata !557, null}
+!575 = metadata !{i32 336, i32 0, metadata !557, null}
+!576 = metadata !{i32 337, i32 0, metadata !557, null}
+!577 = metadata !{i32 338, i32 0, metadata !557, null}
+!578 = metadata !{i32 342, i32 0, metadata !557, null}
+!579 = metadata !{i32 354, i32 0, metadata !557, null}
+!580 = metadata !{i32 370, i32 0, metadata !557, null}
+!581 = metadata !{i32 371, i32 0, metadata !557, null}
+!582 = metadata !{i32 391, i32 0, metadata !557, null}
+!583 = metadata !{i32 392, i32 0, metadata !557, null}
+!584 = metadata !{i32 395, i32 0, metadata !557, null}
+!585 = metadata !{i32 396, i32 0, metadata !557, null}
+!586 = metadata !{i32 401, i32 0, metadata !557, null}
+!587 = metadata !{i32 20, i32 0, metadata !588, null}
+!588 = metadata !{i32 589835, metadata !36, i32 19, i32 0, metadata !37, i32 0} ; [ DW_TAG_lexical_block ]
+!589 = metadata !{i32 22, i32 0, metadata !588, null}
+!590 = metadata !{i32 23, i32 0, metadata !588, null}
+!591 = metadata !{i32 24, i32 0, metadata !588, null}
+!592 = metadata !{i32 26, i32 0, metadata !588, null}
+!593 = metadata !{i32 13, i32 0, metadata !594, null}
+!594 = metadata !{i32 589835, metadata !45, i32 12, i32 0, metadata !46, i32 0} ; [ DW_TAG_lexical_block ]
+!595 = metadata !{i32 12, i32 0, metadata !596, null}
+!596 = metadata !{i32 589835, metadata !52, i32 11, i32 0, metadata !53, i32 0} ; [ DW_TAG_lexical_block ]
+!597 = metadata !{i32 258, i32 0, metadata !598, null}
+!598 = metadata !{i32 589835, metadata !59, i32 211, i32 0, metadata !60, i32 0} ; [ DW_TAG_lexical_block ]
+!599 = metadata !{i32 261, i32 0, metadata !598, null}
+!600 = metadata !{i32 262, i32 0, metadata !598, null}
+!601 = metadata !{i32 274, i32 0, metadata !598, null}
+!602 = metadata !{i32 280, i32 0, metadata !603, null}
+!603 = metadata !{i32 589835, metadata !63, i32 278, i32 0, metadata !60, i32 1} ; [ DW_TAG_lexical_block ]
+!604 = metadata !{i32 282, i32 0, metadata !603, null}
+!605 = metadata !{i32 283, i32 0, metadata !603, null}
+!606 = metadata !{i32 284, i32 0, metadata !603, null}
+!607 = metadata !{i32 291, i32 0, metadata !603, null}
+!608 = metadata !{i32 322, i32 0, metadata !609, null}
+!609 = metadata !{i32 589835, metadata !68, i32 319, i32 0, metadata !71, i32 0} ; [ DW_TAG_lexical_block ]
+!610 = metadata !{i32 323, i32 0, metadata !609, null}
+!611 = metadata !{i32 327, i32 0, metadata !609, null}
+!612 = metadata !{i32 334, i32 0, metadata !609, null}
+!613 = metadata !{i32 336, i32 0, metadata !609, null}
+!614 = metadata !{i32 20, i32 0, metadata !615, null}
+!615 = metadata !{i32 589835, metadata !75, i32 19, i32 0, metadata !76, i32 0} ; [ DW_TAG_lexical_block ]
+!616 = metadata !{i32 21, i32 0, metadata !615, null}
+!617 = metadata !{i32 29, i32 0, metadata !615, null}
+!618 = metadata !{i32 30, i32 0, metadata !615, null}
+!619 = metadata !{i32 28, i32 0, metadata !615, null}
+!620 = metadata !{i32 34, i32 0, metadata !615, null}
+!621 = metadata !{i32 19, i32 0, metadata !622, null}
+!622 = metadata !{i32 589835, metadata !84, i32 18, i32 0, metadata !85, i32 0} ; [ DW_TAG_lexical_block ]
+!623 = metadata !{i32 28, i32 0, metadata !622, null}
+!624 = metadata !{i32 29, i32 0, metadata !622, null}
+!625 = metadata !{i32 27, i32 0, metadata !622, null}
+!626 = metadata !{i32 32, i32 0, metadata !622, null}
+!627 = metadata !{i32 117, i32 0, metadata !94, null}
+!628 = metadata !{i32 117, i32 0, metadata !629, null}
+!629 = metadata !{i32 589835, metadata !94, i32 117, i32 0, metadata !97, i32 0} ; [ DW_TAG_lexical_block ]
+!630 = metadata !{i32 118, i32 0, metadata !110, null}
+!631 = metadata !{i32 118, i32 0, metadata !632, null}
+!632 = metadata !{i32 589835, metadata !110, i32 118, i32 0, metadata !97, i32 1} ; [ DW_TAG_lexical_block ]
+!633 = metadata !{i32 119, i32 0, metadata !111, null}
+!634 = metadata !{i32 119, i32 0, metadata !635, null}
+!635 = metadata !{i32 589835, metadata !111, i32 119, i32 0, metadata !97, i32 2} ; [ DW_TAG_lexical_block ]
+!636 = metadata !{i32 23, i32 0, metadata !637, null}
+!637 = metadata !{i32 589835, metadata !112, i32 18, i32 0, metadata !113, i32 0} ; [ DW_TAG_lexical_block ]
+!638 = metadata !{i32 24, i32 0, metadata !637, null}
+!639 = metadata !{i32 25, i32 0, metadata !637, null}
+!640 = metadata !{i32 28, i32 0, metadata !637, null}
+!641 = metadata !{i32 30, i32 0, metadata !642, null}
+!642 = metadata !{i32 589835, metadata !154, i32 27, i32 0, metadata !155, i32 0} ; [ DW_TAG_lexical_block ]
+!643 = metadata !{i32 47, i32 0, metadata !644, null}
+!644 = metadata !{i32 589835, metadata !160, i32 43, i32 0, metadata !161, i32 0} ; [ DW_TAG_lexical_block ]
+!645 = metadata !{i32 48, i32 0, metadata !644, null}
+!646 = metadata !{i32 49, i32 0, metadata !644, null}
+!647 = metadata !{i32 50, i32 0, metadata !644, null}
+!648 = metadata !{i32 52, i32 0, metadata !644, null}
+!649 = metadata !{i32 58, i32 0, metadata !644, null}
+!650 = metadata !{i32 62, i32 0, metadata !644, null}
+!651 = metadata !{i32 63, i32 0, metadata !644, null}
+!652 = metadata !{i32 64, i32 0, metadata !644, null}
+!653 = metadata !{i32 65, i32 0, metadata !644, null}
+!654 = metadata !{i32 67, i32 0, metadata !644, null}
+!655 = metadata !{i32 71, i32 0, metadata !644, null}
+!656 = metadata !{i32 17, i32 0, metadata !657, null}
+!657 = metadata !{i32 589835, metadata !258, i32 16, i32 0, metadata !259, i32 0} ; [ DW_TAG_lexical_block ]
+!658 = metadata !{i32 43, i32 0, metadata !659, null}
+!659 = metadata !{i32 589835, metadata !264, i32 39, i32 0, metadata !265, i32 0} ; [ DW_TAG_lexical_block ]
+!660 = metadata !{i32 45, i32 0, metadata !659, null}
+!661 = metadata !{i32 46, i32 0, metadata !659, null}
+!662 = metadata !{i32 47, i32 0, metadata !659, null}
+!663 = metadata !{i32 48, i32 0, metadata !659, null}
+!664 = metadata !{i32 49, i32 0, metadata !659, null}
+!665 = metadata !{i32 61, i32 0, metadata !659, null}
+!666 = metadata !{i32 79, i32 0, metadata !659, null}
+!667 = metadata !{i32 44, i32 0, metadata !668, null}
+!668 = metadata !{i32 589835, metadata !290, i32 35, i32 0, metadata !291, i32 0} ; [ DW_TAG_lexical_block ]
+!669 = metadata !{i32 47, i32 0, metadata !668, null}
+!670 = metadata !{i32 49, i32 0, metadata !668, null}
+!671 = metadata !{i32 51, i32 0, metadata !668, null}
+!672 = metadata !{i32 52, i32 0, metadata !668, null}
+!673 = metadata !{i32 62, i32 0, metadata !668, null}
+!674 = metadata !{i32 63, i32 0, metadata !668, null}
+!675 = metadata !{i32 70, i32 0, metadata !668, null}
+!676 = metadata !{i32 73, i32 0, metadata !668, null}
+!677 = metadata !{i32 76, i32 0, metadata !678, null}
+!678 = metadata !{i32 589835, metadata !668, i32 76, i32 0, metadata !291, i32 1} ; [ DW_TAG_lexical_block ]
+!679 = metadata !{i32 77, i32 0, metadata !678, null}
+!680 = metadata !{i32 80, i32 0, metadata !678, null}
+!681 = metadata !{i32 83, i32 0, metadata !678, null}
+!682 = metadata !{i32 88, i32 0, metadata !678, null}
+!683 = metadata !{i32 89, i32 0, metadata !678, null}
+!684 = metadata !{i32 90, i32 0, metadata !678, null}
+!685 = metadata !{i32 92, i32 0, metadata !678, null}
+!686 = metadata !{i32 94, i32 0, metadata !678, null}
+!687 = metadata !{i32 99, i32 0, metadata !668, null}
+!688 = metadata !{i32 22, i32 0, metadata !689, null}
+!689 = metadata !{i32 589835, metadata !332, i32 21, i32 0, metadata !333, i32 0} ; [ DW_TAG_lexical_block ]
+!690 = metadata !{i32 23, i32 0, metadata !689, null}
+!691 = metadata !{i32 31, i32 0, metadata !689, null}
+!692 = metadata !{i32 32, i32 0, metadata !689, null}
+!693 = metadata !{i32 30, i32 0, metadata !689, null}
+!694 = metadata !{i32 36, i32 0, metadata !689, null}
+!695 = metadata !{i32 13, i32 0, metadata !696, null}
+!696 = metadata !{i32 589835, metadata !341, i32 12, i32 0, metadata !342, i32 0} ; [ DW_TAG_lexical_block ]
+!697 = metadata !{i32 14, i32 0, metadata !696, null}
+!698 = metadata !{i32 15, i32 0, metadata !696, null}
+!699 = metadata !{i32 15, i32 0, metadata !475, null}
+!700 = metadata !{i32 16, i32 0, metadata !475, null}
+!701 = metadata !{i32 21, i32 0, metadata !702, null}
+!702 = metadata !{i32 589835, metadata !356, i32 20, i32 0, metadata !357, i32 0} ; [ DW_TAG_lexical_block ]
+!703 = metadata !{i32 27, i32 0, metadata !702, null}
+!704 = metadata !{i32 29, i32 0, metadata !702, null}
+!705 = metadata !{i32 16, i32 0, metadata !482, null}
+!706 = metadata !{i32 17, i32 0, metadata !482, null}
+!707 = metadata !{i32 19, i32 0, metadata !482, null}
+!708 = metadata !{i32 22, i32 0, metadata !482, null}
+!709 = metadata !{i32 25, i32 0, metadata !482, null}
+!710 = metadata !{i32 26, i32 0, metadata !482, null}
+!711 = metadata !{i32 28, i32 0, metadata !482, null}
+!712 = metadata !{i32 29, i32 0, metadata !482, null}
+!713 = metadata !{i32 32, i32 0, metadata !482, null}
+!714 = metadata !{i32 20, i32 0, metadata !482, null}

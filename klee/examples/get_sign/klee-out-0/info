@@ -1,21 +1,21 @@
-klee --write-cvcs --write-pcs -libc=uclibc test_concat.o
-PID: 20191
-Started: 2015-04-22 11:19:44
+klee --write-cvcs --write-pcs -write-smt2s -libc=uclibc test_concat.o
+PID: 22947
+Started: 2015-04-22 16:02:00
 BEGIN searcher description
 <InterleavedSearcher> containing 2 searchers:
 RandomPathSearcher
 WeightedRandomSearcher::CoveringNew
 </InterleavedSearcher>
 END searcher description
-Finished: 2015-04-22 11:19:44
+Finished: 2015-04-22 16:02:00
 Elapsed: 00:00:00
-KLEE: done: explored paths = 1
-KLEE: done: avg. constructs per query = 1
-KLEE: done: total queries = 1
+KLEE: done: explored paths = 6
+KLEE: done: avg. constructs per query = 17
+KLEE: done: total queries = 8
 KLEE: done: valid queries = 0
-KLEE: done: invalid queries = 1
-KLEE: done: query cex = 1
+KLEE: done: invalid queries = 8
+KLEE: done: query cex = 8
 
-KLEE: done: total instructions = 5308
-KLEE: done: completed paths = 1
-KLEE: done: generated tests = 1
+KLEE: done: total instructions = 5706
+KLEE: done: completed paths = 6
+KLEE: done: generated tests = 4

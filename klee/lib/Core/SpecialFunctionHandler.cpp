@@ -93,7 +93,7 @@ static SpecialFunctionHandler::HandlerInfo handlerInfo[] = {
   add("realloc", handleRealloc, true),
   add("test_function_adds", handleTestFunctionAdds, true),
   add("test_function", handleTestFunction, true),
-  add("strcat", handleConcat, true),
+  add("foo", handleFoo, true),
 
   // operator delete[](void*)
   add("_ZdaPv", handleDeleteArray, false),
@@ -565,7 +565,7 @@ void SpecialFunctionHandler::handleTestFunction(ExecutionState &state,
 	  return;
 }
 
-void SpecialFunctionHandler::handleConcat(ExecutionState &state,
+void SpecialFunctionHandler::handleFoo(ExecutionState &state,
                             KInstruction *target,
                             std::vector<ref<Expr> > &arguments) {
 	// XXX should type check args
@@ -575,12 +575,13 @@ void SpecialFunctionHandler::handleConcat(ExecutionState &state,
 	  // TODO: Parse string out of arguments [0] and [1]
 	  // TODO: Generate constraints for string concat: - must be two arguments, result must be concat of both
 
-//	  ref<Expr> dest_left = arguments[0];
-//	  ref<Expr> src_right = arguments[1];
+	  ref<Expr> dest_left = arguments[0];
+	  ref<Expr> src_right = arguments[1];
+//	  ref<ConstantExpr> left_width = ConstantExpr::create(dest_left->getWidth(), dest_left->getWidth());
+//	  ref<ConstantExpr> right_width = ConstantExpr::create(src_right->getWidth(), src_right->getWidth());
+//	  ref<UgtExpr> len_constrain = UgtExpr::create(dyn_cast<Expr>(left_width), dyn_cast<Expr>(right_width));
 //
-//	  ref<ConstantExpr> compare_to = ConstantExpr::create(100, Expr::Int32);
-	  //ref<Expr> equal_test = EqExpr::create(value, compare_to);
-	 // executor.addConstraint(state, equal_test);
+//	  executor.addConstraint(state, dyn_cast<Expr>(len_constrain));
 	  executor.bindLocal(target, state, ConstantExpr::create(102, Expr::Int32));
 	  return;
 }

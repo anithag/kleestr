@@ -1,6 +1,8 @@
 #pragma once
 
 #include "../tags/QF_BV.hpp"
+#include "../tags/Array.hpp"
+#include "../tags/String.hpp"
 #include "../result_wrapper.hpp"
 
 #include <cvc4/cvc4.h>
@@ -14,6 +16,7 @@ namespace metaSMT {
   namespace solver {
     namespace predtags = ::metaSMT::logic::tag;
     namespace bvtags = ::metaSMT::logic::QF_BV::tag;
+    namespace arraytags = ::metaSMT::logic::Array::tag;
 
     /**
      * @ingroup Backend
@@ -88,6 +91,36 @@ namespace metaSMT {
       result_type operator()( predtags::ite_tag tag
                               , result_type a, result_type b, result_type c ) {
         return exprManager_.mkExpr(::CVC4::kind::ITE, a, b, c);
+      }
+
+      result_type operator() (arraytags::array_var_tag const &var,
+                              boost::any const & ) {
+        if (var.id == 0 ) {
+          throw std::runtime_error("uninitialized array used");
+        }
+
+        ::CVC4::Type index_sort = exprManager_.mkBitVectorType(var.index_width);
+        ::CVC4::Type elem_sort = exprManager_.mkBitVectorType(var.elem_width);
+        ::CVC4::Type ty = exprManager_.mkArrayType(index_sort, elem_sort);
+
+        char buf[64];
+        sprintf(buf, "var_%u", var.id);
+
+         //How to generate expression for array? Can we use mkVar()??
+        return exprManager_.mkVar(buf, ty); 
+      }
+
+      result_type operator() (arraytags::select_tag const &
+                              , result_type const &array
+                              , result_type const &index) {
+        return exprManager_.mkExpr( ::CVC4::kind::SELECT, array, index);
+      }
+
+      result_type operator() (arraytags::store_tag const &
+                              , result_type const &array
+                              , result_type const &index
+                              , result_type const &value) {
+        return exprManager_.mkExpr( ::CVC4::kind::STORE, array, index, value);
       }
 
       // bvtags
@@ -226,13 +259,13 @@ namespace metaSMT {
 
         typedef mpl::map33<
           // binary Logic tags
-          mpl::pair<predtags::and_tag,     Op2<AND> >
-        , mpl::pair<predtags::nand_tag,    NotOp2<AND> >
-        , mpl::pair<predtags::or_tag,      Op2<OR> >
-        , mpl::pair<predtags::nor_tag,     NotOp2<OR> >
-        , mpl::pair<predtags::xor_tag,     Op2<XOR> >
-        , mpl::pair<predtags::xnor_tag,    NotOp2<XOR> >
-        , mpl::pair<predtags::implies_tag, Op2<IMPLIES> >
+          mpl::pair<predtags::and_tag,     Op2< ::CVC4::kind::AND> >
+        , mpl::pair<predtags::nand_tag,    NotOp2< ::CVC4::kind::AND> >
+        , mpl::pair<predtags::or_tag,      Op2< ::CVC4::kind::OR> >
+        , mpl::pair<predtags::nor_tag,     NotOp2< ::CVC4::kind::OR> >
+        , mpl::pair<predtags::xor_tag,     Op2< ::CVC4::kind::XOR> >
+        , mpl::pair<predtags::xnor_tag,    NotOp2< ::CVC4::kind::XOR> >
+        , mpl::pair<predtags::implies_tag, Op2< ::CVC4::kind::IMPLIES> >
         // binary QF_BV tags
         , mpl::pair<bvtags::bvand_tag,     Op2<BITVECTOR_AND> >
         , mpl::pair<bvtags::bvnand_tag,    Op2<BITVECTOR_NAND> >

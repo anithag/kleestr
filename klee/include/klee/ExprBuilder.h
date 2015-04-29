@@ -58,6 +58,8 @@ namespace klee {
     virtual ref<Expr> Sle(const ref<Expr> &LHS, const ref<Expr> &RHS) = 0;
     virtual ref<Expr> Sgt(const ref<Expr> &LHS, const ref<Expr> &RHS) = 0;
     virtual ref<Expr> Sge(const ref<Expr> &LHS, const ref<Expr> &RHS) = 0;
+    virtual ref<Expr> Strlen(const ref<Expr> &LHS) = 0;
+    virtual ref<Expr> Strconcat(const ref<Expr> &LHS, const ref<Expr> &RHS) = 0;
 
     // Utility functions
 

@@ -27,7 +27,11 @@ uname -v = #47~14.04.1-Ubuntu SMP Fri Apr 10 17:49:16 UTC 2015
 /usr/bin/oslevel       = unknown
 /bin/universe          = unknown
 
+<<<<<<< HEAD
 PATH: /home/zehranaz/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin
+=======
+PATH: /home/anitha/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin
+>>>>>>> master
 PATH: /usr/local/sbin
 PATH: /usr/local/bin
 PATH: /usr/sbin
@@ -583,7 +587,11 @@ configure:9046: test -s conftest
 configure:9049: $? = 0
 configure:9070: result: yes
 configure:9081: checking for compiler -Wl,--version-script option
+<<<<<<< HEAD
 configure:9137: gcc -o conftest -g -O2 -Wl,--version-script=/tmp/foolx8fVh/export.map   conftest.c  >&5
+=======
+configure:9137: gcc -o conftest -g -O2 -Wl,--version-script=/tmp/foorHJmwW/export.map   conftest.c  >&5
+>>>>>>> master
 configure:9143: $? = 0
 configure:9150: test -z "$ac_c_werror_flag" || test ! -s conftest.err
 configure:9153: $? = 0
@@ -650,8 +658,13 @@ configure:10714: checking whether libtool supports -dlopen/-dlpreopen
 configure:10726: result: yes
 configure:10745: checking for shl_load
 configure:10801: gcc -o conftest -g -O2   conftest.c  >&5
+<<<<<<< HEAD
 /tmp/ccNQEDBd.o: In function `main':
 /home/zehranaz/kleestr/llvm-2.9/conftest.c:77: undefined reference to `shl_load'
+=======
+/tmp/ccfuCa7o.o: In function `main':
+/home/anitha/kleestr/llvm-2.9/conftest.c:77: undefined reference to `shl_load'
+>>>>>>> master
 collect2: error: ld returned 1 exit status
 configure:10807: $? = 1
 configure: failed program was:
@@ -1736,11 +1749,19 @@ configure:13194: test -s conftest
 configure:13197: $? = 0
 configure:13211: result: yes
 configure:13234: checking for llvm-gcc
+<<<<<<< HEAD
 configure:13252: found /home/zehranaz/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin/llvm-gcc
 configure:13264: result: /home/zehranaz/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin/llvm-gcc
 configure:13274: checking for llvm-g++
 configure:13292: found /home/zehranaz/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin/llvm-g++
 configure:13304: result: /home/zehranaz/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin/llvm-g++
+=======
+configure:13252: found /home/anitha/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin/llvm-gcc
+configure:13264: result: /home/anitha/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin/llvm-gcc
+configure:13274: checking for llvm-g++
+configure:13292: found /home/anitha/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin/llvm-g++
+configure:13304: result: /home/anitha/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin/llvm-g++
+>>>>>>> master
 configure:13340: checking LLVM capable compiler
 configure:13358: result: llvm-gcc
 configure:13363: checking tool compatibility
@@ -1766,8 +1787,13 @@ configure:13528: $? = 0
 configure:13542: result: yes
 configure:13718: checking for library containing dlopen
 configure:13759: gcc -o conftest -g -O2   conftest.c -lm  >&5
+<<<<<<< HEAD
 /tmp/ccvk3c4o.o: In function `main':
 /home/zehranaz/kleestr/llvm-2.9/conftest.c:81: undefined reference to `dlopen'
+=======
+/tmp/cchIdn66.o: In function `main':
+/home/anitha/kleestr/llvm-2.9/conftest.c:81: undefined reference to `dlopen'
+>>>>>>> master
 collect2: error: ld returned 1 exit status
 configure:13765: $? = 1
 configure: failed program was:
@@ -3457,8 +3483,13 @@ configure:17443: checking for CrashReporterClient.h
 configure:17451: result: no
 configure:17465: checking __crashreporter_info__
 configure:17486: gcc -o conftest -g -O2   conftest.c -lpthread -ldl -lm  >&5
+<<<<<<< HEAD
 /tmp/ccSpK8yU.o: In function `main':
 /home/zehranaz/kleestr/llvm-2.9/conftest.c:107: undefined reference to `__crashreporter_info__'
+=======
+/tmp/ccT685ef.o: In function `main':
+/home/anitha/kleestr/llvm-2.9/conftest.c:107: undefined reference to `__crashreporter_info__'
+>>>>>>> master
 collect2: error: ld returned 1 exit status
 configure:17492: $? = 1
 configure: failed program was:
@@ -3797,8 +3828,13 @@ configure:18539: $? = 0
 configure:18553: result: yes
 configure:18572: checking for mktemp
 configure:18628: gcc -o conftest -g -O2   conftest.c -lpthread -ldl -lm  >&5
+<<<<<<< HEAD
 /tmp/ccAshiz7.o: In function `main':
 /home/zehranaz/kleestr/llvm-2.9/conftest.c:162: warning: the use of `mktemp' is dangerous, better use `mkstemp' or `mkdtemp'
+=======
+/tmp/ccJ57A7y.o: In function `main':
+/home/anitha/kleestr/llvm-2.9/conftest.c:162: warning: the use of `mktemp' is dangerous, better use `mkstemp' or `mkdtemp'
+>>>>>>> master
 configure:18634: $? = 0
 configure:18641: test -z "$ac_c_werror_flag" || test ! -s conftest.err
 configure:18644: $? = 0
@@ -3892,8 +3928,13 @@ configure:18879: $? = 0
 configure:18893: result: yes
 configure:18797: checking for malloc_zone_statistics
 configure:18853: gcc -o conftest -g -O2   conftest.c -lpthread -ldl -lm  >&5
+<<<<<<< HEAD
 /tmp/ccxyM3ma.o: In function `main':
 /home/zehranaz/kleestr/llvm-2.9/conftest.c:174: undefined reference to `malloc_zone_statistics'
+=======
+/tmp/ccHVqxGC.o: In function `main':
+/home/anitha/kleestr/llvm-2.9/conftest.c:174: undefined reference to `malloc_zone_statistics'
+>>>>>>> master
 collect2: error: ld returned 1 exit status
 configure:18859: $? = 1
 configure: failed program was:
@@ -4093,8 +4134,13 @@ configure:18993: $? = 0
 configure:19007: result: yes
 configure:18911: checking for sigsetjmp
 configure:18967: gcc -o conftest -g -O2   conftest.c -lpthread -ldl -lm  >&5
+<<<<<<< HEAD
 /tmp/ccQB3vkr.o: In function `main':
 /home/zehranaz/kleestr/llvm-2.9/conftest.c:176: undefined reference to `sigsetjmp'
+=======
+/tmp/cclZ6W9j.o: In function `main':
+/home/anitha/kleestr/llvm-2.9/conftest.c:176: undefined reference to `sigsetjmp'
+>>>>>>> master
 collect2: error: ld returned 1 exit status
 configure:18973: $? = 1
 configure: failed program was:
@@ -4998,7 +5044,11 @@ config.status:1175: executing utils/Makefile commands
 config.status:1175: executing projects/Makefile commands
 config.status:1175: executing bindings/Makefile commands
 config.status:1175: executing bindings/ocaml/Makefile.ocaml commands
+<<<<<<< HEAD
 configure:23999: === configuring in projects/sample (/home/zehranaz/kleestr/llvm-2.9/projects/sample)
+=======
+configure:23999: === configuring in projects/sample (/home/anitha/kleestr/llvm-2.9/projects/sample)
+>>>>>>> master
 configure:24102: running /bin/bash ./configure --prefix=/usr/local  '--enable-optimized' '--enable-assertions' --cache-file=/dev/null --srcdir=.
 
 ## ---------------- ##
@@ -5167,8 +5217,13 @@ ac_cv_path_GRAPHVIZ='echo Graphviz'
 ac_cv_path_GREP=/bin/grep
 ac_cv_path_GROFF=/usr/bin/groff
 ac_cv_path_GZIPBIN=/bin/gzip
+<<<<<<< HEAD
 ac_cv_path_LLVMGCC=/home/zehranaz/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin/llvm-gcc
 ac_cv_path_LLVMGXX=/home/zehranaz/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin/llvm-g++
+=======
+ac_cv_path_LLVMGCC=/home/anitha/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin/llvm-gcc
+ac_cv_path_LLVMGXX=/home/anitha/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin/llvm-g++
+>>>>>>> master
 ac_cv_path_MKDIR=/bin/mkdir
 ac_cv_path_MV=/bin/mv
 ac_cv_path_NEATO='echo neato'
@@ -5320,6 +5375,7 @@ LIBADD_DL='-ldl'
 LIBOBJS=''
 LIBS='-lpthread -ldl -lm '
 LINKALL='-Wl,--whole-archive'
+<<<<<<< HEAD
 LLVMCC1='/home/zehranaz/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.2.1/cc1'
 LLVMCC1PLUS='/home/zehranaz/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.2.1/cc1plus'
 LLVMCC_DISABLEOPT_FLAGS='-mllvm -disable-llvm-optzns'
@@ -5334,6 +5390,22 @@ LLVMGXX='/home/zehranaz/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin/llvm-g++'
 LLVMGXXCOMMAND='llvm-g++'
 LLVM_BINDIR='/usr/local/bin'
 LLVM_CONFIGTIME='Tue Apr 14 22:03:02 PDT 2015'
+=======
+LLVMCC1='/home/anitha/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.2.1/cc1'
+LLVMCC1PLUS='/home/anitha/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.2.1/cc1plus'
+LLVMCC_DISABLEOPT_FLAGS='-mllvm -disable-llvm-optzns'
+LLVMCC_EMITIR_FLAG='-emit-llvm'
+LLVMCC_OPTION='llvm-gcc'
+LLVMGCC='/home/anitha/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin/llvm-gcc'
+LLVMGCCCOMMAND='llvm-gcc'
+LLVMGCCDIR='/home/anitha/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin/..'
+LLVMGCC_DRAGONEGG='no'
+LLVMGCC_LANGS='c,c++,fortran'
+LLVMGXX='/home/anitha/kleestr/llvm-gcc4.2-2.9-x86_64-linux/bin/llvm-g++'
+LLVMGXXCOMMAND='llvm-g++'
+LLVM_BINDIR='/usr/local/bin'
+LLVM_CONFIGTIME='Thu Apr 16 11:11:59 EDT 2015'
+>>>>>>> master
 LLVM_COPYRIGHT='Copyright (c) 2003-2010 University of Illinois at Urbana-Champaign.'
 LLVM_CROSS_COMPILING='0'
 LLVM_DATADIR='/usr/local/share/llvm'
@@ -5609,7 +5681,29 @@ target_vendor='unknown'
 #define LLVM_INCLUDEDIR "/usr/local/include"
 #define LLVM_INFODIR "/usr/local/info"
 #define LLVM_MANDIR "/usr/local/man"
+<<<<<<< HEAD
 #define LLVM_CONFIGTIME "Tue Apr 14 22:03:02 PDT 2015"
+=======
+#define LLVM_CONFIGTIME "Thu Apr 16 11:11:59 EDT 2015"
+>>>>>>> master
 #define LLVM_HOSTTRIPLE "x86_64-unknown-linux-gnu"
 
 configure: exit 0
+
+## ---------------------- ##
+## Running config.status. ##
+## ---------------------- ##
+
+This file was extended by llvm config.status 2.9, which was
+generated by GNU Autoconf 2.60.  Invocation command line was
+
+  CONFIG_FILES    = 
+  CONFIG_HEADERS  = 
+  CONFIG_LINKS    = 
+  CONFIG_COMMANDS = 
+  $ /home/anitha/kleestr/llvm-2.9/config.status include/llvm/Support/DataTypes.h
+
+on anitha-VirtualBox
+
+config.status:768: creating include/llvm/Support/DataTypes.h
+config.status:1162: include/llvm/Support/DataTypes.h is unchanged

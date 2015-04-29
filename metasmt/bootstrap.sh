@@ -11,26 +11,22 @@ REQUIRES="
 
 FREE="
   cvc4-1.4
-  picosat-936
-  lingeling-ayv-86bf266-140429
-  boolector-1.5.118
-  aiger-20071012
-  cudd-2.4.2
-  minisat-git
-  stp-svn
+  Z3-git
 "
 
 NONFREE="
-  Z3-4.1
+  SWORD-1.1
+  lingeling-ayv-86bf266-140429
 "
 
 CMAKE=cmake
 BUILD_CMAKE="no"
-CMAKE_PACKAGE=cmake-2.8.7
+CMAKE_PACKAGE=cmake-3.2.2
 
 CMAKE_ARGS=""
 CMAKE_GENERATOR=""
 
+num_threads="1"
 
 
 usage() {
@@ -51,6 +47,9 @@ usage: $0 [--free] [--non-free] build
    -G <generator> pass generator to CMake
   --cmake=/p/t/c  use this version of CMake
   --cmake         build a custom CMake version
+  --build <pkg>   build this dependency package, must exist in depdencies
+  -b <pkg>
+  -j N            The number of make jobs
   <build>         the directory to setup the build environment in
 EOF
   exit 1
@@ -75,6 +74,13 @@ while [[ "$@" ]]; do
     --clean|-c)   CLEAN="rm -rf";;
     --cmake=*)    CMAKE="${1#--cmake=}";;
     --cmake)      BUILD_CMAKE="yes";;
+    --build|-b)   REQUIRES="$REQUIRES $2"; shift;;
+    -j)
+        num_threads="$2";
+        shift;;
+    -j*)
+        num_threads="${1/-j}";;
+
              *)   ## assume build dir
                   BUILD_DIR="$1" ;;
   esac
@@ -102,12 +108,12 @@ if ! cd dependencies; then
 fi
 
 if [ "$BUILD_CMAKE" = "yes" ]; then
-  ./build "$DEPS" $CMAKE_PACKAGE &&
+  ./build -j $num_threads "$DEPS" $CMAKE_PACKAGE &&
   CMAKE=$DEPS/$CMAKE_PACKAGE/bin/cmake
   export PATH="$DEPS/$CMAKE_PACKAGE/bin:$PATH"
 fi
 
-./build "$DEPS" $REQUIRES || {
+./build -j $num_threads "$DEPS" $REQUIRES || {
   echo "building dependencies $REQUIRES failed."
   exit 3
 }

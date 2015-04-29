@@ -151,6 +151,8 @@ void Expr::printKind(llvm::raw_ostream &os, Kind k) {
     X(Sle);
     X(Sgt);
     X(Sge);
+    X(Strlen);
+    X(Strconcat);
 #undef X
   default:
     assert(0 && "invalid kind");
@@ -638,6 +640,22 @@ ref<Expr> ConcatExpr::create8(const ref<Expr> &kid1, const ref<Expr> &kid2,
 			      const ref<Expr> &kid7, const ref<Expr> &kid8) {
   return ConcatExpr::create(kid1, ConcatExpr::create(kid2, ConcatExpr::create(kid3, 
 			      ConcatExpr::create(kid4, ConcatExpr::create4(kid5, kid6, kid7, kid8)))));
+}
+
+// FIXME: Strlen create - no optimizations
+ref<Expr> StrlenExpr::create(const ref<Expr> &e) {
+//  if (ConstantExpr *CE = dyn_cast<ConstantExpr>(e))
+//    return CE->Not();
+  
+  return NotExpr::alloc(e);
+}
+
+
+// FIXME: Strconcat create - no optimizations
+ref<Expr> StrconcatExpr::create(const ref<Expr> &l, const ref<Expr> &r) {
+  Expr::Width w = l->getWidth() + r->getWidth();
+  
+  return StrconcatExpr::alloc(l, r);
 }
 
 /***/

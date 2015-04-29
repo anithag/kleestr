@@ -22,6 +22,7 @@
 #include <metaSMT/frontend/Logic.hpp>
 #include <metaSMT/frontend/QF_BV.hpp>
 #include <metaSMT/frontend/Array.hpp>
+#include <metaSMT/frontend/String.hpp>
 #include <metaSMT/support/default_visitation_unrolling_limit.hpp>
 #include <metaSMT/support/run_algorithm.hpp>
 

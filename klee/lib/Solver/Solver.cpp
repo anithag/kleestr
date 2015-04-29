@@ -51,10 +51,11 @@ using namespace klee;
 
 #ifdef SUPPORT_METASMT
 
-#include <metaSMT/DirectSolver_Context.hpp>
 #include <metaSMT/backend/Z3_Backend.hpp>
+#include <metaSMT/backend/CVC4.hpp>
 //#include <metaSMT/backend/Boolector.hpp>
 //#include <metaSMT/backend/MiniSAT.hpp>
+#include <metaSMT/DirectSolver_Context.hpp>
 #include <metaSMT/support/run_algorithm.hpp>
 #include <metaSMT/API/Stack.hpp>
 #include <metaSMT/API/Group.hpp>
@@ -1264,6 +1265,7 @@ SolverImpl::SolverRunStatus MetaSMTSolverImpl<SolverContext>::getOperationStatus
 
 //template class MetaSMTSolver< DirectSolver_Context < Boolector> >;
 template class MetaSMTSolver< DirectSolver_Context < Z3_Backend> >;
+template class MetaSMTSolver< DirectSolver_Context < ::metaSMT::solver::CVC4> >;
 template class MetaSMTSolver< DirectSolver_Context < STP_Backend> >;
 
 #endif /* SUPPORT_METASMT */

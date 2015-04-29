@@ -1,4 +1,4 @@
-//===-- Expr.h --------------------------------------------------*- C++ -*-===//
+
 //
 //                     The KLEE Symbolic Virtual Machine
 //
@@ -159,7 +159,12 @@ public:
     Sgt, ///< Not used in canonical form
     Sge, ///< Not used in canonical form
 
-    LastKind=Sge,
+
+    // String support
+    Strlen,
+    Strconcat,
+
+    LastKind=Strconcat,
 
     CastKindFirst=ZExt,
     CastKindLast=SExt,
@@ -474,6 +479,9 @@ public:
   ref<ConstantExpr> Sle(const ref<ConstantExpr> &RHS);
   ref<ConstantExpr> Sgt(const ref<ConstantExpr> &RHS);
   ref<ConstantExpr> Sge(const ref<ConstantExpr> &RHS);
+
+  //Strlen returns a constant expression
+  //ref<ConstantExpr> Strlen();
 
   ref<ConstantExpr> Neg();
   ref<ConstantExpr> Not();
@@ -871,6 +879,101 @@ public:
     return E->getKind() == Expr::Concat;
   }
   static bool classof(const ConcatExpr *) { return true; }
+};
+
+class StrlenExpr : public NonConstantExpr{ 
+public: 
+  static const Kind kind = Strlen;
+  static const unsigned numKids = 1;
+
+private:
+  Width width;
+  ref<Expr> left;  
+
+public:
+  static ref<Expr> alloc(const ref<Expr> &l) {
+    ref<Expr> c(new StrlenExpr(l));
+    c->computeHash();
+    return c;
+  }
+  
+  static ref<Expr> create(const ref<Expr> &l);
+
+  Width getWidth() const { return width; }
+  Kind getKind() const { return kind; }
+  ref<Expr> getLeft() const { return left; }
+
+  unsigned getNumKids() const { return numKids; }
+  ref<Expr> getKid(unsigned i) const { 
+    if (i == 0) return left; 
+    else return NULL;
+  }
+
+  virtual ref<Expr> rebuild(ref<Expr> kids[]) const { return create(kids[0]); }
+private:
+  StrlenExpr(const ref<Expr> &l) : left(l) {
+    //FIXME: Should return the width
+    width = l->getWidth(); 
+  }
+
+public:
+  static bool classof(const Expr *E) {
+    return E->getKind() == Expr::Strlen;
+  }
+  static bool classof(const StrlenExpr *) { return true; }
+};
+
+class StrconcatExpr : public NonConstantExpr { 
+public: 
+  static const Kind kind = Strconcat;
+  static const unsigned numKids = 2;
+
+private:
+  Width width;
+  ref<Expr> left, right;  
+
+public:
+  static ref<Expr> alloc(const ref<Expr> &l, const ref<Expr> &r) {
+    ref<Expr> c(new StrconcatExpr(l, r));
+    c->computeHash();
+    return c;
+  }
+  
+  static ref<Expr> create(const ref<Expr> &l, const ref<Expr> &r);
+
+  Width getWidth() const { return width; }
+  Kind getKind() const { return kind; }
+  ref<Expr> getLeft() const { return left; }
+  ref<Expr> getRight() const { return right; }
+
+  unsigned getNumKids() const { return numKids; }
+  ref<Expr> getKid(unsigned i) const { 
+    if (i == 0) return left; 
+    else if (i == 1) return right;
+    else return NULL;
+  }
+
+  /// Shortcuts to create larger concats.  The chain returned is unbalanced to the right
+  static ref<Expr> createN(unsigned nKids, const ref<Expr> kids[]);
+  static ref<Expr> create4(const ref<Expr> &kid1, const ref<Expr> &kid2,
+			   const ref<Expr> &kid3, const ref<Expr> &kid4);
+  static ref<Expr> create8(const ref<Expr> &kid1, const ref<Expr> &kid2,
+			   const ref<Expr> &kid3, const ref<Expr> &kid4,
+			   const ref<Expr> &kid5, const ref<Expr> &kid6,
+			   const ref<Expr> &kid7, const ref<Expr> &kid8);
+  
+  virtual ref<Expr> rebuild(ref<Expr> kids[]) const { return create(kids[0], kids[1]); }
+  
+private:
+  StrconcatExpr(const ref<Expr> &l, const ref<Expr> &r) : left(l), right(r) {
+    width = l->getWidth() + r->getWidth();
+  }
+
+public:
+  static bool classof(const Expr *E) {
+    return E->getKind() == Expr::Strconcat;
+  }
+  static bool classof(const StrconcatExpr *) { return true; }
 };
 
 

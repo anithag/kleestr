@@ -322,7 +322,11 @@ Copyright (C) 2006 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
+<<<<<<< HEAD
 ac_pwd='/home/zehranaz/kleestr/llvm-2.9/projects/sample'
+=======
+ac_pwd='/home/anitha/kleestr/llvm-2.9/projects/sample'
+>>>>>>> master
 srcdir='.'
 # If no file are specified by the user, then we need to provide default
 # value.  By we need to know if files were specified by the user.
@@ -398,7 +402,11 @@ _ASBOX
 #
 # INIT-COMMANDS
 #
+<<<<<<< HEAD
 llvm_src="/home/zehranaz/kleestr/llvm-2.9"
+=======
+llvm_src="/home/anitha/kleestr/llvm-2.9"
+>>>>>>> master
 
 
 # Handling of arguments.
@@ -505,8 +513,13 @@ s,@LIBS@,|#_!!_#|,g
 s,@build_alias@,|#_!!_#|,g
 s,@host_alias@,|#_!!_#|,g
 s,@target_alias@,|#_!!_#|,g
+<<<<<<< HEAD
 s,@LLVM_SRC@,|#_!!_#|/home/zehranaz/kleestr/llvm-2.9,g
 s,@LLVM_OBJ@,|#_!!_#|/home/zehranaz/kleestr/llvm-2.9,g
+=======
+s,@LLVM_SRC@,|#_!!_#|/home/anitha/kleestr/llvm-2.9,g
+s,@LLVM_OBJ@,|#_!!_#|/home/anitha/kleestr/llvm-2.9,g
+>>>>>>> master
 s,@LIBOBJS@,|#_!!_#|,g
 s,@LTLIBOBJS@,|#_!!_#|,g
 :end

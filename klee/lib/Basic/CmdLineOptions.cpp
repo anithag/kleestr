@@ -81,6 +81,7 @@ UseMetaSMT("use-metasmt",
            llvm::cl::values(clEnumValN(METASMT_BACKEND_NONE, "none", "Don't use metaSMT"),
                       clEnumValN(METASMT_BACKEND_STP, "stp", "Use metaSMT with STP"),
                       clEnumValN(METASMT_BACKEND_Z3, "z3", "Use metaSMT with Z3"),
+                      clEnumValN(METASMT_BACKEND_CVC4, "cvc4", "Use metaSMT with Boolector"),
                       clEnumValN(METASMT_BACKEND_BOOLECTOR, "btor", "Use metaSMT with Boolector"),
                       clEnumValEnd),  
            llvm::cl::init(METASMT_BACKEND_NONE));

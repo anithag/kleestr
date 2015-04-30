@@ -1,0 +1,283 @@
+diff --git a/klee/include/klee/Expr.h b/klee/include/klee/Expr.h
+index af8bf10..e8dfa70 100644
+--- a/klee/include/klee/Expr.h
++++ b/klee/include/klee/Expr.h
+@@ -1,4 +1,4 @@
+-//===-- Expr.h --------------------------------------------------*- C++ -*-===//
++
+ //
+ //                     The KLEE Symbolic Virtual Machine
+ //
+@@ -159,7 +159,12 @@ public:
+     Sgt, ///< Not used in canonical form
+     Sge, ///< Not used in canonical form
+ 
+-    LastKind=Sge,
++
++    // String support
++    Strlen,
++    Strconcat,
++
++    LastKind=Strconcat,
+ 
+     CastKindFirst=ZExt,
+     CastKindLast=SExt,
+@@ -475,6 +480,9 @@ public:
+   ref<ConstantExpr> Sgt(const ref<ConstantExpr> &RHS);
+   ref<ConstantExpr> Sge(const ref<ConstantExpr> &RHS);
+ 
++  //Strlen returns a constant expression
++  //ref<ConstantExpr> Strlen();
++
+   ref<ConstantExpr> Neg();
+   ref<ConstantExpr> Not();
+ };
+@@ -873,6 +881,101 @@ public:
+   static bool classof(const ConcatExpr *) { return true; }
+ };
+ 
++class StrlenExpr : public NonConstantExpr{ 
++public: 
++  static const Kind kind = Strlen;
++  static const unsigned numKids = 1;
++
++private:
++  Width width;
++  ref<Expr> left;  
++
++public:
++  static ref<Expr> alloc(const ref<Expr> &l) {
++    ref<Expr> c(new StrlenExpr(l));
++    c->computeHash();
++    return c;
++  }
++  
++  static ref<Expr> create(const ref<Expr> &l);
++
++  Width getWidth() const { return width; }
++  Kind getKind() const { return kind; }
++  ref<Expr> getLeft() const { return left; }
++
++  unsigned getNumKids() const { return numKids; }
++  ref<Expr> getKid(unsigned i) const { 
++    if (i == 0) return left; 
++    else return NULL;
++  }
++
++  virtual ref<Expr> rebuild(ref<Expr> kids[]) const { return create(kids[0]); }
++private:
++  StrlenExpr(const ref<Expr> &l) : left(l) {
++    //FIXME: Should return the width
++    width = l->getWidth(); 
++  }
++
++public:
++  static bool classof(const Expr *E) {
++    return E->getKind() == Expr::Strlen;
++  }
++  static bool classof(const StrlenExpr *) { return true; }
++};
++
++class StrconcatExpr : public NonConstantExpr { 
++public: 
++  static const Kind kind = Strconcat;
++  static const unsigned numKids = 2;
++
++private:
++  Width width;
++  ref<Expr> left, right;  
++
++public:
++  static ref<Expr> alloc(const ref<Expr> &l, const ref<Expr> &r) {
++    ref<Expr> c(new StrconcatExpr(l, r));
++    c->computeHash();
++    return c;
++  }
++  
++  static ref<Expr> create(const ref<Expr> &l, const ref<Expr> &r);
++
++  Width getWidth() const { return width; }
++  Kind getKind() const { return kind; }
++  ref<Expr> getLeft() const { return left; }
++  ref<Expr> getRight() const { return right; }
++
++  unsigned getNumKids() const { return numKids; }
++  ref<Expr> getKid(unsigned i) const { 
++    if (i == 0) return left; 
++    else if (i == 1) return right;
++    else return NULL;
++  }
++
++  /// Shortcuts to create larger concats.  The chain returned is unbalanced to the right
++  static ref<Expr> createN(unsigned nKids, const ref<Expr> kids[]);
++  static ref<Expr> create4(const ref<Expr> &kid1, const ref<Expr> &kid2,
++			   const ref<Expr> &kid3, const ref<Expr> &kid4);
++  static ref<Expr> create8(const ref<Expr> &kid1, const ref<Expr> &kid2,
++			   const ref<Expr> &kid3, const ref<Expr> &kid4,
++			   const ref<Expr> &kid5, const ref<Expr> &kid6,
++			   const ref<Expr> &kid7, const ref<Expr> &kid8);
++  
++  virtual ref<Expr> rebuild(ref<Expr> kids[]) const { return create(kids[0], kids[1]); }
++  
++private:
++  StrconcatExpr(const ref<Expr> &l, const ref<Expr> &r) : left(l), right(r) {
++    width = l->getWidth() + r->getWidth();
++  }
++
++public:
++  static bool classof(const Expr *E) {
++    return E->getKind() == Expr::Strconcat;
++  }
++  static bool classof(const StrconcatExpr *) { return true; }
++};
++
+ 
+ /** This class represents an extract from expression {\tt expr}, at
+     bit offset {\tt offset} of width {\tt width}.  Bit 0 is the right most 
+diff --git a/klee/include/klee/ExprBuilder.h b/klee/include/klee/ExprBuilder.h
+index 0caed07..6ff83e5 100644
+--- a/klee/include/klee/ExprBuilder.h
++++ b/klee/include/klee/ExprBuilder.h
+@@ -58,6 +58,8 @@ namespace klee {
+     virtual ref<Expr> Sle(const ref<Expr> &LHS, const ref<Expr> &RHS) = 0;
+     virtual ref<Expr> Sgt(const ref<Expr> &LHS, const ref<Expr> &RHS) = 0;
+     virtual ref<Expr> Sge(const ref<Expr> &LHS, const ref<Expr> &RHS) = 0;
++    virtual ref<Expr> Strlen(const ref<Expr> &LHS) = 0;
++    virtual ref<Expr> Strconcat(const ref<Expr> &LHS, const ref<Expr> &RHS) = 0;
+ 
+     // Utility functions
+ 
+diff --git a/klee/include/klee/util/ExprVisitor.h b/klee/include/klee/util/ExprVisitor.h
+index 1fae450..16694f7 100644
+--- a/klee/include/klee/util/ExprVisitor.h
++++ b/klee/include/klee/util/ExprVisitor.h
+@@ -79,6 +79,8 @@ namespace klee {
+     virtual Action visitSle(const SleExpr&);
+     virtual Action visitSgt(const SgtExpr&);
+     virtual Action visitSge(const SgeExpr&);
++    virtual Action visitStrlen(const StrlenExpr&);
++    virtual Action visitStrconcat(const StrconcatExpr&);
+ 
+   private:
+     typedef ExprHashMap< ref<Expr> > visited_ty;
+diff --git a/klee/lib/Expr/Expr.cpp b/klee/lib/Expr/Expr.cpp
+index baa8566..1b033c3 100644
+--- a/klee/lib/Expr/Expr.cpp
++++ b/klee/lib/Expr/Expr.cpp
+@@ -151,6 +151,8 @@ void Expr::printKind(llvm::raw_ostream &os, Kind k) {
+     X(Sle);
+     X(Sgt);
+     X(Sge);
++    X(Strlen);
++    X(Strconcat);
+ #undef X
+   default:
+     assert(0 && "invalid kind");
+@@ -640,6 +642,22 @@ ref<Expr> ConcatExpr::create8(const ref<Expr> &kid1, const ref<Expr> &kid2,
+ 			      ConcatExpr::create(kid4, ConcatExpr::create4(kid5, kid6, kid7, kid8)))));
+ }
+ 
++// FIXME: Strlen create - no optimizations
++ref<Expr> StrlenExpr::create(const ref<Expr> &e) {
++//  if (ConstantExpr *CE = dyn_cast<ConstantExpr>(e))
++//    return CE->Not();
++  
++  return NotExpr::alloc(e);
++}
++
++
++// FIXME: Strconcat create - no optimizations
++ref<Expr> StrconcatExpr::create(const ref<Expr> &l, const ref<Expr> &r) {
++  Expr::Width w = l->getWidth() + r->getWidth();
++  
++  return StrconcatExpr::alloc(l, r);
++}
++
+ /***/
+ 
+ ref<Expr> ExtractExpr::create(ref<Expr> expr, unsigned off, Width w) {
+diff --git a/klee/lib/Expr/ExprBuilder.cpp b/klee/lib/Expr/ExprBuilder.cpp
+index d9e20e4..96eb229 100644
+--- a/klee/lib/Expr/ExprBuilder.cpp
++++ b/klee/lib/Expr/ExprBuilder.cpp
+@@ -149,6 +149,14 @@ namespace {
+     virtual ref<Expr> Sge(const ref<Expr> &LHS, const ref<Expr> &RHS) {
+       return SgeExpr::alloc(LHS, RHS);
+     }
++
++    virtual ref<Expr> Strlen(const ref<Expr> &arg){
++      return StrlenExpr::alloc(arg);
++    }
++
++    virtual ref<Expr> Strconcat(const ref<Expr> &LHS, const ref<Expr> &RHS) {
++      return StrconcatExpr::alloc(LHS, RHS);
++    }
+   };
+ 
+   /// ChainedBuilder - Helper class for construct specialized expression
+@@ -298,6 +306,14 @@ namespace {
+     ref<Expr> Sge(const ref<Expr> &LHS, const ref<Expr> &RHS) {
+       return Base->Sge(LHS, RHS);
+     }
++
++    virtual ref<Expr> Strlen(const ref<Expr> &arg){
++      return StrlenExpr::alloc(arg);
++    }
++
++    virtual ref<Expr> Strconcat(const ref<Expr> &LHS, const ref<Expr> &RHS) {
++      return StrconcatExpr::alloc(LHS, RHS);
++    }
+   };
+ 
+   /// ConstantSpecializedExprBuilder - A base expression builder class which
+@@ -688,6 +704,26 @@ namespace {
+       return Builder.Sge(cast<NonConstantExpr>(LHS),
+                          cast<NonConstantExpr>(RHS));
+     }
++    virtual ref<Expr> Strlen(const ref<Expr> &LHS) {
++      if (ConstantExpr *LCE = dyn_cast<ConstantExpr>(LHS)) {
++        return Builder.Strlen(LCE);
++      } 
++      return Builder.Strlen(cast<NonConstantExpr>(LHS));
++    }
++    virtual ref<Expr> Strconcat(const ref<Expr> &LHS, const ref<Expr> &RHS) {
++  // FIXME: What is this??
++ /* 
++     if (ConstantExpr *LCE = dyn_cast<ConstantExpr>(LHS)) {
++        if (ConstantExpr *RCE = dyn_cast<ConstantExpr>(RHS))
++          return LCE->Strconcat(RCE);
++        return Builder.Strconcat(LCE, cast<NonConstantExpr>(RHS));
++      } else if (ConstantExpr *RCE = dyn_cast<ConstantExpr>(RHS)) {
++        return Builder.Strconcat(cast<NonConstantExpr>(LHS), RCE);
++      }
++*/
++      return Builder.Strconcat(cast<NonConstantExpr>(LHS),
++                         cast<NonConstantExpr>(RHS));
++    }
+   };
+ 
+   class ConstantFoldingBuilder :
+diff --git a/klee/lib/Expr/ExprVisitor.cpp b/klee/lib/Expr/ExprVisitor.cpp
+index 3eced3b..a37701e 100644
+--- a/klee/lib/Expr/ExprVisitor.cpp
++++ b/klee/lib/Expr/ExprVisitor.cpp
+@@ -86,6 +86,8 @@ ref<Expr> ExprVisitor::visitActual(const ref<Expr> &e) {
+     case Expr::Sle: res = visitSle(static_cast<SleExpr&>(ep)); break;
+     case Expr::Sgt: res = visitSgt(static_cast<SgtExpr&>(ep)); break;
+     case Expr::Sge: res = visitSge(static_cast<SgeExpr&>(ep)); break;
++    case Expr::Strlen: res = visitStrlen(static_cast<StrlenExpr&>(ep)); break;
++    case Expr::Strconcat: res = visitStrconcat(static_cast<StrconcatExpr&>(ep)); break;
+     case Expr::Constant:
+     default:
+       assert(0 && "invalid expression kind");
+@@ -256,3 +258,10 @@ ExprVisitor::Action ExprVisitor::visitSge(const SgeExpr&) {
+   return Action::doChildren(); 
+ }
+ 
++ExprVisitor::Action ExprVisitor::visitStrlen(const StrlenExpr&) {
++  return Action::doChildren(); 
++}
++
++ExprVisitor::Action ExprVisitor::visitStrconcat(const StrconcatExpr&) {
++  return Action::doChildren(); 
++}

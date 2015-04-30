@@ -4,18 +4,21 @@
 
 #include <klee/klee.h>
 
-int get_sign(char x) {
-  if (x == 0)
-     return 0;
+int get_sign(char *x, char *y, int i) {
   
-  if (x < 0)
-     return -1;
-  else 
-     return 1;
+  if(strcat(x,y) == x )
+          return i+1;
+  else
+          return i-1;
+  
 } 
 
 int main() {
-  char a;
-  klee_make_symbolic(&a, sizeof(a), "a");
-  return get_sign(a);
+  char a[100];
+  char b[100];
+  int i;
+  klee_make_symbolic(a, 100, "a");
+  klee_make_symbolic(b, 100, "b");
+  klee_make_symbolic(&i, 4, "i");
+  return get_sign(a, b, i);
 } 

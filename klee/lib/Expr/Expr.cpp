@@ -647,7 +647,7 @@ ref<Expr> StrlenExpr::create(const ref<Expr> &e) {
 //  if (ConstantExpr *CE = dyn_cast<ConstantExpr>(e))
 //    return CE->Not();
   
-  return NotExpr::alloc(e);
+  return StrlenExpr::alloc(e);
 }
 
 
@@ -1198,7 +1198,31 @@ static ref<Expr> SleExpr_create(const ref<Expr> &l, const ref<Expr> &r) {
   }
 }
 
-CMPCREATE_T(EqExpr, Eq, EqExpr, EqExpr_createPartial, EqExpr_createPartialR)
+//Removing assert check for equality
+#define EQCREATE_T(_e_op, _op, _reflexive_e_op, partialL, partialR) \
+ref<Expr>  _e_op ::create(const ref<Expr> &l, const ref<Expr> &r) {    \
+  if (ConstantExpr *cl = dyn_cast<ConstantExpr>(l)) {                  \
+    if (ConstantExpr *cr = dyn_cast<ConstantExpr>(r))                  \
+      return cl->_op(cr);                                              \
+    return partialR(cl, r.get());                                      \
+  } else if (ConstantExpr *cr = dyn_cast<ConstantExpr>(r)) {           \
+    return partialL(l.get(), cr);                                      \
+  } else {                                                             \
+    return _e_op ## _create(l.get(), r.get());                         \
+  }                                                                    \
+}
+ref<Expr>  EqExpr::create(const ref<Expr> &l, const ref<Expr> &r) {    \
+  if (ConstantExpr *cl = dyn_cast<ConstantExpr>(l)) {                  \
+    if (ConstantExpr *cr = dyn_cast<ConstantExpr>(r))                  \
+      return cl->Eq(cr);                                              \
+    return EqExpr_createPartialR(cl, r.get());                                      \
+  } else if (ConstantExpr *cr = dyn_cast<ConstantExpr>(r)) {           \
+    return EqExpr_createPartial(l.get(), cr);                                      \
+  } else {                                                             \
+    return EqExpr_create(l.get(), r.get());                         \
+  }                                                                    \
+}
+//EQCREATE_T(EqExpr, Eq, EqExpr, EqExpr_createPartial, EqExpr_createPartialR)
 CMPCREATE(UltExpr, Ult)
 CMPCREATE(UleExpr, Ule)
 CMPCREATE(SltExpr, Slt)

@@ -3,6 +3,7 @@
 #include "../tags/QF_BV.hpp"
 #include "../tags/Array.hpp"
 #include "../tags/String.hpp"
+#include "../tags/Int.hpp"
 #include "../result_wrapper.hpp"
 
 #include <cvc4/cvc4.h>
@@ -17,6 +18,8 @@ namespace metaSMT {
     namespace predtags = ::metaSMT::logic::tag;
     namespace bvtags = ::metaSMT::logic::QF_BV::tag;
     namespace arraytags = ::metaSMT::logic::Array::tag;
+    namespace stringtags = ::metaSMT::logic::String::tag;
+    namespace inttags = ::metaSMT::logic::Int::tag;
 
     /**
      * @ingroup Backend
@@ -91,6 +94,44 @@ namespace metaSMT {
       result_type operator()( predtags::ite_tag tag
                               , result_type a, result_type b, result_type c ) {
         return exprManager_.mkExpr(::CVC4::kind::ITE, a, b, c);
+      }
+
+      result_type operator()( inttags::uint_tag , boost::any arg ) {
+        typedef boost::tuple<unsigned long, unsigned long> Tuple;
+        Tuple tuple = boost::any_cast<Tuple>(arg);
+        unsigned long value = boost::get<0>(tuple);
+        unsigned long width = boost::get<1>(tuple);
+
+	//Ignore width!
+        return exprManager_.mkConst(::CVC4::Rational(value));
+      }
+
+      result_type operator() (inttags::int_var_tag const &var,
+                              boost::any const & ) {
+        if (var.id == 0 ) {
+          throw std::runtime_error("uninitialized string used");
+        }
+
+        ::CVC4::Type intty = exprManager_.integerType();
+
+        char buf[64];
+        sprintf(buf, "var_%u", var.id);
+
+        return exprManager_.mkVar(buf, intty); 
+      }
+
+      result_type operator() (stringtags::string_var_tag const &var,
+                              boost::any const & ) {
+        if (var.id == 0 ) {
+          throw std::runtime_error("uninitialized string used");
+        }
+
+        ::CVC4::Type stringty = exprManager_.stringType();
+
+        char buf[64];
+        sprintf(buf, "var_%u", var.id);
+
+        return exprManager_.mkVar(buf, stringty); 
       }
 
       result_type operator() (arraytags::array_var_tag const &var,
@@ -224,6 +265,9 @@ namespace metaSMT {
         return exprManager_.mkExpr(::CVC4::kind::DISTINCT, a, b);
       }
 
+      result_type operator()( stringtags::strlen_tag , result_type e ) {
+        return exprManager_.mkExpr(::CVC4::kind::STRING_LENGTH, e);
+      }
       ////////////////////////
       // Fallback operators //
       ////////////////////////
@@ -257,7 +301,7 @@ namespace metaSMT {
         namespace mpl = boost::mpl;
         using namespace ::CVC4::kind;
 
-        typedef mpl::map33<
+        typedef mpl::map34<
           // binary Logic tags
           mpl::pair<predtags::and_tag,     Op2< ::CVC4::kind::AND> >
         , mpl::pair<predtags::nand_tag,    NotOp2< ::CVC4::kind::AND> >
@@ -266,6 +310,9 @@ namespace metaSMT {
         , mpl::pair<predtags::xor_tag,     Op2< ::CVC4::kind::XOR> >
         , mpl::pair<predtags::xnor_tag,    NotOp2< ::CVC4::kind::XOR> >
         , mpl::pair<predtags::implies_tag, Op2< ::CVC4::kind::IMPLIES> >
+
+        , mpl::pair<stringtags::strconcat_tag,    Op2< ::CVC4::kind::STRING_CONCAT> >
+   //     , mpl::pair<stringtags::strlen_tag,       Op2< ::CVC4::kind::STRING_LENGTH> >
         // binary QF_BV tags
         , mpl::pair<bvtags::bvand_tag,     Op2<BITVECTOR_AND> >
         , mpl::pair<bvtags::bvnand_tag,    Op2<BITVECTOR_NAND> >

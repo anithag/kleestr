@@ -1266,7 +1266,7 @@ SolverImpl::SolverRunStatus MetaSMTSolverImpl<SolverContext>::getOperationStatus
 //template class MetaSMTSolver< DirectSolver_Context < Boolector> >;
 template class MetaSMTSolver< DirectSolver_Context < Z3_Backend> >;
 template class MetaSMTSolver< DirectSolver_Context < ::metaSMT::solver::CVC4> >;
-template class MetaSMTSolver< DirectSolver_Context < STP_Backend> >;
+//template class MetaSMTSolver< DirectSolver_Context < STP_Backend> >;
 
 #endif /* SUPPORT_METASMT */
 

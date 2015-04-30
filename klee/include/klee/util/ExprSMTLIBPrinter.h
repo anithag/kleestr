@@ -81,8 +81,9 @@ public:
   /// \sa setLogic()
   enum SMTLIBv2Logic {
     QF_ABV,  ///< Logic using Theory of Arrays and Theory of Bitvectors
-    QF_AUFBV ///< Logic using Theory of Arrays and Theory of Bitvectors and has
+    QF_AUFBV, ///< Logic using Theory of Arrays and Theory of Bitvectors and has
              ///< uninterpreted functions
+    ALL_SUPPORTED  //+ string theory
   };
 
   /// Different SMTLIBv2 options that have a boolean value that can be set

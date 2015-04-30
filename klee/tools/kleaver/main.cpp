@@ -242,7 +242,7 @@ static bool EvaluateInputAST(const char *Filename,
     switch (UseMetaSMT) {
           case METASMT_BACKEND_STP:
               backend = "STP"; 
-              coreSolver = new MetaSMTSolver< DirectSolver_Context < STP_Backend > >(UseForkedCoreSolver, CoreSolverOptimizeDivides);
+             // coreSolver = new MetaSMTSolver< DirectSolver_Context < STP_Backend > >(UseForkedCoreSolver, CoreSolverOptimizeDivides);
               break;
           case METASMT_BACKEND_Z3:
               backend = "Z3";

@@ -5,6 +5,7 @@
 #include "frontend/QF_UF.hpp"
 #include "frontend/QF_BV.hpp"
 #include "frontend/Array.hpp"
+#include "frontend/Int.hpp"
 #include "Features.hpp"
 #include "API/Assertion.hpp"
 #include "API/Assumption.hpp"
@@ -108,6 +109,20 @@ namespace metaSMT {
         _variables.insert( std::make_pair(tag.id, ret) );
         return ret;
       }
+    }
+
+    // special handling of uint_tag
+    template< typename Expr1, typename Expr2>
+    result_type operator() (logic::Int::tag::uint_tag const & tag
+        , Expr1 value
+        , Expr2 bw
+    ) {
+      const unsigned long val   = proto::value(value);
+      const unsigned long width = proto::value(bw);
+
+      return SolverContext::operator() ( tag,
+        boost::any(boost::make_tuple(val, width))
+      );
     }
 
     /**

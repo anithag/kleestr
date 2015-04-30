@@ -573,7 +573,6 @@ public:
   static bool classof(const NotOptimizedExpr *) { return true; }
 };
 
-
 /// Class representing a byte update of an array.
 class UpdateNode {
   friend class UpdateList;  

@@ -23,6 +23,7 @@
 #include <metaSMT/frontend/QF_BV.hpp>
 #include <metaSMT/frontend/Array.hpp>
 #include <metaSMT/frontend/String.hpp>
+#include <metaSMT/frontend/Int.hpp>
 #include <metaSMT/support/default_visitation_unrolling_limit.hpp>
 #include <metaSMT/support/run_algorithm.hpp>
 
@@ -37,6 +38,8 @@
 
 using namespace metaSMT;
 using namespace metaSMT::logic::QF_BV;
+using namespace metaSMT::logic::String;
+using namespace metaSMT::logic::Int;
 
 
 #define DIRECT_CONTEXT
@@ -137,6 +140,7 @@ private:
     
     typename SolverContext::result_type constructActual(ref<Expr> e, int *width_out);
     typename SolverContext::result_type construct(ref<Expr> e, int *width_out);
+    typename SolverContext::result_type construct_int(ref<Expr> e, int *width_out);
     
     typename SolverContext::result_type bvBoolExtract(typename SolverContext::result_type expr, int bit);
     typename SolverContext::result_type bvExtract(typename SolverContext::result_type expr, unsigned top, unsigned bottom);
@@ -601,6 +605,20 @@ typename SolverContext::result_type MetaSMTBuilder<SolverContext>::construct(ref
         }
     }
 }
+template<typename SolverContext>
+typename SolverContext::result_type MetaSMTBuilder<SolverContext>::construct_int(ref<Expr> e, int *width_out) {
+  
+		//ignore width_out
+            typename SolverContext::result_type res ;
+            ConstantExpr *coe = cast<ConstantExpr>(e);
+            assert(coe);
+            unsigned coe_width = coe->getWidth();
+	    unsigned value = coe->getZExtValue();
+
+            res = evaluate(_solver, metaSMT::logic::Int::uint(value, coe_width));
+            _constructed.insert(std::make_pair(e, std::make_pair(res, *width_out)));
+	    return res;
+}
 
 template<typename SolverContext>
 typename SolverContext::result_type MetaSMTBuilder<SolverContext>::constructActual(ref<Expr> e, int *width_out)  {
@@ -640,7 +658,7 @@ typename SolverContext::result_type MetaSMTBuilder<SolverContext>::constructActu
             }
             else {
                  ref<ConstantExpr> tmp = coe;
-                 res = bvConst64(64, tmp->Extract(0, 64)->getZExtValue());
+ 		 res = bvConst64(64, tmp->Extract(0, 64)->getZExtValue());
                  while (tmp->getWidth() > 64) {
                      tmp = tmp->Extract(64, tmp->getWidth() -  64);
                      unsigned min_width = std::min(64U, tmp->getWidth());
@@ -1073,10 +1091,43 @@ typename SolverContext::result_type MetaSMTBuilder<SolverContext>::constructActu
 	{
 	     EqExpr *ee = cast<EqExpr>(e);
 	     assert(ee);
-	     
-    	     typename SolverContext::result_type left_expr = evaluate(_solver, construct(ee->left, width_out));
-	     typename SolverContext::result_type right_expr = evaluate(_solver, construct(ee->right, width_out));
+    	     typename SolverContext::result_type left_expr, right_expr; 
+	     ConstantExpr *LE = dyn_cast<ConstantExpr>(ee->left);
+	     ConstantExpr *RE = dyn_cast<ConstantExpr>(ee->right);
+	     if (LE) {
 
+		//check if right expr is one of the string expressions. If so, lift it to int
+	       StrlenExpr *se = dyn_cast<StrlenExpr>(ee->right);
+		if(se) {
+    	             left_expr = evaluate(_solver, construct_int(ee->left, width_out));
+	     	     right_expr = evaluate(_solver, construct(ee->right, width_out));
+		
+		} else {
+    	             left_expr = evaluate(_solver, construct(ee->left, width_out));
+	     	     right_expr = evaluate(_solver, construct(ee->right, width_out));
+		}
+
+	     } else if (RE) {
+
+		//check if left expr is one of the string expressions. If so, lift it to int
+	       StrlenExpr *se = dyn_cast<StrlenExpr>(ee->left);
+		if(se) {
+    	             left_expr = evaluate(_solver, construct(ee->left, width_out));
+	     	     right_expr = evaluate(_solver, construct_int(ee->right, width_out));
+		
+		} else {
+    	             left_expr = evaluate(_solver, construct(ee->left, width_out));
+	     	     right_expr = evaluate(_solver, construct(ee->right, width_out));
+		}
+
+
+	     } else {
+    	             left_expr = evaluate(_solver, construct(ee->left, width_out));
+	     	     right_expr = evaluate(_solver, construct(ee->right, width_out));
+	     }
+	     
+	     res = evaluate(_solver, metaSMT::logic::equal(left_expr, right_expr));
+	/* FIXME: I have disabled optimizations 
 	     if (*width_out==1) {
 	         if (ConstantExpr *CE = dyn_cast<ConstantExpr>(ee->left)) {
 		     if (CE->isTrue()) {
@@ -1094,7 +1145,9 @@ typename SolverContext::result_type MetaSMTBuilder<SolverContext>::constructActu
 	         *width_out = 1;
 	         res = evaluate(_solver, metaSMT::logic::equal(left_expr, right_expr));
 	     }
-	     
+	     */
+	
+		
 	     break;
 	}
 	
@@ -1167,6 +1220,41 @@ typename SolverContext::result_type MetaSMTBuilder<SolverContext>::constructActu
         case Expr::Sge:
 #endif  
      
+        case Expr::Strlen:
+        {
+            StrlenExpr *se = cast<StrlenExpr>(e);
+            assert(se);
+    
+            //typename SolverContext::result_type left_expr = evaluate(_solver, construct(se->getLeft(), width_out));
+            typename SolverContext::result_type left_expr = evaluate(_solver, metaSMT::logic::String::new_string(0));
+    
+	    //Important: construct a map of previous variable to newly generated string
+            _constructed.insert(std::make_pair(e, std::make_pair(left_expr, 0)));
+
+            //assert(*width_out != 1 && "uncanonicalized sle");
+            *width_out = 1;    
+    
+            res = evaluate(_solver, strlen(left_expr));
+            break;	  
+        }
+
+        case Expr::Strconcat:
+        {
+            StrconcatExpr *se = cast<StrconcatExpr>(e);
+            assert(se);
+    
+        //    typename SolverContext::result_type left_expr = evaluate(_solver, construct(se->getLeft(), width_out));
+          //  typename SolverContext::result_type right_expr = evaluate(_solver, construct(se->getRight(), width_out));
+            typename SolverContext::result_type left_expr = evaluate(_solver, metaSMT::logic::String::new_string(0));
+            typename SolverContext::result_type right_expr = evaluate(_solver, metaSMT::logic::String::new_string(0));
+    
+            assert(*width_out != 1 && "uncanonicalized sle");
+            *width_out = 1;    
+    
+            res = evaluate(_solver, strconcat(left_expr, right_expr));
+            break;	  
+        }
+
         default:
              assert(false);
              break;      

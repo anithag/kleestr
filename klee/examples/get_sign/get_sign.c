@@ -4,18 +4,15 @@
 
 #include <klee/klee.h>
 
-int get_sign(int x) {
-  if (x == 0)
-     return 0;
-  
-  if (x < 0)
-     return -1;
+int get_sign(int *x) {
+  if (*x > 10)
+     return 2;
   else 
      return 1;
 } 
 
 int main() {
-  int a;
-  klee_make_symbolic(&a, sizeof(a), "a");
-  return get_sign(a);
+  int myarray[100];
+  klee_make_symbolic(myarray, 400, "myarray-print");
+  return get_sign(myarray);
 } 

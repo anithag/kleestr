@@ -94,6 +94,8 @@ static SpecialFunctionHandler::HandlerInfo handlerInfo[] = {
   add("test_function_adds", handleTestFunctionAdds, true),
   add("test_function", handleTestFunction, true),
   add("foo", handleFoo, true),
+  add("strcat", handleStrcat, true),
+  add("strlen", handleStrlen, true),
 
   // operator delete[](void*)
   add("_ZdaPv", handleDeleteArray, false),
@@ -390,6 +392,28 @@ void SpecialFunctionHandler::handleAssume(ExecutionState &state,
   } else {
     executor.addConstraint(state, e);
   }
+}
+
+void SpecialFunctionHandler::handleStrcat(ExecutionState &state,
+                            KInstruction *target,
+                            std::vector<ref<Expr> > &arguments) {
+  assert(arguments.size()==2 && "invalid number of arguments to klee_assume");
+  
+  //ref<Expr> e1str = StringExpr::create(arguments[0], arguments[0]->getWidth());
+  //ref<Expr> e2str = StringExpr::create(arguments[1], arguments[1]->getWidth());
+
+  ref<Expr> e = StrconcatExpr::create(arguments[0], arguments[1]);
+  
+ // executor.addConstraint(state, e);
+    executor.bindLocal(target, state, e);
+}
+void SpecialFunctionHandler::handleStrlen(ExecutionState &state,
+                            KInstruction *target,
+                            std::vector<ref<Expr> > &arguments) {
+  assert(arguments.size()==1 && "invalid number of arguments to klee_assume");
+  
+  ref<Expr> e = StrlenExpr::create(arguments[0]);
+  executor.bindLocal(target, state, e);
 }
 
 void SpecialFunctionHandler::handleIsSymbolic(ExecutionState &state,

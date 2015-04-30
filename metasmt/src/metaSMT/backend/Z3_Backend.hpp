@@ -2,6 +2,7 @@
 #include "../tags/QF_BV.hpp"
 #include "../tags/QF_UF.hpp"
 #include "../tags/Array.hpp"
+#include "../tags/Int.hpp"
 #include "../result_wrapper.hpp"
 #include "../Features.hpp"
 
@@ -31,6 +32,7 @@ namespace metaSMT {
     namespace bvtags = ::metaSMT::logic::QF_BV::tag;
     namespace arraytags = ::metaSMT::logic::Array::tag;
     namespace uftags = ::metaSMT::logic::QF_UF::tag;
+    namespace inttags = ::metaSMT::logic::Int::tag;
 
     namespace qi = boost::spirit::qi;
 
@@ -340,6 +342,16 @@ namespace metaSMT {
       }
 
       result_type operator() (bvtags::bvuint_tag const &, boost::any const &arg) {
+        typedef boost::tuple<unsigned long, unsigned long> P;
+        P const p = boost::any_cast<P>(arg);
+        unsigned long const value = boost::get<0>(p);
+        unsigned const width = boost::get<1>(p);
+        Z3_sort ty = Z3_mk_bv_sort(ctx_, width);
+        return z3::to_expr(ctx_, Z3_mk_unsigned_int64(ctx_, value, ty));
+      }
+
+            //Dummy!!
+      result_type operator() (inttags::uint_tag const &, boost::any const &arg) {
         typedef boost::tuple<unsigned long, unsigned long> P;
         P const p = boost::any_cast<P>(arg);
         unsigned long const value = boost::get<0>(p);

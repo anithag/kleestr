@@ -1,0 +1,95 @@
+diff --git a/klee/include/klee/CommandLine.h b/klee/include/klee/CommandLine.h
+index c4c7006..ff28bc5 100644
+--- a/klee/include/klee/CommandLine.h
++++ b/klee/include/klee/CommandLine.h
+@@ -51,6 +51,7 @@ enum MetaSMTBackendType
+     METASMT_BACKEND_NONE,
+     METASMT_BACKEND_STP,
+     METASMT_BACKEND_Z3,
++    METASMT_BACKEND_CVC4,
+     METASMT_BACKEND_BOOLECTOR
+ };
+ 
+diff --git a/klee/lib/Basic/CmdLineOptions.cpp b/klee/lib/Basic/CmdLineOptions.cpp
+index eac5414..86e454d 100644
+--- a/klee/lib/Basic/CmdLineOptions.cpp
++++ b/klee/lib/Basic/CmdLineOptions.cpp
+@@ -81,6 +81,7 @@ UseMetaSMT("use-metasmt",
+            llvm::cl::values(clEnumValN(METASMT_BACKEND_NONE, "none", "Don't use metaSMT"),
+                       clEnumValN(METASMT_BACKEND_STP, "stp", "Use metaSMT with STP"),
+                       clEnumValN(METASMT_BACKEND_Z3, "z3", "Use metaSMT with Z3"),
++                      clEnumValN(METASMT_BACKEND_CVC4, "cvc4", "Use metaSMT with Boolector"),
+                       clEnumValN(METASMT_BACKEND_BOOLECTOR, "btor", "Use metaSMT with Boolector"),
+                       clEnumValEnd),  
+            llvm::cl::init(METASMT_BACKEND_NONE));
+diff --git a/klee/lib/Core/Executor.cpp b/klee/lib/Core/Executor.cpp
+index 56dd1dd..1efadf0 100644
+--- a/klee/lib/Core/Executor.cpp
++++ b/klee/lib/Core/Executor.cpp
+@@ -111,6 +111,7 @@ using namespace klee;
+ 
+ #include <metaSMT/frontend/Array.hpp>
+ #include <metaSMT/backend/Z3_Backend.hpp>
++#include <metaSMT/backend/CVC4.hpp>
+ //#include <metaSMT/backend/Boolector.hpp>
+ //#include <metaSMT/backend/MiniSAT.hpp>
+ #include <metaSMT/DirectSolver_Context.hpp>
+@@ -314,6 +315,10 @@ Executor::Executor(const InterpreterOptions &opts,
+               backend = "Z3";
+               coreSolver = new MetaSMTSolver< DirectSolver_Context < Z3_Backend > >(UseForkedCoreSolver, CoreSolverOptimizeDivides);
+               break;
++          case METASMT_BACKEND_CVC4:
++              backend = "CVC4";
++              coreSolver = new MetaSMTSolver< DirectSolver_Context < CVC4 > >(UseForkedCoreSolver, CoreSolverOptimizeDivides);
++              break;
+           case METASMT_BACKEND_BOOLECTOR:
+               backend = "Boolector";
+        //       coreSolver = new MetaSMTSolver< DirectSolver_Context < Boolector > >(UseForkedCoreSolver, CoreSolverOptimizeDivides);
+diff --git a/klee/lib/Solver/Solver.cpp b/klee/lib/Solver/Solver.cpp
+index debf6c6..618fe42 100644
+--- a/klee/lib/Solver/Solver.cpp
++++ b/klee/lib/Solver/Solver.cpp
+@@ -51,10 +51,11 @@ using namespace klee;
+ 
+ #ifdef SUPPORT_METASMT
+ 
+-#include <metaSMT/DirectSolver_Context.hpp>
+ #include <metaSMT/backend/Z3_Backend.hpp>
++#include <metaSMT/backend/CVC4.hpp>
+ //#include <metaSMT/backend/Boolector.hpp>
+ //#include <metaSMT/backend/MiniSAT.hpp>
++#include <metaSMT/DirectSolver_Context.hpp>
+ #include <metaSMT/support/run_algorithm.hpp>
+ #include <metaSMT/API/Stack.hpp>
+ #include <metaSMT/API/Group.hpp>
+@@ -1264,6 +1265,7 @@ SolverImpl::SolverRunStatus MetaSMTSolverImpl<SolverContext>::getOperationStatus
+ 
+ //template class MetaSMTSolver< DirectSolver_Context < Boolector> >;
+ template class MetaSMTSolver< DirectSolver_Context < Z3_Backend> >;
++template class MetaSMTSolver< DirectSolver_Context < CVC4> >;
+ template class MetaSMTSolver< DirectSolver_Context < STP_Backend> >;
+ 
+ #endif /* SUPPORT_METASMT */
+diff --git a/klee/tools/kleaver/main.cpp b/klee/tools/kleaver/main.cpp
+index c87e05f..2164293 100644
+--- a/klee/tools/kleaver/main.cpp
++++ b/klee/tools/kleaver/main.cpp
+@@ -45,6 +45,7 @@ using namespace klee::expr;
+ #ifdef SUPPORT_METASMT
+ 
+ #include <metaSMT/DirectSolver_Context.hpp>
++#include <metaSMT/backend/CVC4.hpp>
+ #include <metaSMT/backend/Z3_Backend.hpp>
+ //#include <metaSMT/backend/Boolector.hpp>
+ 
+@@ -247,6 +248,10 @@ static bool EvaluateInputAST(const char *Filename,
+               backend = "Z3";
+               coreSolver = new MetaSMTSolver< DirectSolver_Context < Z3_Backend > >(UseForkedCoreSolver, CoreSolverOptimizeDivides);
+               break;
++          case METASMT_BACKEND_CVC4:
++              backend = "CVC4";
++              coreSolver = new MetaSMTSolver< DirectSolver_Context < CVC4 > >(UseForkedCoreSolver, CoreSolverOptimizeDivides);
++              break;
+           case METASMT_BACKEND_BOOLECTOR:
+               backend = "Boolector";
+        //       coreSolver = new MetaSMTSolver< DirectSolver_Context < Boolector > >(UseForkedCoreSolver, CoreSolverOptimizeDivides);

@@ -408,6 +408,28 @@ void SpecialFunctionHandler::handleStrlen(ExecutionState &state,
   assert(arguments.size()==1 && "invalid number of arguments to klee_assume");
   
   ref<Expr> e = StrlenExpr::create(arguments[0]);
+
+ //Get array
+  Executor::ExactResolutionList rl;
+  executor.resolveExact(state, arguments[0], rl, "make_symbolic");
+  
+  for (Executor::ExactResolutionList::iterator it = rl.begin(), 
+         ie = rl.end(); it != ie; ++it) {
+    const MemoryObject *mo = it->first.first;
+  //  mo->setName(name);
+    
+    const ObjectState *old = it->first.second;
+    ExecutionState *s = it->second;
+
+    //get Symbolic array associated with this memoryobject
+    for (unsigned i = 0; i != state.symbolics.size(); ++i)
+             if((s->symbolics[i].second)->name == mo->name) {
+  			StrlenExpr *expr = cast<StrlenExpr>(e);
+  			expr->setarray(s->symbolics[i].second);
+			break;
+	     }
+    
+  }  
   executor.bindLocal(target, state, e);
 }
 

@@ -888,6 +888,8 @@ public:
 private:
   Width width;
   ref<Expr> left;  
+  //Array associated with the pointer
+  const Array *array;
 
 public:
   static ref<Expr> alloc(const ref<Expr> &l) {
@@ -920,6 +922,11 @@ public:
     return E->getKind() == Expr::Strlen;
   }
   static bool classof(const StrlenExpr *) { return true; }
+
+  const Array* getarray() { return array; }
+  void setarray(const Array *a) { 
+               this->array = a; 
+  }
 };
 
 class StrconcatExpr : public NonConstantExpr { 

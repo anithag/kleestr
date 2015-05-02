@@ -225,6 +225,13 @@ void ExprSMTLIBPrinter::printFullExpression(
     printExtractExpr(cast<ExtractExpr>(e));
     return;
 
+  case Expr::Strlen:
+	  printStrlenExpr(cast<StrlenExpr>(e));
+	  return;
+  case Expr::Strconcat:
+	  printStrconcatExpr(cast<StrconcatExpr>(e));
+	  return;
+
   case Expr::SExt:
   case Expr::ZExt:
     printCastExpr(cast<CastExpr>(e));
@@ -301,6 +308,33 @@ void ExprSMTLIBPrinter::printExtractExpr(const ref<ExtractExpr> &e) {
   p->popIndent(); // pop indent added for the recursive call
   printSeperator();
   *p << ")";
+}
+
+void ExprSMTLIBPrinter::printStrlenExpr(const ref<StrlenExpr> &e) {
+  setLogic(QF_S);
+  *p << "( " << getSMTLIBKeyword(e);
+  printSeperator();
+
+  // recurse
+  printExpression(e->getKid(0), SORT_BITVECTOR);
+  printSeperator();
+
+  *p << ")";
+}
+
+void ExprSMTLIBPrinter::printStrconcatExpr(const ref<StrconcatExpr> &e) {
+	  setLogic(QF_S);
+
+    *p << "( " << getSMTLIBKeyword(e);
+	  printSeperator();
+
+	  // recurse
+	  printExpression(e->getKid(0), SORT_BITVECTOR);
+	  printSeperator();
+	  printExpression(e->getKid(1), SORT_BITVECTOR);
+	  printSeperator();
+
+	  *p << ")";
 }
 
 void ExprSMTLIBPrinter::printCastExpr(const ref<CastExpr> &e) {
@@ -399,6 +433,11 @@ const char *ExprSMTLIBPrinter::getSMTLIBKeyword(const ref<Expr> &e) {
   case Expr::Sge:
     return "bvsge";
 
+  case Expr::Strlen:
+	  return "str.len";
+  case Expr::Strconcat:
+	  return "str.++";
+
   default:
     llvm_unreachable("Conversion from Expr to SMTLIB keyword failed");
   }
@@ -477,6 +516,8 @@ void ExprSMTLIBPrinter::printSetLogic() {
   case QF_AUFBV:
     *o << "QF_AUFBV";
     break;
+  case QF_S:
+	*o << "QF_S";
   }
   *o << " )\n";
 }
@@ -760,7 +801,7 @@ void ExprSMTLIBPrinter::scanUpdates(const UpdateNode *un) {
 void ExprSMTLIBPrinter::printExit() { *o << "(exit)\n"; }
 
 bool ExprSMTLIBPrinter::setLogic(SMTLIBv2Logic l) {
-  if (l > QF_AUFBV)
+  if (l > QF_S)
     return false;
 
   logicToUse = l;

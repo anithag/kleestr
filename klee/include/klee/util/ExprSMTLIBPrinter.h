@@ -83,6 +83,7 @@ public:
     QF_ABV,  ///< Logic using Theory of Arrays and Theory of Bitvectors
     QF_AUFBV, ///< Logic using Theory of Arrays and Theory of Bitvectors and has
              ///< uninterpreted functions
+	QF_S,    ///< Logic using Theory of Strings, Ints and Arrays from CVC4
     ALL_SUPPORTED  //+ string theory
   };
 
@@ -320,6 +321,8 @@ protected:
   void printNotEqualExpr(const ref<NeExpr> &e);
   void printSelectExpr(const ref<SelectExpr> &e,
                                ExprSMTLIBPrinter::SMTLIB_SORT s);
+  void printStrlenExpr(const ref<StrlenExpr> &e);
+  void printStrconcatExpr(const ref<StrconcatExpr> &e);
 
   // For the set of operators that take sort "s" arguments
   void printSortArgsExpr(const ref<Expr> &e,

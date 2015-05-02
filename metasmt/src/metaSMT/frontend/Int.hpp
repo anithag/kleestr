@@ -98,6 +98,47 @@ namespace metaSMT {
 	  boost::tie(rhs_tag.id, rhs_tag.width);
       }
 
+ #define _INT_BINARY_FUNCTION(NAME_, TAG_) \
+      template<typename E1, typename E2> \
+      typename proto::result_of::make_expr< TAG_, Int_Domain, E1 const &, E2 const & >::type \
+      NAME_( E1 const& e1, E2 const & e2 ) \
+      { \
+        return proto::make_expr< TAG_, Int_Domain >(boost::cref(e1), boost::cref(e2));\
+      } 
+
+      // bitwise binary
+      _INT_BINARY_FUNCTION(intand, tag::intand_tag)
+      _INT_BINARY_FUNCTION(intnand, tag::intnand_tag)
+      _INT_BINARY_FUNCTION(intor, tag::intor_tag)
+      _INT_BINARY_FUNCTION(intnor, tag::intnor_tag)
+      _INT_BINARY_FUNCTION(intxor, tag::intxor_tag)
+      _INT_BINARY_FUNCTION(intxnor, tag::intxnor_tag)
+
+      _INT_BINARY_FUNCTION(intadd, tag::intadd_tag)
+      _INT_BINARY_FUNCTION(intmul, tag::intmul_tag)
+      _INT_BINARY_FUNCTION(intsub, tag::intsub_tag)
+      _INT_BINARY_FUNCTION(intudiv, tag::intudiv_tag)
+      _INT_BINARY_FUNCTION(inturem, tag::inturem_tag)
+      _INT_BINARY_FUNCTION(intsdiv, tag::intsdiv_tag)
+      _INT_BINARY_FUNCTION(intsrem, tag::intsrem_tag)
+
+      _INT_BINARY_FUNCTION(intcomp, tag::intcomp_tag)
+
+      _INT_BINARY_FUNCTION(intslt, tag::intslt_tag)
+      _INT_BINARY_FUNCTION(intsgt, tag::intsgt_tag)
+      _INT_BINARY_FUNCTION(intsle, tag::intsle_tag)
+      _INT_BINARY_FUNCTION(intsge, tag::intsge_tag)
+
+      _INT_BINARY_FUNCTION(intult, tag::intult_tag)
+      _INT_BINARY_FUNCTION(intugt, tag::intugt_tag)
+      _INT_BINARY_FUNCTION(intule, tag::intule_tag)
+      _INT_BINARY_FUNCTION(intuge, tag::intuge_tag)
+
+      _INT_BINARY_FUNCTION(intshl,  tag::intshl_tag)
+      _INT_BINARY_FUNCTION(intshr,  tag::intshr_tag)
+      _INT_BINARY_FUNCTION(intashr, tag::intashr_tag)
+
+
       /**@}*/
 
     } // namespace Array

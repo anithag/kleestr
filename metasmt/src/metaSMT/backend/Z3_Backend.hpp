@@ -120,6 +120,10 @@ namespace metaSMT {
         inline bool operator !=(result_type const &r) const {
           return !operator ==(r);
         }
+
+        //dummy
+	result_type getType() { return *this; }
+        bool isString() { return false; }
 #if 0
         inline bool operator <(result_type const &r) const {
           assert( false && "Yet not implemented" );

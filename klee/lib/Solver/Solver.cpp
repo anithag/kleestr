@@ -1049,6 +1049,63 @@ bool MetaSMTSolverImpl<SolverContext>::computeInitialValues(const Query &query,
   return(success);
 }
 
+//Specialization for String types
+template<>
+SolverImpl::SolverRunStatus MetaSMTSolverImpl<DirectSolver_Context< ::metaSMT::solver::CVC4> >::runAndGetCex(ref<Expr> query_expr,
+                                             const std::vector<const Array*> &objects,
+                                             std::vector< std::vector<unsigned char> > &values,
+                                             bool &hasSolution)
+{
+
+  // assume the negation of the query  
+  assumption(_meta_solver, _builder->construct(Expr::createIsZero(query_expr)));  
+  hasSolution = solve(_meta_solver);  
+  
+  if (hasSolution) {
+      values.reserve(objects.size());
+      for (std::vector<const Array*>::const_iterator it = objects.begin(), ie = objects.end(); it != ie; ++it) {
+        
+          const Array *array = *it;
+          assert(array);
+          typename DirectSolver_Context< ::metaSMT::solver::CVC4>::result_type array_exp = _builder->getInitialArray(array);
+           
+          std::vector<unsigned char> data;      
+          data.reserve(array->size);       
+
+	  //String support
+	  if((array_exp.getType()).isString()) {
+       		   std::string elem_value = metaSMT::read_value(_meta_solver, array_exp);
+			//below copy will not work
+		 //  std::copy(elem_value.begin(), elem_value.end(), data.begin());
+       		   for (std::string::const_iterator it = elem_value.begin(); it !=elem_value.end(); it++) {
+			   data.push_back(*it);
+	           }
+		   for(unsigned offset = elem_value.length(); offset < array->size; offset++)
+			data.push_back(0);
+	  } else {
+           	
+       		   for (unsigned offset = 0; offset < array->size; offset++) {
+             		 typename DirectSolver_Context< ::metaSMT::solver::CVC4>::result_type elem_exp = evaluate(
+                       						_meta_solver,
+                       		metaSMT::logic::Array::select(array_exp, bvuint(offset, array->getDomain())));
+              		unsigned char elem_value = metaSMT::read_value(_meta_solver, elem_exp);
+              		data.push_back(elem_value);
+		   }
+          }
+                   
+          values.push_back(data);
+      }
+  }
+  
+  if (true == hasSolution) {
+      return(SolverImpl::SOLVER_RUN_STATUS_SUCCESS_SOLVABLE);
+  }
+  else {
+      return(SolverImpl::SOLVER_RUN_STATUS_SUCCESS_UNSOLVABLE);  
+  }
+}
+
+//For remaining Solvers
 template<typename SolverContext>
 SolverImpl::SolverRunStatus MetaSMTSolverImpl<SolverContext>::runAndGetCex(ref<Expr> query_expr,
                                              const std::vector<const Array*> &objects,
@@ -1070,14 +1127,14 @@ SolverImpl::SolverRunStatus MetaSMTSolverImpl<SolverContext>::runAndGetCex(ref<E
            
           std::vector<unsigned char> data;      
           data.reserve(array->size);       
-           
-          for (unsigned offset = 0; offset < array->size; offset++) {
-              typename SolverContext::result_type elem_exp = evaluate(
-                       _meta_solver,
-                       metaSMT::logic::Array::select(array_exp, bvuint(offset, array->getDomain())));
-              unsigned char elem_value = metaSMT::read_value(_meta_solver, elem_exp);
-              data.push_back(elem_value);
-          }
+
+       		   for (unsigned offset = 0; offset < array->size; offset++) {
+             		 typename SolverContext::result_type elem_exp = evaluate(
+                       						_meta_solver,
+                       		metaSMT::logic::Array::select(array_exp, bvuint(offset, array->getDomain())));
+              		unsigned char elem_value = metaSMT::read_value(_meta_solver, elem_exp);
+              		data.push_back(elem_value);
+		   }
                    
           values.push_back(data);
       }

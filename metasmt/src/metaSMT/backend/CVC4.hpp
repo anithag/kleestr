@@ -8,7 +8,7 @@
 
 #include <cvc4/cvc4.h>
 
-#include <boost/mpl/map/map40.hpp>
+#include <boost/mpl/map/map50.hpp>
 #include <boost/any.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <list>
@@ -70,7 +70,12 @@ namespace metaSMT {
         } else if (type.isBitVector()) {
           ::CVC4::BitVector bvValue = value.getConst< ::CVC4::BitVector >();
           return bvValue.toString();
-        }
+        } else if (type.isString()){
+
+          ::CVC4::String strValue = value.getConst< ::CVC4::String >();
+	  return strValue.toString();
+	}
+
         return result_wrapper( false );
       }
 
@@ -301,7 +306,7 @@ namespace metaSMT {
         namespace mpl = boost::mpl;
         using namespace ::CVC4::kind;
 
-        typedef mpl::map34<
+        typedef mpl::map42<
           // binary Logic tags
           mpl::pair<predtags::and_tag,     Op2< ::CVC4::kind::AND> >
         , mpl::pair<predtags::nand_tag,    NotOp2< ::CVC4::kind::AND> >
@@ -312,6 +317,17 @@ namespace metaSMT {
         , mpl::pair<predtags::implies_tag, Op2< ::CVC4::kind::IMPLIES> >
 
         , mpl::pair<stringtags::strconcat_tag,    Op2< ::CVC4::kind::STRING_CONCAT> >
+
+	//integer logic tags
+        , mpl::pair<inttags::intult_tag,     Op2< ::CVC4::kind::LT> >
+        , mpl::pair<inttags::intule_tag,     Op2< ::CVC4::kind::LEQ> >
+        , mpl::pair<inttags::intugt_tag,     Op2< ::CVC4::kind::GT> >
+        , mpl::pair<inttags::intuge_tag,     Op2< ::CVC4::kind::GEQ> >
+        , mpl::pair<inttags::intslt_tag,     Op2< ::CVC4::kind::LT> >
+        , mpl::pair<inttags::intsle_tag,     Op2< ::CVC4::kind::LEQ> >
+        , mpl::pair<inttags::intsgt_tag,     Op2< ::CVC4::kind::GT> >
+        , mpl::pair<inttags::intsge_tag,     Op2< ::CVC4::kind::GEQ> >
+
    //     , mpl::pair<stringtags::strlen_tag,       Op2< ::CVC4::kind::STRING_LENGTH> >
         // binary QF_BV tags
         , mpl::pair<bvtags::bvand_tag,     Op2<BITVECTOR_AND> >

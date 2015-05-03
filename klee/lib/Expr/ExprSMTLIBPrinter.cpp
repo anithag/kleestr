@@ -53,7 +53,7 @@ namespace klee {
 
 ExprSMTLIBPrinter::ExprSMTLIBPrinter()
     : usedArrays(), o(NULL), query(NULL), p(NULL), haveConstantArray(false),
-      logicToUse(QF_AUFBV),
+      logicToUse(ALL_SUPPORTED),
       humanReadable(ExprSMTLIBOptions::humanReadableSMTLIB),
       smtlibBoolOptions(), arraysToCallGetValueOn(NULL) {
   setConstantDisplayMode(ExprSMTLIBOptions::argConstantDisplayMode);
@@ -311,7 +311,6 @@ void ExprSMTLIBPrinter::printExtractExpr(const ref<ExtractExpr> &e) {
 }
 
 void ExprSMTLIBPrinter::printStrlenExpr(const ref<StrlenExpr> &e) {
-  setLogic(QF_S);
   *p << "( " << getSMTLIBKeyword(e);
   printSeperator();
 
@@ -323,8 +322,6 @@ void ExprSMTLIBPrinter::printStrlenExpr(const ref<StrlenExpr> &e) {
 }
 
 void ExprSMTLIBPrinter::printStrconcatExpr(const ref<StrconcatExpr> &e) {
-	  setLogic(QF_S);
-
     *p << "( " << getSMTLIBKeyword(e);
 	  printSeperator();
 
@@ -510,6 +507,9 @@ void ExprSMTLIBPrinter::generateOutput() {
 void ExprSMTLIBPrinter::printSetLogic() {
   *o << "(set-logic ";
   switch (logicToUse) {
+  case ALL_SUPPORTED:
+    *o << "ALL_SUPPORTED";
+    break;
   case QF_ABV:
     *o << "QF_ABV";
     break;
@@ -517,7 +517,7 @@ void ExprSMTLIBPrinter::printSetLogic() {
     *o << "QF_AUFBV";
     break;
   case QF_S:
-	*o << "QF_S";
+	  *o << "QF_S";
   }
   *o << " )\n";
 }
@@ -929,6 +929,11 @@ ExprSMTLIBPrinter::SMTLIB_SORT ExprSMTLIBPrinter::getSort(const ref<Expr> &e) {
   case Expr::Xor:
     return e->getWidth() == Expr::Bool ? SORT_BOOL : SORT_BITVECTOR;
 
+  // Strings
+  case Expr::Strconcat:
+  case Expr::Strlen:
+	return SORT_BITVECTOR;
+
   // Everything else is a bitvector.
   default:
     return SORT_BITVECTOR;
@@ -987,6 +992,9 @@ void ExprSMTLIBPrinter::printCastToSort(const ref<Expr> &e,
           << bitWidth << ") to bool!\n";
 
   } break;
+//  case SORT_STRING: {
+//
+//  } break;
   default:
     llvm_unreachable("Unsupported cast");
   }

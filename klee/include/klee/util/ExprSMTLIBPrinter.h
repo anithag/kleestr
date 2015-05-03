@@ -83,7 +83,7 @@ public:
     QF_ABV,  ///< Logic using Theory of Arrays and Theory of Bitvectors
     QF_AUFBV, ///< Logic using Theory of Arrays and Theory of Bitvectors and has
              ///< uninterpreted functions
-	QF_S,    ///< Logic using Theory of Strings, Ints and Arrays from CVC4
+	  QF_S,    ///< Logic using Theory of Strings, Ints and Arrays from CVC4
     ALL_SUPPORTED  //+ string theory
   };
 

@@ -6,7 +6,7 @@
 
 #define STRING_LENGTH 50
 #define NUMBER_OF_STRINGS 5
-#define MAX_QUERY_SIZE 210
+#define MAX_QUERY_SIZE 110
 
 // TODO - Hint: may want to add some checks here
 char* strcat(char *dest, char *src) {
@@ -14,8 +14,15 @@ char* strcat(char *dest, char *src) {
  	while (dest[len] != '\0') {
  		len++;
  	}
+ 	// Cannot append more if src is too large
+ 	if (strlen(dest) <= len + strlen(src)) 
+ 		return dest;
+ 	
  	int i = 0;
  	while (src[i] != '\0') {
+ 		if (i+len >= strlen(dest)) {
+ 			return dest;
+ 		}
  		dest[i+len] = src[i];
  		i++;
  	} 	
@@ -35,7 +42,7 @@ void get_query(char *query_buf) {
 	// Pick a random token to attach to SQL query
 	srand(time(NULL));
 	int index = rand() % NUMBER_OF_STRINGS;
-	int i= 0;
+	int i = 0;
 	while (query_library[index][i] != '\0') {
 		query_buf[i] = query_library[index][i];
 		i++;
@@ -48,10 +55,19 @@ void generate_SQL_query(char *query) {
 	get_query(query_buf);
 	query = strcat(query, query_buf);
 
-	if (strlen(query) < MAX_QUERY_SIZE) {
-		query = strcat(query, " ");
+}
+
+// Fill up query with evil queries that take space away from real queries
+void attack(char *string) {
+	srand(time(NULL));
+	int num_strings_to_append = rand() % 3;
+	int i = 0;
+	char query_buf[70];
+	while (i < num_strings_to_append) {
+		strcat(string, " ");
 		get_query(query_buf);
-		query = strcat(query, query_buf);
+		strcat(string, query_buf);
+		i++;
 	}
 }
 
@@ -80,6 +96,7 @@ void generate_SQL_query(char *query) {
 int main() {
 	char dest[MAX_QUERY_SIZE];
 	klee_make_symbolic(dest, MAX_QUERY_SIZE, "query_destination");
+	attack(dest);
 	generate_SQL_query(dest);
 	//printf("%s\n", dest);
 

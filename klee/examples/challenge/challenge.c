@@ -1,20 +1,36 @@
-#include <klee/klee.h>
-
+//#include <klee/klee.h>
+#include <stdio.h>
 // TODO
-char* strcat(char *dest, const char *src) {
- 	return null;
+char* strcat(char *dest, char *src) {
+ 	int len = 0;
+ 	while (dest[len]) {
+ 		len++;
+ 	}
+ 	int i = 0;
+ 	while (src[i]) {
+ 		dest[i+len] = src[i];
+ 		i++;
+ 	}
+ 	
+ 	return dest;
 }
 
 // Generates a piece of SQL query
-char* get_query() {
-
+void get_query(char *query_buf) {
+	char rand_token[] = "INSERT INTO CLOWNS (ID,NAME) VALUES (1, 'Paul')";
+	int i= 0;
+	while (rand_token[i]) {
+		query_buf[i] = rand_token[i];
+		i++;
+	}
 }
 
-// Calls get_query repeatedly to generate a SQL query
-char* generate_SQL_query() {
- 	
+// Calls get_query repeatedly to generate a SQL query. Appends it onto query.
+void generate_SQL_query(char *query) {
+	char query_buf[100];
+	get_query(query_buf);
+	query = strcat(query, query_buf);	
 }
- 
 
 /*
 	Write a concat function where the length of the destination is >= length of
@@ -35,10 +51,9 @@ char* generate_SQL_query() {
 */
 
 int main() {
-	char dest[100];
-	char src[6];
-	src = "hello";
-	strcat(dest, src);
+	char dest[110];
+	generate_SQL_query(dest);
+	printf("%s\n", dest);
 
 	return 0;
 }

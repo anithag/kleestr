@@ -79,6 +79,18 @@ namespace metaSMT {
         return proto::make_expr< tag::strconcat_tag, String_Domain >(boost::cref(e1), boost::cref(e2));
       }
 
+      // constant creation
+      typedef proto::result_of::make_expr< tag::ustring_tag, String_Domain
+        , std::string
+        , unsigned long
+      > ::type string_result_type;
+
+      inline string_result_type
+      ustring( const std::string & value, unsigned long const & width )
+      {
+        return proto::make_expr< tag::ustring_tag, String_Domain>(value, width);
+      } 
+      
       typedef
       proto::result_of::make_expr< proto::tag::terminal, String_Domain
         , tag::string_var_tag

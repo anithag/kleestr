@@ -35,6 +35,7 @@ namespace metaSMT {
 
         TAG(strconcat, nary)
         TAG(strlen, unary)
+        TAG(ustring, unary)
 
 #undef PRINT
 #undef TAG
@@ -43,6 +44,7 @@ namespace metaSMT {
           nil
         , strconcat_tag
         , strlen_tag
+        , ustring_tag
         , string_var_tag
         >::type String_Tags;
 

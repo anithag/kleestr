@@ -394,13 +394,48 @@ void SpecialFunctionHandler::handleStrcat(ExecutionState &state,
                             std::vector<ref<Expr> > &arguments) {
   assert(arguments.size()==2 && "invalid number of arguments to klee_assume");
   
-  //ref<Expr> e1str = StringExpr::create(arguments[0], arguments[0]->getWidth());
-  //ref<Expr> e2str = StringExpr::create(arguments[1], arguments[1]->getWidth());
-
   ref<Expr> e = StrconcatExpr::create(arguments[0], arguments[1]);
   
- // executor.addConstraint(state, e);
-    executor.bindLocal(target, state, e);
+ //Get array left and right
+  const Array *left, *right;
+  Executor::ExactResolutionList rl;
+  executor.resolveExact(state, arguments[0], rl, "make_symbolic");
+  
+  for (Executor::ExactResolutionList::iterator it = rl.begin(), 
+         ie = rl.end(); it != ie; ++it) {
+    const MemoryObject *mo = it->first.first;
+    
+    const ObjectState *old = it->first.second;
+    ExecutionState *s = it->second;
+
+    //get Symbolic array associated with this memoryobject
+    for (unsigned i = 0; i != state.symbolics.size(); ++i)
+             if((s->symbolics[i].second)->name == mo->name) {
+  			left = (s->symbolics[i].second);
+			break;
+	     }
+  }  
+  executor.resolveExact(state, arguments[1], rl, "make_symbolic");
+  
+  for (Executor::ExactResolutionList::iterator it = rl.begin(), 
+         ie = rl.end(); it != ie; ++it) {
+    const MemoryObject *mo = it->first.first;
+    
+    const ObjectState *old = it->first.second;
+    ExecutionState *s = it->second;
+
+    //get Symbolic array associated with this memoryobject
+    for (unsigned i = 0; i != state.symbolics.size(); ++i)
+             if((s->symbolics[i].second)->name == mo->name) {
+  			right = (s->symbolics[i].second);
+			break;
+	     }
+  }  
+  
+   StrconcatExpr *expr = cast<StrconcatExpr>(e);
+   expr->setarray(left, right);
+
+   executor.bindLocal(target, state, e);
 }
 void SpecialFunctionHandler::handleStrlen(ExecutionState &state,
                             KInstruction *target,

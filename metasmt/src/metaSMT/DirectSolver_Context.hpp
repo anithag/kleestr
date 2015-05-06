@@ -6,6 +6,7 @@
 #include "frontend/QF_BV.hpp"
 #include "frontend/Array.hpp"
 #include "frontend/Int.hpp"
+#include "frontend/String.hpp"
 #include "Features.hpp"
 #include "API/Assertion.hpp"
 #include "API/Assumption.hpp"
@@ -111,6 +112,20 @@ namespace metaSMT {
       }
     }
 
+    // special handling of ustring
+    template< typename Expr1, typename Expr2>
+    result_type operator() (logic::String::tag::ustring_tag const & tag
+        , Expr1 value
+        , Expr2 bw
+    ) {
+      std::string val   = proto::value(value);
+      const unsigned long width = proto::value(bw);
+
+      return SolverContext::operator() ( tag,
+        boost::any(boost::make_tuple(val, width))
+      );
+    }
+
     // special handling of uint_tag
     template< typename Expr1, typename Expr2>
     result_type operator() (logic::Int::tag::uint_tag const & tag
@@ -122,6 +137,17 @@ namespace metaSMT {
 
       return SolverContext::operator() ( tag,
         boost::any(boost::make_tuple(val, width))
+      );
+    }
+
+    template<typename Width, typename Expr >
+    result_type operator() (logic::Int::tag::int_to_bv_tag t
+        , Width width
+        , Expr e
+    ) {
+      return SolverContext::operator() ( t,
+          proto::value(width)
+        , boost::proto::eval(e, *this)
       );
     }
 

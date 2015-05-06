@@ -141,6 +141,7 @@ private:
     typename SolverContext::result_type constructActual(ref<Expr> e, int *width_out);
     typename SolverContext::result_type construct(ref<Expr> e, int *width_out);
     typename SolverContext::result_type construct_int(ref<Expr> e, int *width_out);
+    typename SolverContext::result_type construct_string(ref<Expr> e, int *width_out);
     
     typename SolverContext::result_type bvBoolExtract(typename SolverContext::result_type expr, int bit);
     typename SolverContext::result_type bvExtract(typename SolverContext::result_type expr, unsigned top, unsigned bottom);
@@ -621,6 +622,25 @@ typename SolverContext::result_type MetaSMTBuilder<SolverContext>::construct_int
 }
 
 template<typename SolverContext>
+typename SolverContext::result_type MetaSMTBuilder<SolverContext>::construct_string(ref<Expr> e, int *width_out) {
+  
+		//ignore width_out
+            typename SolverContext::result_type res ;
+            ConstantExpr *coe = cast<ConstantExpr>(e);
+            assert(coe);
+            unsigned coe_width = coe->getWidth();
+	    char *buf = new char[12];
+	    unsigned long value1 = coe->getZExtValue();
+	    buf[0] = 0;
+	    std::string value(buf);
+	    //std::string value(buf);
+
+            res = evaluate(_solver, metaSMT::logic::String::ustring(value, coe_width));
+            _constructed.insert(std::make_pair(e, std::make_pair(res, *width_out)));
+	    return res;
+}
+
+template<typename SolverContext>
 typename SolverContext::result_type MetaSMTBuilder<SolverContext>::constructActual(ref<Expr> e, int *width_out)  {
 
     typename SolverContext::result_type res;
@@ -1092,43 +1112,9 @@ typename SolverContext::result_type MetaSMTBuilder<SolverContext>::constructActu
 	     EqExpr *ee = cast<EqExpr>(e);
 	     assert(ee);
     	     typename SolverContext::result_type left_expr, right_expr; 
-	     ConstantExpr *LE = dyn_cast<ConstantExpr>(ee->left);
-	     ConstantExpr *RE = dyn_cast<ConstantExpr>(ee->right);
-	     if (LE) {
-
-		//check if right expr is one of the string expressions. If so, lift it to int
-		//Not quite right - what if the other expression is streln too?
-	       StrlenExpr *se = dyn_cast<StrlenExpr>(ee->right);
-		if(se) {
-    	             left_expr = evaluate(_solver, construct_int(ee->left, width_out));
-	     	     right_expr = evaluate(_solver, construct(ee->right, width_out));
-		
-		} else {
-    	             left_expr = evaluate(_solver, construct(ee->left, width_out));
-	     	     right_expr = evaluate(_solver, construct(ee->right, width_out));
-		}
-
-	     } else if (RE) {
-
-		//check if left expr is one of the string expressions. If so, lift it to int
-	       StrlenExpr *se = dyn_cast<StrlenExpr>(ee->left);
-		if(se) {
-    	             left_expr = evaluate(_solver, construct(ee->left, width_out));
-	     	     right_expr = evaluate(_solver, construct_int(ee->right, width_out));
-		
-		} else {
-    	             left_expr = evaluate(_solver, construct(ee->left, width_out));
-	     	     right_expr = evaluate(_solver, construct(ee->right, width_out));
-		}
-
-
-	     } else {
-    	             left_expr = evaluate(_solver, construct(ee->left, width_out));
-	     	     right_expr = evaluate(_solver, construct(ee->right, width_out));
-	     }
-	     
-	     res = evaluate(_solver, metaSMT::logic::equal(left_expr, right_expr));
-	/* FIXME: I have disabled optimizations 
+    	     left_expr = evaluate(_solver, construct(ee->left, width_out));
+	     right_expr = evaluate(_solver, construct(ee->right, width_out));
+		/*
 	     if (*width_out==1) {
 	         if (ConstantExpr *CE = dyn_cast<ConstantExpr>(ee->left)) {
 		     if (CE->isTrue()) {
@@ -1146,9 +1132,8 @@ typename SolverContext::result_type MetaSMTBuilder<SolverContext>::constructActu
 	         *width_out = 1;
 	         res = evaluate(_solver, metaSMT::logic::equal(left_expr, right_expr));
 	     }
-	     */
-	
-		
+		*/
+	     res = evaluate(_solver, metaSMT::logic::equal(left_expr, right_expr));
 	     break;
 	}
 	
@@ -1159,61 +1144,12 @@ typename SolverContext::result_type MetaSMTBuilder<SolverContext>::constructActu
 	    
 	    typename SolverContext::result_type left_expr, right_expr;
 	    
-	     ConstantExpr *LE = dyn_cast<ConstantExpr>(ue->left);
-	     ConstantExpr *RE = dyn_cast<ConstantExpr>(ue->right);
-	     if (LE) {
-
-		//check if right expr is one of the string expressions. If so, lift it to int
-	       StrlenExpr *se = dyn_cast<StrlenExpr>(ue->right);
-		if(se) {
-    	             left_expr = evaluate(_solver, construct_int(ue->left, width_out));
-	     	     right_expr = evaluate(_solver, construct(ue->right, width_out));
-	    	     res = evaluate(_solver, metaSMT::logic::Int::intult(left_expr, right_expr));
-		
-		} else {
-    	             left_expr = evaluate(_solver, construct(ue->left, width_out));
-	     	     right_expr = evaluate(_solver, construct(ue->right, width_out));
-	    	     assert(*width_out != 1 && "uncanonicalized ult");
-	    	     *width_out = 1;    
-	             res = evaluate(_solver, bvult(left_expr, right_expr));
-		}
-
-	     } else if (RE) {
-
-		//check if left expr is one of the string expressions. If so, lift it to int
-	       StrlenExpr *se = dyn_cast<StrlenExpr>(ue->left);
-		if(se) {
-    	             left_expr = evaluate(_solver, construct(ue->left, width_out));
-	     	     right_expr = evaluate(_solver, construct_int(ue->right, width_out));
-	    	     res = evaluate(_solver, metaSMT::logic::Int::intult(left_expr, right_expr));
-		
-		} else {
-    	             left_expr = evaluate(_solver, construct(ue->left, width_out));
-	     	     right_expr = evaluate(_solver, construct(ue->right, width_out));
-	    	     assert(*width_out != 1 && "uncanonicalized ult");
-	    	     *width_out = 1;    
-	    
-	             res = evaluate(_solver, bvult(left_expr, right_expr));
-		}
-
-
-	     } else {
-
-	       StrlenExpr *se = dyn_cast<StrlenExpr>(ue->left);
-		if(se) {
-    	             left_expr = evaluate(_solver, construct(ue->left, width_out));
-	     	     right_expr = evaluate(_solver, construct(ue->right, width_out));
-	    	     res = evaluate(_solver, metaSMT::logic::Int::intult(left_expr, right_expr));
-		
-		} else {
     	             left_expr = evaluate(_solver, construct(ue->left, width_out));
 	     	     right_expr = evaluate(_solver, construct(ue->right, width_out));
 	    	   //  assert(*width_out != 1 && "uncanonicalized ult");
 	    	     *width_out = 1;    
 	    
 	             res = evaluate(_solver, bvult(left_expr, right_expr));
-		}
-	     }
 	     
 	    break;	  
 	}
@@ -1225,60 +1161,12 @@ typename SolverContext::result_type MetaSMTBuilder<SolverContext>::constructActu
 	    
 	    typename SolverContext::result_type left_expr, right_expr;
 	    
-	     ConstantExpr *LE = dyn_cast<ConstantExpr>(ue->left);
-	     ConstantExpr *RE = dyn_cast<ConstantExpr>(ue->right);
-	     if (LE) {
-
-		//check if right expr is one of the string expressions. If so, lift it to int
-	       StrlenExpr *se = dyn_cast<StrlenExpr>(ue->right);
-		if(se) {
-    	             left_expr = evaluate(_solver, construct_int(ue->left, width_out));
-	     	     right_expr = evaluate(_solver, construct(ue->right, width_out));
-	    	     res = evaluate(_solver, metaSMT::logic::Int::intule(left_expr, right_expr));
-		
-		} else {
-    	             left_expr = evaluate(_solver, construct(ue->left, width_out));
-	     	     right_expr = evaluate(_solver, construct(ue->right, width_out));
-	    	     assert(*width_out != 1 && "uncanonicalized ule");
-	    	     *width_out = 1;    
-	             res = evaluate(_solver, bvule(left_expr, right_expr));
-		}
-
-	     } else if (RE) {
-
-		//check if left expr is one of the string expressions. If so, lift it to int
-	       StrlenExpr *se = dyn_cast<StrlenExpr>(ue->left);
-		if(se) {
-    	             left_expr = evaluate(_solver, construct(ue->left, width_out));
-	     	     right_expr = evaluate(_solver, construct_int(ue->right, width_out));
-	    	     res = evaluate(_solver, metaSMT::logic::Int::intule(left_expr, right_expr));
-		
-		} else {
-    	             left_expr = evaluate(_solver, construct(ue->left, width_out));
-	     	     right_expr = evaluate(_solver, construct(ue->right, width_out));
-	    	     assert(*width_out != 1 && "uncanonicalized ule");
-	    	     *width_out = 1;    
+    	    left_expr = evaluate(_solver, construct(ue->left, width_out));
+	    right_expr = evaluate(_solver, construct(ue->right, width_out));
+	       // assert(*width_out != 1 && "uncanonicalized ule");
+	    *width_out = 1;    
+	     res = evaluate(_solver, bvule(left_expr, right_expr));
 	    
-	             res = evaluate(_solver, bvule(left_expr, right_expr));
-		  }
-
-	       } else {
-
-	        StrlenExpr *se = dyn_cast<StrlenExpr>(ue->left);
-		if(se) {
-    	             left_expr = evaluate(_solver, construct(ue->left, width_out));
-	     	     right_expr = evaluate(_solver, construct(ue->right, width_out));
-	    	     res = evaluate(_solver, metaSMT::logic::Int::intule(left_expr, right_expr));
-		
-	        } else {
-    	             left_expr = evaluate(_solver, construct(ue->left, width_out));
-	     	     right_expr = evaluate(_solver, construct(ue->right, width_out));
-	    	    // assert(*width_out != 1 && "uncanonicalized ule");
-	    	     *width_out = 1;    
-	    
-	             res = evaluate(_solver, bvule(left_expr, right_expr));
-		}
-	     }
 	    break;	  
 	}
 	  
@@ -1288,59 +1176,12 @@ typename SolverContext::result_type MetaSMTBuilder<SolverContext>::constructActu
 	    assert(se);
 	    typename SolverContext::result_type left_expr, right_expr;
 	    
-	     ConstantExpr *LE = dyn_cast<ConstantExpr>(se->left);
-	     ConstantExpr *RE = dyn_cast<ConstantExpr>(se->right);
-	     if (LE) {
-
-		//check if right expr is one of the string expressions. If so, lift it to int
-	       StrlenExpr *ste = dyn_cast<StrlenExpr>(se->right);
-		if(ste) {
-    	             left_expr = evaluate(_solver, construct_int(se->left, width_out));
-	     	     right_expr = evaluate(_solver, construct(se->right, width_out));
-	    	     res = evaluate(_solver, metaSMT::logic::Int::intslt(left_expr, right_expr));
-		
-		} else {
-    	             left_expr = evaluate(_solver, construct(se->left, width_out));
-	     	     right_expr = evaluate(_solver, construct(se->right, width_out));
-	    	     assert(*width_out != 1 && "uncanonicalized slt");
-	    	     *width_out = 1;    
-	             res = evaluate(_solver, bvslt(left_expr, right_expr));
-		}
-
-	     } else if (RE) {
-
-		//check if left expr is one of the string expressions. If so, lift it to int
-	       StrlenExpr *ste = dyn_cast<StrlenExpr>(se->left);
-		if(ste) {
-    	             left_expr = evaluate(_solver, construct(se->left, width_out));
-	     	     right_expr = evaluate(_solver, construct_int(se->right, width_out));
-	    	     res = evaluate(_solver, metaSMT::logic::Int::intslt(left_expr, right_expr));
-		
-		} else {
-    	             left_expr = evaluate(_solver, construct(se->left, width_out));
-	     	     right_expr = evaluate(_solver, construct(se->right, width_out));
-	    	     assert(*width_out != 1 && "uncanonicalized slt");
-	    	     *width_out = 1;    
-	    
-	             res = evaluate(_solver, bvslt(left_expr, right_expr));
-		}
-	       } else {
-
-	        StrlenExpr *ste = dyn_cast<StrlenExpr>(se->left);
-		if(ste) {
-    	             left_expr = evaluate(_solver, construct(se->left, width_out));
-	     	     right_expr = evaluate(_solver, construct(se->right, width_out));
-	    	     res = evaluate(_solver, metaSMT::logic::Int::intslt(left_expr, right_expr));
-		
-	         } else {
     	             left_expr = evaluate(_solver, construct(se->left, width_out));
 	     	     right_expr = evaluate(_solver, construct(se->right, width_out));
 	    	   //  assert(*width_out != 1 && "uncanonicalized slt");
 	    	     *width_out = 1;    
 	    
 	             res = evaluate(_solver, bvslt(left_expr, right_expr));
-		}
-	     }
 	    
 	    break;	  
 	}
@@ -1352,61 +1193,12 @@ typename SolverContext::result_type MetaSMTBuilder<SolverContext>::constructActu
     
 	    typename SolverContext::result_type left_expr, right_expr;
 	    
-	     ConstantExpr *LE = dyn_cast<ConstantExpr>(se->left);
-	     ConstantExpr *RE = dyn_cast<ConstantExpr>(se->right);
-	     if (LE) {
-
-		//check if right expr is one of the string expressions. If so, lift it to int
-	       StrlenExpr *ste = dyn_cast<StrlenExpr>(se->right);
-		if(ste) {
-    	             left_expr = evaluate(_solver, construct_int(se->left, width_out));
-	     	     right_expr = evaluate(_solver, construct(se->right, width_out));
-	    	     res = evaluate(_solver, metaSMT::logic::Int::intsle(left_expr, right_expr));
-		
-		} else {
-    	             left_expr = evaluate(_solver, construct(se->left, width_out));
-	     	     right_expr = evaluate(_solver, construct(se->right, width_out));
-	    	     assert(*width_out != 1 && "uncanonicalized sle");
-	    	     *width_out = 1;    
-	             res = evaluate(_solver, bvsle(left_expr, right_expr));
-		}
-
-	     } else if (RE) {
-
-		//check if left expr is one of the string expressions. If so, lift it to int
-	       StrlenExpr *ste = dyn_cast<StrlenExpr>(se->left);
-		if(ste) {
-    	             left_expr = evaluate(_solver, construct(se->left, width_out));
-	     	     right_expr = evaluate(_solver, construct_int(se->right, width_out));
-	    	     res = evaluate(_solver, metaSMT::logic::Int::intsle(left_expr, right_expr));
-		
-		} else {
-    	             left_expr = evaluate(_solver, construct(se->left, width_out));
-	     	     right_expr = evaluate(_solver, construct(se->right, width_out));
-	    	     assert(*width_out != 1 && "uncanonicalized sle");
-	    	     *width_out = 1;    
-	    
-	             res = evaluate(_solver, bvsle(left_expr, right_expr));
-		}
-	       } else {
-
-	        StrlenExpr *ste = dyn_cast<StrlenExpr>(se->left);
-		if(ste) {
-    	             left_expr = evaluate(_solver, construct(se->left, width_out));
-	     	     right_expr = evaluate(_solver, construct(se->right, width_out));
-	    	     res = evaluate(_solver, metaSMT::logic::Int::intsle(left_expr, right_expr));
-		
-	        } else {
-    	             left_expr = evaluate(_solver, construct(se->left, width_out));
-	     	     right_expr = evaluate(_solver, construct(se->right, width_out));
+    	         left_expr = evaluate(_solver, construct(se->left, width_out));
+	         right_expr = evaluate(_solver, construct(se->right, width_out));
 	    	//     assert(*width_out != 1 && "uncanonicalized sle");
 	    	     *width_out = 1;    
 	    
-	             res = evaluate(_solver, bvsle(left_expr, right_expr));
-		}
-	     }
-	    
-
+	         res = evaluate(_solver, bvsle(left_expr, right_expr));
             break;	  
         }
   
@@ -1446,13 +1238,17 @@ typename SolverContext::result_type MetaSMTBuilder<SolverContext>::constructActu
             StrconcatExpr *se = cast<StrconcatExpr>(e);
             assert(se);
     
-        //    typename SolverContext::result_type left_expr = evaluate(_solver, construct(se->getLeft(), width_out));
-          //  typename SolverContext::result_type right_expr = evaluate(_solver, construct(se->getRight(), width_out));
             typename SolverContext::result_type left_expr = evaluate(_solver, metaSMT::logic::String::new_string(0));
             typename SolverContext::result_type right_expr = evaluate(_solver, metaSMT::logic::String::new_string(0));
     
-            assert(*width_out != 1 && "uncanonicalized sle");
+            //assert(*width_out != 1 && "uncanonicalized sle");
             *width_out = 1;    
+
+	     //FIXME: Somehow get root and hash it. Push it to map
+	    const Array *rootleft = se->getarray(0);
+	    const Array *rootright = se->getarray(1);
+            _arr_hash.hashArrayExpr(rootleft, left_expr);
+            _arr_hash.hashArrayExpr(rootright, right_expr);
     
             res = evaluate(_solver, strconcat(left_expr, right_expr));
             break;	  

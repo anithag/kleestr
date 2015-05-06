@@ -102,7 +102,6 @@ public:
   static const Width Int64 = 64;
   static const Width Fl80 = 80;
   
-
   enum Kind {
     InvalidKind = -1,
 
@@ -174,7 +173,14 @@ public:
     CmpKindLast=Sge
   };
 
+  enum resultKind{
+
+	BitVector = 999,
+	Int = 1000
+  };
+
   unsigned refCount;
+  resultKind reskind;
 
 protected:  
   unsigned hashValue;
@@ -183,6 +189,11 @@ public:
   Expr() : refCount(0) { Expr::count++; }
   virtual ~Expr() { Expr::count--; } 
 
+  resultKind getresultKind() const { return this->reskind; }
+  void setresultKind(resultKind resk) {
+
+    this->reskind = resk;
+  }
   virtual Kind getKind() const = 0;
   virtual Width getWidth() const = 0;
   
@@ -937,6 +948,8 @@ public:
 private:
   Width width;
   ref<Expr> left, right;  
+  //Array associated with the pointer
+  const Array *arrayleft, *arrayright;
 
 public:
   static ref<Expr> alloc(const ref<Expr> &l, const ref<Expr> &r) {
@@ -980,6 +993,14 @@ public:
     return E->getKind() == Expr::Strconcat;
   }
   static bool classof(const StrconcatExpr *) { return true; }
+  const Array* getarray(int child) {
+   if(child == 0) return arrayleft;
+   else   return  arrayright; 
+  }
+  void setarray(const Array *left, const Array *right) { 
+               this->arrayleft = left; 
+               this->arrayright = right; 
+  }
 };
 
 

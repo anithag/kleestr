@@ -97,6 +97,20 @@ namespace metaSMT {
 	return boost::tie(lhs_tag.id, lhs_tag.width) ==
 	  boost::tie(rhs_tag.id, rhs_tag.width);
       }
+#undef _INT_BINARY_FUNCTION
+
+ #define _INT_UNARY_FUNCTION(NAME_, TAG_) \
+      template<typename E1> \
+      typename proto::result_of::make_expr< TAG_, Int_Domain, E1 const &>::type \
+      NAME_( E1 const& e1) \
+      { \
+        return proto::make_expr< TAG_, Int_Domain >(boost::cref(e1));\
+      } 
+
+	//This is actually binary taking width of bitvector and int as parameters
+     // _INT_UNARY_FUNCTION(int_to_bv_tag, tag::int_to_bv_tag)
+
+#undef _INT_UNARY_FUNCTION
 
  #define _INT_BINARY_FUNCTION(NAME_, TAG_) \
       template<typename E1, typename E2> \
@@ -138,6 +152,7 @@ namespace metaSMT {
       _INT_BINARY_FUNCTION(intshr,  tag::intshr_tag)
       _INT_BINARY_FUNCTION(intashr, tag::intashr_tag)
 
+      _INT_BINARY_FUNCTION(int_to_bv_tag, tag::int_to_bv_tag)
 
       /**@}*/
 

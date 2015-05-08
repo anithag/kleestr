@@ -38,6 +38,9 @@ namespace metaSMT {
       {
         engine_.setOption("incremental", true);
         engine_.setOption("produce-models", true);
+        engine_.setOption("rewrite-divk", true);
+        engine_.setOption("strings-fmf", true);
+        engine_.setOption("strings-exp", true);
       }
 
       ~CVC4() {
@@ -123,6 +126,16 @@ namespace metaSMT {
         sprintf(buf, "var_%u", var.id);
 
         return exprManager_.mkVar(buf, intty); 
+      }
+
+      result_type operator()( stringtags::ustring_tag , boost::any arg ) {
+        typedef boost::tuple<std::string, unsigned long> Tuple;
+        Tuple tuple = boost::any_cast<Tuple>(arg);
+        std::string value = boost::get<0>(tuple);
+        unsigned long width = boost::get<1>(tuple);
+
+	//Ignore width!
+        return exprManager_.mkConst(::CVC4::String(value));
       }
 
       result_type operator() (stringtags::string_var_tag const &var,
@@ -271,7 +284,19 @@ namespace metaSMT {
       }
 
       result_type operator()( stringtags::strlen_tag , result_type e ) {
-        return exprManager_.mkExpr(::CVC4::kind::STRING_LENGTH, e);
+        result_type strlenres = exprManager_.mkExpr(::CVC4::kind::STRING_LENGTH, e);
+	
+	//by default make it 64
+        ::CVC4::IntToBitVector bvOp(64);
+        ::CVC4::Expr op = exprManager_.mkConst(bvOp);
+        return exprManager_.mkExpr(op, strlenres);
+      //  return exprManager_.mkExpr(::CVC4::kind::STRING_LENGTH, e);
+      }
+
+      result_type operator()( inttags::int_to_bv_tag, unsigned long width, result_type e ) {
+        ::CVC4::IntToBitVector bvOp(width);
+        ::CVC4::Expr op = exprManager_.mkConst(bvOp);
+        return exprManager_.mkExpr(op, e);
       }
       ////////////////////////
       // Fallback operators //

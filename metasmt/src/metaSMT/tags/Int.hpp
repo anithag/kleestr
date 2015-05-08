@@ -4,7 +4,7 @@
 
 #include "Logic.hpp"
 
-#include <boost/mpl/vector.hpp>
+#include <boost/mpl/vector/vector30.hpp>
 #include <boost/variant.hpp>
 
 namespace metaSMT {
@@ -71,11 +71,37 @@ namespace metaSMT {
         TAG(intule, binary)
         TAG(intuge, binary)
 
+	//Castto bit vector
+        TAG(int_to_bv, binary)
+
 #undef PRINT
 #undef TAG
 
-        typedef boost::mpl::vector<
+        typedef boost::mpl::vector26<
           nil
+        , intand_tag
+        , intnand_tag
+        , intor_tag
+        , intnor_tag
+        , intxor_tag
+        , intxnor_tag
+        , intcomp_tag
+        , intadd_tag
+        , intmul_tag
+        , intsub_tag
+        , intsrem_tag
+        , intsdiv_tag
+        , inturem_tag
+        , intudiv_tag
+        , intslt_tag
+        , intsgt_tag
+        , intsle_tag
+        , intsge_tag
+        , intult_tag
+        , intugt_tag
+        , intule_tag
+        , intuge_tag
+	, int_to_bv_tag
 	, uint_tag
         , int_var_tag
         >::type Int_Tags;

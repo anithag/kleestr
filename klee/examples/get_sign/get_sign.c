@@ -5,8 +5,9 @@
 #include <klee/klee.h>
 
 int get_sign(int *x) {
-  if (*x > 10)
-     return 2;
+  if (*x <= 1010 && *x > 16) {
+		return 3;
+  }
   else 
      return 1;
 } 

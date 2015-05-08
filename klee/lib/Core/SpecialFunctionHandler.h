@@ -138,6 +138,7 @@ namespace klee {
     HANDLER(handleDivRemOverflow);
     HANDLER(handleStrcat);
     HANDLER(handleStrlen);
+    HANDLER(handleStrcmp);
     //HANDLER(handleDivRemOverflow);
 #undef HANDLER
   };

@@ -34,6 +34,7 @@ namespace metaSMT {
         };
 
         TAG(strconcat, nary)
+        TAG(strcmp, binary)
         TAG(strlen, unary)
         TAG(ustring, unary)
 
@@ -43,6 +44,7 @@ namespace metaSMT {
         typedef boost::mpl::vector<
           nil
         , strconcat_tag
+        , strcmp_tag
         , strlen_tag
         , ustring_tag
         , string_var_tag

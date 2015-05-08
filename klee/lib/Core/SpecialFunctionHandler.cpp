@@ -92,6 +92,7 @@ static SpecialFunctionHandler::HandlerInfo handlerInfo[] = {
   add("realloc", handleRealloc, true),
   add("strcat", handleStrcat, true),
   add("strlen", handleStrlen, true),
+  add("strcmp", handleStrcmp, true),
 
   // operator delete[](void*)
   add("_ZdaPv", handleDeleteArray, false),
@@ -466,6 +467,77 @@ void SpecialFunctionHandler::handleStrlen(ExecutionState &state,
     
   }  
   executor.bindLocal(target, state, e);
+}
+
+void SpecialFunctionHandler::handleStrcmp(ExecutionState &state,
+                            KInstruction *target,
+                            std::vector<ref<Expr> > &arguments) {
+  assert(arguments.size()==2 && "invalid number of arguments to klee_assume");
+  
+  ref<Expr> e = StrcmpExpr::create(arguments[0], arguments[1]);
+  
+ //Get array left and right
+  const Array *left=NULL, *right=NULL;
+  bool issymbolic = false;
+  StrcmpExpr *expr = cast<StrcmpExpr>(e);
+ 
+  Executor::ExactResolutionList rl;
+  executor.resolveExact(state, arguments[0], rl, "make_symbolic");
+  for (Executor::ExactResolutionList::iterator it = rl.begin(), 
+         ie = rl.end(); it != ie; ++it) {
+    const MemoryObject *mo = it->first.first;
+    
+    const ObjectState *old = it->first.second;
+    ExecutionState *s = it->second;
+
+    //get Symbolic array associated with this memoryobject
+    for (unsigned i = 0; i != state.symbolics.size(); ++i)
+             if((s->symbolics[i].second)->name == mo->name) {
+  			left = (s->symbolics[i].second);
+			issymbolic = true;
+			expr->setleftarray(left);
+			break;
+	     }
+  }  
+  if(!issymbolic) {
+	//concrete
+     std::string msg_str = readStringAtAddress(state, arguments[0]);
+     expr->setleftconcrete(true);
+     expr->setleftstring(msg_str);
+     expr->setleftarray(NULL);
+
+  }
+
+	//for use below
+  issymbolic = false;
+  rl.clear();
+  executor.resolveExact(state, arguments[1], rl, "make_symbolic");
+  for (Executor::ExactResolutionList::iterator it = rl.begin(), 
+         ie = rl.end(); it != ie; ++it) {
+    const MemoryObject *mo = it->first.first;
+    
+    const ObjectState *old = it->first.second;
+    ExecutionState *s = it->second;
+
+    //get Symbolic array associated with this memoryobject
+    for (unsigned i = 0; i != state.symbolics.size(); ++i)
+             if((s->symbolics[i].second)->name == mo->name) {
+			issymbolic = true;
+  			right = (s->symbolics[i].second);
+			expr->setrightarray(right);
+			break;
+	     }
+  }  
+  if(!issymbolic) {
+	//concrete
+     std::string msg_str = readStringAtAddress(state, arguments[1]);
+     expr->setrightconcrete(true);
+     expr->setrightstring(msg_str);
+     expr->setrightarray(NULL);
+     
+  }
+
+   executor.bindLocal(target, state, e);
 }
 
 void SpecialFunctionHandler::handleIsSymbolic(ExecutionState &state,

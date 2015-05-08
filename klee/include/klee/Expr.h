@@ -161,6 +161,7 @@ public:
 
     // String support
     Strlen,
+    Strcmp,
     Strconcat,
 
     LastKind=Strconcat,
@@ -348,14 +349,25 @@ public:
 
 private:
   llvm::APInt value;
-
-  ConstantExpr(const llvm::APInt &v) : value(v) {}
+  std::string strvalue;
+  bool concrete;
+  
+  ConstantExpr(const llvm::APInt &v) : value(v) {concrete = false;}
 
 public:
   ~ConstantExpr() {}
   
   Width getWidth() const { return value.getBitWidth(); }
   Kind getKind() const { return Constant; }
+
+  void setString(std::string value) {
+		this->strvalue = value;
+		this->concrete = true;
+  }
+
+ std::string getString() { return this->strvalue; }
+ void setconcrete(bool t) { this->concrete = t;}
+ bool isconcrete() { return this->concrete; } 
 
   unsigned getNumKids() const { return 0; }
   ref<Expr> getKid(unsigned i) const { return 0; }
@@ -490,9 +502,6 @@ public:
   ref<ConstantExpr> Sle(const ref<ConstantExpr> &RHS);
   ref<ConstantExpr> Sgt(const ref<ConstantExpr> &RHS);
   ref<ConstantExpr> Sge(const ref<ConstantExpr> &RHS);
-
-  //Strlen returns a constant expression
-  //ref<ConstantExpr> Strlen();
 
   ref<ConstantExpr> Neg();
   ref<ConstantExpr> Not();
@@ -1003,6 +1012,98 @@ public:
   }
 };
 
+class StrcmpExpr : public NonConstantExpr { 
+public: 
+  static const Kind kind = Strcmp;
+  static const unsigned numKids = 2;
+
+private:
+  Width width;
+  ref<Expr> left, right;  
+  //Array associated with the pointer
+  const Array *arrayleft, *arrayright;
+
+public:
+  static ref<Expr> alloc(const ref<Expr> &l, const ref<Expr> &r) {
+    ref<Expr> c(new StrcmpExpr(l, r));
+    c->computeHash();
+    return c;
+  }
+  
+  static ref<Expr> create(const ref<Expr> &l, const ref<Expr> &r);
+
+  Width getWidth() const { return width; }
+  Kind getKind() const { return kind; }
+  ref<Expr> getLeft() const { return left; }
+  ref<Expr> getRight() const { return right; }
+
+  unsigned getNumKids() const { return numKids; }
+  ref<Expr> getKid(unsigned i) const { 
+    if (i == 0) return left; 
+    else if (i == 1) return right;
+    else return NULL;
+  }
+
+  virtual ref<Expr> rebuild(ref<Expr> kids[]) const { return create(kids[0], kids[1]); }
+  
+private:
+  StrcmpExpr(const ref<Expr> &l, const ref<Expr> &r) : left(l), right(r) {
+    width = l->getWidth() + r->getWidth();
+  }
+
+public:
+  static bool classof(const Expr *E) {
+    return E->getKind() == Expr::Strcmp;
+  }
+  static bool classof(const StrcmpExpr *) { return true; }
+  const Array* getarray(int child) {
+   if(child == 0) return arrayleft;
+   else   return  arrayright; 
+  }
+  void setarray(const Array *left, const Array *right) { 
+               this->arrayleft = left; 
+               this->arrayright = right; 
+  }
+
+  void setleftarray(const Array *left) { 
+               this->arrayleft = left; 
+  }
+
+  void setrightarray(const Array *right) { 
+               this->arrayright = right; 
+  }
+
+  bool isleftconcrete() {
+	return cast<ConstantExpr>(left)->isconcrete();
+
+  }
+  bool isrightconcrete() {
+	return cast<ConstantExpr>(right)->isconcrete();
+
+  }
+  void setleftconcrete(bool t) {
+	cast<ConstantExpr>(left)->setconcrete(t);
+
+  }
+
+  void setrightconcrete(bool t) {
+	cast<ConstantExpr>(right)->setconcrete(t);
+
+  }
+
+ void setleftstring(std::string str) {
+    cast<ConstantExpr>(left)->setString(str);
+ }
+ void setrightstring(std::string str) {
+    cast<ConstantExpr>(right)->setString(str);
+ }
+ std::string getleftconcrete() {
+	return cast<ConstantExpr>(left)->getString();
+ }
+ std::string getrightconcrete() {
+	return cast<ConstantExpr>(right)->getString();
+ }
+};
 
 /** This class represents an extract from expression {\tt expr}, at
     bit offset {\tt offset} of width {\tt width}.  Bit 0 is the right most 

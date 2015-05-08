@@ -27,6 +27,7 @@ namespace metaSMT {
 	, proto::or_<
 	    proto::terminal< tag::string_var_tag >
 	  , proto::unary_expr<tag::strlen_tag, String_Grammar>
+	  , proto::binary_expr<tag::strcmp_tag, String_Grammar, String_Grammar>
 	  , proto::nary_expr<tag::strconcat_tag, proto::vararg<proto::_> >
 	> >
       {};
@@ -77,6 +78,15 @@ namespace metaSMT {
       strconcat( E1 const &e1, E2 const &e2)
       {
         return proto::make_expr< tag::strconcat_tag, String_Domain >(boost::cref(e1), boost::cref(e2));
+      }
+
+
+      template<typename E1, typename E2>
+      typename proto::result_of::make_expr< tag::strcmp_tag, String_Domain,
+          E1 const &, E2 const &>::type
+      strcmp( E1 const &e1, E2 const &e2)
+      {
+        return proto::make_expr< tag::strcmp_tag, String_Domain >(boost::cref(e1), boost::cref(e2));
       }
 
       // constant creation

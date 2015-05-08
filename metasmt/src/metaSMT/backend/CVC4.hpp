@@ -293,6 +293,11 @@ namespace metaSMT {
       //  return exprManager_.mkExpr(::CVC4::kind::STRING_LENGTH, e);
       }
 
+      result_type operator()( stringtags::strcmp_tag , result_type lhs, result_type rhs ) {
+        return exprManager_.mkExpr(::CVC4::kind::EQUAL, lhs, rhs);
+	
+      }
+
       result_type operator()( inttags::int_to_bv_tag, unsigned long width, result_type e ) {
         ::CVC4::IntToBitVector bvOp(width);
         ::CVC4::Expr op = exprManager_.mkConst(bvOp);

@@ -6,8 +6,7 @@
 
 int get_sign(char *x, char *y, int i) {
   
-  
-  if(strlen(x) == 10 )
+  if(strcmp("hello world", y) )
           return i+1;
   else
           return i-1;
@@ -15,11 +14,11 @@ int get_sign(char *x, char *y, int i) {
 } 
 
 int main() {
-  char a[15];
-  char b[10];
+  char a[100];
+  char b[100];
   int i;
-  klee_make_symbolic(a, 15, "a-print");
-  klee_make_symbolic(b, 10, "b-print");
-  klee_assert(strlen(a) == strlen(b) + 9);
+  klee_make_symbolic(a, 100, "a-print");
+  klee_make_symbolic(b, 100, "b-print");
+//  klee_make_symbolic(&i, 4, "i");
   return get_sign(a, b, i);
 } 

@@ -88,6 +88,12 @@ ref<Expr> ExprVisitor::visitActual(const ref<Expr> &e) {
     case Expr::Sge: res = visitSge(static_cast<SgeExpr&>(ep)); break;
     case Expr::Strlen: res = visitStrlen(static_cast<StrlenExpr&>(ep)); break;
     case Expr::Strconcat: res = visitStrconcat(static_cast<StrconcatExpr&>(ep)); break;
+    case Expr::Strcmp:
+			{ 
+				StrcmpExpr epref = static_cast<StrcmpExpr&>(ep);
+			res=	visitStrcmp(epref); 
+				break;
+			}
     case Expr::Constant:
     default:
       assert(0 && "invalid expression kind");
@@ -263,5 +269,9 @@ ExprVisitor::Action ExprVisitor::visitStrlen(const StrlenExpr&) {
 }
 
 ExprVisitor::Action ExprVisitor::visitStrconcat(const StrconcatExpr&) {
+  return Action::doChildren(); 
+}
+
+ExprVisitor::Action ExprVisitor::visitStrcmp(const StrcmpExpr&) {
   return Action::doChildren(); 
 }

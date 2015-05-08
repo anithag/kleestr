@@ -153,6 +153,7 @@ void Expr::printKind(llvm::raw_ostream &os, Kind k) {
     X(Sge);
     X(Strlen);
     X(Strconcat);
+    X(Strcmp);
 #undef X
   default:
     assert(0 && "invalid kind");
@@ -656,6 +657,11 @@ ref<Expr> StrconcatExpr::create(const ref<Expr> &l, const ref<Expr> &r) {
   Expr::Width w = l->getWidth() + r->getWidth();
   
   return StrconcatExpr::alloc(l, r);
+}
+ref<Expr> StrcmpExpr::create(const ref<Expr> &l, const ref<Expr> &r) {
+  Expr::Width w = l->getWidth() + r->getWidth();
+  
+  return StrcmpExpr::alloc(l, r);
 }
 
 /***/

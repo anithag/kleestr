@@ -157,6 +157,10 @@ namespace {
     virtual ref<Expr> Strconcat(const ref<Expr> &LHS, const ref<Expr> &RHS) {
       return StrconcatExpr::alloc(LHS, RHS);
     }
+
+    virtual ref<Expr> Strcmp(const ref<Expr> &LHS, const ref<Expr> &RHS) {
+      return StrcmpExpr::alloc(LHS, RHS);
+    }
   };
 
   /// ChainedBuilder - Helper class for construct specialized expression
@@ -313,6 +317,10 @@ namespace {
 
     virtual ref<Expr> Strconcat(const ref<Expr> &LHS, const ref<Expr> &RHS) {
       return StrconcatExpr::alloc(LHS, RHS);
+    }
+
+    virtual ref<Expr> Strcmp(const ref<Expr> &LHS, const ref<Expr> &RHS) {
+      return StrcmpExpr::alloc(LHS, RHS);
     }
   };
 
@@ -722,6 +730,10 @@ namespace {
       }
 */
       return Builder.Strconcat(cast<NonConstantExpr>(LHS),
+                         cast<NonConstantExpr>(RHS));
+    }
+    virtual ref<Expr> Strcmp(const ref<Expr> &LHS, const ref<Expr> &RHS) {
+      return Builder.Strcmp(cast<NonConstantExpr>(LHS),
                          cast<NonConstantExpr>(RHS));
     }
   };

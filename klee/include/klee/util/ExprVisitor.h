@@ -81,6 +81,7 @@ namespace klee {
     virtual Action visitSge(const SgeExpr&);
     virtual Action visitStrlen(const StrlenExpr&);
     virtual Action visitStrconcat(const StrconcatExpr&);
+    virtual Action visitStrcmp(const StrcmpExpr&);
 
   private:
     typedef ExprHashMap< ref<Expr> > visited_ty;

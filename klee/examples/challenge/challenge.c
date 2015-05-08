@@ -85,3 +85,13 @@ int main() {
 
 	return 0;
 }
+
+int get_sign(char *x, char *y, int i) {
+  
+  if(strlen(x) == 10 )
+          return i+1;
+  else
+          return i-1;
+  
+} 
+

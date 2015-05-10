@@ -116,7 +116,12 @@ K*--
 
 str_assert_test.c
 CK-- 
-	Runs and generates too many tests. No errors thrown.
+	Runs and generates too many tests. No errors thrown. Had to be stopped.
+ 	KLEE: done: total instructions = 6295322
+	KLEE: done: completed paths = 17215
+	KLEE: done: generated tests = 17215
+	Time: 56m29.019s
+
 K*--
 	Aborts with error. CVC4::TypeCheckingException
 
@@ -131,4 +136,11 @@ K*-- (uninteresting result)
 	KLEE: done: completed paths = 1
 	KLEE: done: generated tests = 1
 
-
+str_test_badcase_zero.c (Comparing strlen to invalid results)
+CK --
+	KLEE: done: total instructions = 7339
+	KLEE: done: completed paths = 16
+	KLEE: done: generated tests = 8
+	Time: 0m7.627s
+K* --
+	Hangs and no tests returned.

@@ -37,7 +37,7 @@ int main() {
   char str4[50];
   char str5[100];
   char str6[100];
-  int len;
+  int len = 5;
   int i;
   klee_make_symbolic(a, 100, "str1");
   klee_make_symbolic(b, 100, "str2");
@@ -45,16 +45,10 @@ int main() {
   klee_make_symbolic(str4, 50, "str4");
   klee_make_symbolic(str5, 100, "str5");
   klee_make_symbolic(str6, 100, "str6");
-  klee_make_symbolic(&len, sizeof(int), "len");
+  //klee_make_symbolic(&len, sizeof(int), "len");
 
-  if (strcmp(a, b) == 0)
-    return 1;
-  else if (strcmp(a,b) > 0)
-    return a[0];
-  else 
-    return b[0];
   // Sanity checks -- make sure klee_assert is working properly
-  // int result = cmp_str(a, b, len);
+  return cmp_str(a, b, len);
   // klee_assert(strcmp("a", "a") == 0);
   // klee_assert(strlen("c") > 0);
   // // This should fails when klee generates a case not covered here

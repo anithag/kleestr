@@ -1,0 +1,79 @@
+Some preliminary evaluation results:
+
+strcmp.c
+CK--
+	KLEE: done: total instructions = 26647
+	KLEE: done: completed paths = 201
+	KLEE: done: generated tests = 201
+	Time: 0m28.017s
+K*--
+	KLEE: done: total instructions = 53
+	KLEE: done: completed paths = 2
+	KLEE: done: generated tests = 2
+	Time: 0m16.240s
+
+
+strcmp2.c
+CK--
+	KLEE: done: total instructions = 588540
+	KLEE: done: completed paths = 5251
+	KLEE: done: generated tests = 5152
+	Time: 15m26.207s
+
+K*--
+	KLEE: done: total instructions = 101
+	KLEE: done: completed paths = 5
+	KLEE: done: generated tests = 5
+	Time: 0m16.240s
+
+
+strcmp3.c
+CK--
+K*--
+	KLEE: done: total instructions = 69
+	KLEE: done: completed paths = 3
+	KLEE: done: generated tests = 3
+	Time: 0m3.501s
+
+
+strcmp4.c
+CK--
+K*--
+	KLEE: done: total instructions = 52
+	KLEE: done: completed paths = 2
+	KLEE: done: generated tests = 2
+	Time: 0m0.120s
+
+strcmp5.c
+CK--
+K*--
+	KLEE: done: total instructions = 52
+	KLEE: done: completed paths = 2
+	KLEE: done: generated tests = 2
+	Time: 0m0.116s
+
+strcmp6.c
+CK--
+K*--
+	KLEE: done: total instructions = 35
+	KLEE: done: completed paths = 1
+	KLEE: done: generated tests = 1
+	Time: 0m0.123s
+
+strlen.c
+CK--
+K*--
+	KLEE: done: total instructions = 52
+	KLEE: done: completed paths = 2
+	KLEE: done: generated tests = 2
+	Time: 	0m2.907s
+
+
+strlen2.c
+CK--
+K*--
+	KLEE: done: total instructions = 54
+	KLEE: done: completed paths = 2
+	KLEE: done: generated tests = 2
+	Time: 0m17.528s
+

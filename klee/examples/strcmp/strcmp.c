@@ -3,7 +3,7 @@
  */
 
 #include <klee/klee.h>
-
+#include <string.h>
 int get_sign(char *x, char *y, int i) {
   
   if(strcmp(x, y) )

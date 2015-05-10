@@ -19,12 +19,13 @@ int cmp_len(char *x, char *y, int i) {
 } 
 
 int cmp_str (char *a, char *b, int len) {
-  int comparison = strcmp(a,b);
+  int comparison = strcmp(a,"bb");
   if (strcmp(a,b)) {
     if (strcmp(a,b) > 0) {
       return len + comparison;
     }
-    return len - comparison;
+    else 
+      return len - comparison;
   }
   return 0;
 }
@@ -33,7 +34,7 @@ int main() {
   char a[100];
   char b[100];
   char str3[100];
-  char str4[100];
+  char str4[50];
   char str5[100];
   char str6[100];
   int len;
@@ -41,22 +42,28 @@ int main() {
   klee_make_symbolic(a, 100, "str1");
   klee_make_symbolic(b, 100, "str2");
   klee_make_symbolic(str3, 100, "str3");
-  klee_make_symbolic(str4, 100, "str4");
+  klee_make_symbolic(str4, 50, "str4");
   klee_make_symbolic(str5, 100, "str5");
   klee_make_symbolic(str6, 100, "str6");
   klee_make_symbolic(&len, sizeof(int), "len");
 
+  if (strcmp(a, b) == 0)
+    return 1;
+  else if (strcmp(a,b) > 0)
+    return a[0];
+  else 
+    return b[0];
   // Sanity checks -- make sure klee_assert is working properly
-  int result = cmp_str(a, b, len);
-  klee_assert(strcmp("a", "a") == 0);
-  klee_assert(strlen("c") > 0);
-  // This should fails when klee generates a case not covered here
-  klee_assert((result == 0 && strlen(a) == strlen(b)) || ((result > 0) && strlen(a) > strlen(b)) ||  (result < 0 && (strlen(a) < strlen(b))));
+  // int result = cmp_str(a, b, len);
+  // klee_assert(strcmp("a", "a") == 0);
+  // klee_assert(strlen("c") > 0);
+  // // This should fails when klee generates a case not covered here
+  // klee_assert((result == 0 & strlen(a) == strlen(b)) | ((result > 0) & strlen(a) > strlen(b)) |  (result < 0 & (strlen(a) < strlen(b))));
   
-  // Make str3 longer than str4. strcmp should always be positive.
-  klee_assume(strlen(str3) > strlen(str4));
-  int result2 = cmp_str(str3, str4, len);
-  klee_assert(result2 > 0);
+  // // Make str3 longer than str4. strcmp should always be positive.
+  // klee_assume(strlen(str3) > strlen(str4));
+  // int result2 = cmp_str(str3, str4, len);
+  // klee_assert(result2 > 0);
 
-  return result;
+  // return result;
 } 

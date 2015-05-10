@@ -1,0 +1,19 @@
+KLEE: WARNING: undefined reference to function: strcmp
+KLEE: WARNING: undefined reference to function: strlen
+klee: Expr.cpp:1234: static klee::ref<klee::Expr> klee::SltExpr::create(const klee::ref<klee::Expr>&, const klee::ref<klee::Expr>&): Assertion `l->getWidth()==r->getWidth() && "type mismatch"' failed.
+0  klee            0x0000000001032f3f
+1  klee            0x0000000001033474
+2  libpthread.so.0 0x00007f8baa265340
+3  libc.so.6       0x00007f8ba780ccc9 gsignal + 57
+4  libc.so.6       0x00007f8ba78100d8 abort + 328
+5  libc.so.6       0x00007f8ba7805b86
+6  libc.so.6       0x00007f8ba7805c32
+7  klee            0x00000000008dd0ed klee::SltExpr::create(klee::ref<klee::Expr> const&, klee::ref<klee::Expr> const&) + 113
+8  klee            0x00000000008dc755 klee::SgtExpr::create(klee::ref<klee::Expr> const&, klee::ref<klee::Expr> const&) + 45
+9  klee            0x00000000007a5462 klee::Executor::executeInstruction(klee::ExecutionState&, klee::KInstruction*) + 11726
+10 klee            0x00000000007aafcc klee::Executor::run(klee::ExecutionState&) + 1676
+11 klee            0x00000000007b106d klee::Executor::runFunctionAsMain(llvm::Function*, int, char**, char**) + 2247
+12 klee            0x0000000000784e36 main + 6699
+13 libc.so.6       0x00007f8ba77f7ec5 __libc_start_main + 245
+14 klee            0x000000000077e2cf
+Aborted (core dumped)

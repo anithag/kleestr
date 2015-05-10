@@ -29,6 +29,12 @@ K*--
 
 strcmp3.c
 CK--
+	Gives KLEE: ERROR: /home/zehranaz/kleestr/klee-uclibc/libc/string/strlen.c:22: memory error: out of bound pointer
+	KLEE: done: total instructions = 584199
+	KLEE: done: completed paths = 5251
+	KLEE: done: generated tests = 5152
+	Time: 17m23.153s
+
 K*--
 	KLEE: done: total instructions = 69
 	KLEE: done: completed paths = 3
@@ -38,6 +44,10 @@ K*--
 
 strcmp4.c
 CK--
+	KLEE: done: total instructions = 6070
+	KLEE: done: completed paths = 7
+	KLEE: done: generated tests = 7
+	Time: 0m0.277s
 K*--
 	KLEE: done: total instructions = 52
 	KLEE: done: completed paths = 2
@@ -46,6 +56,10 @@ K*--
 
 strcmp5.c
 CK--
+	KLEE: done: total instructions = 6796
+	KLEE: done: completed paths = 13
+	KLEE: done: generated tests = 13
+	Time: 0m0.416s
 K*--
 	KLEE: done: total instructions = 52
 	KLEE: done: completed paths = 2
@@ -54,6 +68,10 @@ K*--
 
 strcmp6.c
 CK--
+	KLEE: done: total instructions = 5324
+	KLEE: done: completed paths = 1
+	KLEE: done: generated tests = 1
+	Time: 0m0.263s
 K*--
 	KLEE: done: total instructions = 35
 	KLEE: done: completed paths = 1
@@ -62,6 +80,10 @@ K*--
 
 strlen.c
 CK--
+	KLEE: done: total instructions = 15660
+	KLEE: done: completed paths = 101
+	KLEE: done: generated tests = 101
+	Time: 	0m7.108s
 K*--
 	KLEE: done: total instructions = 52
 	KLEE: done: completed paths = 2
@@ -71,6 +93,8 @@ K*--
 
 strlen2.c
 CK--
+	KLEE: ERROR: /home/zehranaz/kleestr/klee-uclibc/libc/string/strlen.c:22: memory error: out of bound pointer
+
 K*--
 	KLEE: done: total instructions = 54
 	KLEE: done: completed paths = 2

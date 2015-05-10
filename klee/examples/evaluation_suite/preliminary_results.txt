@@ -102,11 +102,11 @@ K*--
 	Time: 0m17.528s
 
 str_tests.c
-CK--
+CK-- (clean klee doing better in terms of generating test cases somewhat interesting)
 	KLEE: done: total instructions = 522494
 	KLEE: done: completed paths = 905
 	KLEE: done: generated tests = 903
-	Time: 
+	Time: 6m19.385s
 K*--
 	KLEE: ERROR: /home/zehranaz/kleestr/klee/examples/evaluation_suite/str_tests.c:22: memory error: out of bound pointer
 	KLEE: done: total instructions = 41
@@ -119,5 +119,16 @@ CK--
 	Runs and generates too many tests. No errors thrown.
 K*--
 	Aborts with error. CVC4::TypeCheckingException
+
+str_assert_test2.c
+CK--
+	KLEE: done: total instructions = 8843
+	KLEE: done: completed paths = 32
+	KLEE: done: generated tests = 24
+	Time: 0m0.468s
+K*-- (uninteresting result)
+	KLEE: done: total instructions = 44
+	KLEE: done: completed paths = 1
+	KLEE: done: generated tests = 1
 
 

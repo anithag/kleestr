@@ -24,9 +24,15 @@ use Cwd 'abs_path';
 my $PACKAGE_NAME        = q{llvm};
 my $VERSION             = q{2.9};
 my $PREFIX              = q{/usr/local};
+<<<<<<< HEAD
+my $LLVM_CONFIGTIME     = q{Tue Apr 14 22:03:02 PDT 2015};
+my $LLVM_SRC_ROOT       = q{/home/zehranaz/kleestr/llvm-2.9};
+my $LLVM_OBJ_ROOT       = q{/home/zehranaz/kleestr/llvm-2.9};
+=======
 my $LLVM_CONFIGTIME     = q{Thu Apr 16 11:11:59 EDT 2015};
 my $LLVM_SRC_ROOT       = q{/home/anitha/kleestr/llvm-2.9};
 my $LLVM_OBJ_ROOT       = q{/home/anitha/kleestr/llvm-2.9};
+>>>>>>> master
 my $ARCH                = lc(q{x86_64});
 my $TARGET_TRIPLE       = q{x86_64-unknown-linux-gnu};
 my $TARGETS_TO_BUILD    = q{X86 Sparc PowerPC Alpha ARM Mips CellSPU XCore MSP430 SystemZ Blackfin CBackend CppBackend MBlaze PTX};

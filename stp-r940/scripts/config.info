@@ -1,2 +1,6 @@
+<<<<<<< HEAD
+PREFIX=/home/zehranaz/kleestr/stp-r940/install
+=======
 PREFIX=/home/anitha/kleestr/stp-r940/install
+>>>>>>> master
 SAT=cryptominisat2

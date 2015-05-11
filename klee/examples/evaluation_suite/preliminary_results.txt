@@ -114,6 +114,19 @@ K*--
 	KLEE: done: generated tests = 1
 	Time: 0m0.447s
 
+str_tests2.c (Worse case for Klee in terms of tests generated)
+CK -- 
+	KLEE: done: total instructions = 6662
+	KLEE: done: completed paths = 14
+	KLEE: done: generated tests = 12
+	Time: 0m0.172s
+K* --
+	KLEE: done: total instructions = 29
+	KLEE: done: completed paths = 1
+	KLEE: done: generated tests = 1
+	Time: 0m0.059s
+
+
 str_assert_test.c
 CK-- 
 	Runs and generates too many tests. No errors thrown. Had to be stopped.

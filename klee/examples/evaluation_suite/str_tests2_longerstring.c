@@ -17,12 +17,12 @@ int cmp_str (char *a, char *b, int len) {
 }
 
 int main() {
-  char a[2];
-  char b[2];
+  char a[200];
+  char b[200];
   int len = 5;
   int i;
-  klee_make_symbolic(a, 2, "str1");
-  klee_make_symbolic(b, 2, "str2");
+  klee_make_symbolic(a, 200, "str1");
+  klee_make_symbolic(b, 200, "str2");
 
   return cmp_str(a, b, len);
 } 

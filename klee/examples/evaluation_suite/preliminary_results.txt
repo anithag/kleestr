@@ -114,7 +114,7 @@ K*--
 	KLEE: done: generated tests = 1
 	Time: 0m0.447s
 
-str_tests2.c (Worse case for Klee in terms of tests generated)
+str_tests2.c - Tests only strcmp (Worse case for Klee in terms of tests generated)
 CK -- 
 	KLEE: done: total instructions = 6662
 	KLEE: done: completed paths = 14
@@ -126,6 +126,36 @@ K* --
 	KLEE: done: generated tests = 1
 	Time: 0m0.059s
 
+str_tests2_longerstring.c - Worse for K* in test generation
+CK--
+
+K*--
+	KLEE: done: total instructions = 29
+	KLEE: done: completed paths = 1
+	KLEE: done: generated tests = 1
+	Time: 0m0.066s
+
+
+str_tests3.c - Tests only strlen (Worse case for Klee in terms of times)
+CK--
+	KLEE: done: total instructions = 6155
+	KLEE: done: completed paths = 7
+	KLEE: done: generated tests = 5
+	Time: 0.253s
+K*--
+	KLEE: done: total instructions = 84
+	KLEE: done: completed paths = 3
+	KLEE: done: generated tests = 3
+	Time: 42.760s
+
+str_tests3_longerstring.c 
+CK--
+
+K*--
+	KLEE: done: total instructions = 84
+	KLEE: done: completed paths = 3
+	KLEE: done: generated tests = 3
+	Timing: 0m31.672s
 
 str_assert_test.c
 CK-- 

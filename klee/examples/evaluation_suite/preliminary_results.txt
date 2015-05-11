@@ -126,9 +126,13 @@ K* --
 	KLEE: done: generated tests = 1
 	Time: 0m0.059s
 
-str_tests2_longerstring.c - Worse for K* in test generation
-CK--
-
+str_tests2_longerstring.c - Worse for K* in test generation 
+CK-- (104)
+	KLEE: ERROR: /home/zehranaz/kleestr/klee-uclibc/libc/string/strcmp.c:34: memory error: out of bound pointer
+	KLEE: done: total instructions = 1879076
+	KLEE: done: completed paths = 1805
+	KLEE: done: generated tests = 1803
+	Time: 25m22.328s
 K*--
 	KLEE: done: total instructions = 29
 	KLEE: done: completed paths = 1

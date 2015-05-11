@@ -10,7 +10,7 @@
 int cmp_str (char *c, char *d, int num) {
   //int comparison = strcmp(a,"bb");
   if (strcmp(c,d)) {
-    if (strlen(c) == -1) {
+    if (strlen(c) >= -1) {
       return num + 1;
     }
     else if (strlen(c) > 0)

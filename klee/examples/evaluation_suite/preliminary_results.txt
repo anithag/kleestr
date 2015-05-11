@@ -1,0 +1,193 @@
+Some preliminary evaluation results:
+
+strcmp.c
+CK--
+	KLEE: done: total instructions = 26647
+	KLEE: done: completed paths = 201
+	KLEE: done: generated tests = 201
+	Time: 0m28.017s
+K*--
+	KLEE: done: total instructions = 53
+	KLEE: done: completed paths = 2
+	KLEE: done: generated tests = 2
+	Time: 0m16.240s
+
+
+strcmp2.c
+CK--
+	KLEE: done: total instructions = 588540
+	KLEE: done: completed paths = 5251
+	KLEE: done: generated tests = 5152
+	Time: 15m26.207s
+
+K*--
+	KLEE: done: total instructions = 101
+	KLEE: done: completed paths = 5
+	KLEE: done: generated tests = 5
+	Time: 0m16.240s
+
+
+strcmp3.c
+CK--
+	Gives KLEE: ERROR: /home/zehranaz/kleestr/klee-uclibc/libc/string/strlen.c:22: memory error: out of bound pointer
+	KLEE: done: total instructions = 584199
+	KLEE: done: completed paths = 5251
+	KLEE: done: generated tests = 5152
+	Time: 17m23.153s
+
+K*--
+	KLEE: done: total instructions = 69
+	KLEE: done: completed paths = 3
+	KLEE: done: generated tests = 3
+	Time: 0m3.501s
+
+
+strcmp4.c
+CK--
+	KLEE: done: total instructions = 6070
+	KLEE: done: completed paths = 7
+	KLEE: done: generated tests = 7
+	Time: 0m0.277s
+K*--
+	KLEE: done: total instructions = 52
+	KLEE: done: completed paths = 2
+	KLEE: done: generated tests = 2
+	Time: 0m0.120s
+
+strcmp5.c
+CK--
+	KLEE: done: total instructions = 6796
+	KLEE: done: completed paths = 13
+	KLEE: done: generated tests = 13
+	Time: 0m0.416s
+K*--
+	KLEE: done: total instructions = 52
+	KLEE: done: completed paths = 2
+	KLEE: done: generated tests = 2
+	Time: 0m0.116s
+
+strcmp6.c
+CK--
+	KLEE: done: total instructions = 5324
+	KLEE: done: completed paths = 1
+	KLEE: done: generated tests = 1
+	Time: 0m0.263s
+K*--
+	KLEE: done: total instructions = 35
+	KLEE: done: completed paths = 1
+	KLEE: done: generated tests = 1
+	Time: 0m0.123s
+
+strlen.c
+CK--
+	KLEE: done: total instructions = 15660
+	KLEE: done: completed paths = 101
+	KLEE: done: generated tests = 101
+	Time: 	0m7.108s
+K*--
+	KLEE: done: total instructions = 52
+	KLEE: done: completed paths = 2
+	KLEE: done: generated tests = 2
+	Time: 	0m2.907s
+
+
+strlen2.c
+CK--
+	KLEE: ERROR: /home/zehranaz/kleestr/klee-uclibc/libc/string/strlen.c:22: memory error: out of bound pointer
+
+K*--
+	KLEE: done: total instructions = 54
+	KLEE: done: completed paths = 2
+	KLEE: done: generated tests = 2
+	Time: 0m17.528s
+
+str_tests.c
+CK-- (clean klee doing better in terms of generating test cases somewhat interesting)
+	KLEE: done: total instructions = 522494
+	KLEE: done: completed paths = 905
+	KLEE: done: generated tests = 903
+	Time: 6m19.385s
+K*--
+	KLEE: ERROR: /home/zehranaz/kleestr/klee/examples/evaluation_suite/str_tests.c:22: memory error: out of bound pointer
+	KLEE: done: total instructions = 41
+	KLEE: done: completed paths = 1
+	KLEE: done: generated tests = 1
+	Time: 0m0.447s
+
+str_tests2.c - Tests only strcmp (Worse case for Klee in terms of tests generated)
+CK -- 
+	KLEE: done: total instructions = 6662
+	KLEE: done: completed paths = 14
+	KLEE: done: generated tests = 12
+	Time: 0m0.172s
+K* --
+	KLEE: done: total instructions = 29
+	KLEE: done: completed paths = 1
+	KLEE: done: generated tests = 1
+	Time: 0m0.059s
+
+str_tests2_longerstring.c - Worse for K* in test generation 
+CK-- (104)
+	KLEE: ERROR: /home/zehranaz/kleestr/klee-uclibc/libc/string/strcmp.c:34: memory error: out of bound pointer
+	KLEE: done: total instructions = 1879076
+	KLEE: done: completed paths = 1805
+	KLEE: done: generated tests = 1803
+	Time: 25m22.328s
+K*--
+	KLEE: done: total instructions = 29
+	KLEE: done: completed paths = 1
+	KLEE: done: generated tests = 1
+	Time: 0m0.066s
+
+
+str_tests3.c - Tests only strlen (Worse case for Klee in terms of times)
+CK--
+	KLEE: done: total instructions = 6155
+	KLEE: done: completed paths = 7
+	KLEE: done: generated tests = 5
+	Time: 0.253s
+K*--
+	KLEE: done: total instructions = 84
+	KLEE: done: completed paths = 3
+	KLEE: done: generated tests = 3
+	Time: 42.760s
+
+str_tests3_longerstring.c 
+CK--
+
+K*--
+	KLEE: done: total instructions = 84
+	KLEE: done: completed paths = 3
+	KLEE: done: generated tests = 3
+	Timing: 0m31.672s
+
+str_assert_test.c
+CK-- 
+	Runs and generates too many tests. No errors thrown. Had to be stopped.
+ 	KLEE: done: total instructions = 6295322
+	KLEE: done: completed paths = 17215
+	KLEE: done: generated tests = 17215
+	Time: 56m29.019s
+
+K*--
+	Aborts with error. CVC4::TypeCheckingException
+
+str_assert_test2.c
+CK--
+	KLEE: done: total instructions = 8843
+	KLEE: done: completed paths = 32
+	KLEE: done: generated tests = 24
+	Time: 0m0.468s
+K*-- (uninteresting result)
+	KLEE: done: total instructions = 44
+	KLEE: done: completed paths = 1
+	KLEE: done: generated tests = 1
+
+str_test_badcase_zero.c (Comparing strlen to invalid results)
+CK --
+	KLEE: done: total instructions = 7339
+	KLEE: done: completed paths = 16
+	KLEE: done: generated tests = 8
+	Time: 0m7.627s
+K* --
+	Hangs and no tests returned.

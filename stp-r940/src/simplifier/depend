@@ -1,15 +1,3 @@
-consteval.o: consteval.cpp simplifier.h ../AST/AST.h ../AST/UsefulDefs.h \
- ../AST/../main/Globals.h ../AST/ASTKind.h \
- ../AST/../extlib-constbv/constantbv.h ../AST/RunTimes.h ../AST/ASTNode.h \
- ../AST/../AST/NodeFactory/HashingNodeFactory.h \
- ../AST/../AST/NodeFactory/NodeFactory.h ../AST/ASTKind.h \
- ../AST/ASTInternal.h ../AST/ASTInterior.h ../AST/ASTSymbol.h \
- ../AST/ASTBVConst.h ../STPManager/STPManager.h \
- ../STPManager/UserDefinedFlags.h ../STPManager/../AST/AST.h \
- ../STPManager/../AST/NodeFactory/HashingNodeFactory.h \
- ../AST/NodeFactory/SimplifyingNodeFactory.h \
- ../AST/NodeFactory/NodeFactory.h \
- ../AST/NodeFactory/../../STPManager/STPManager.h SubstitutionMap.h
 bvsolver.o: bvsolver.cpp ../AST/AST.h ../AST/UsefulDefs.h \
  ../AST/../main/Globals.h ../AST/ASTKind.h \
  ../AST/../extlib-constbv/constantbv.h ../AST/RunTimes.h ../AST/ASTNode.h \
@@ -23,6 +11,18 @@ bvsolver.o: bvsolver.cpp ../AST/AST.h ../AST/UsefulDefs.h \
  ../AST/NodeFactory/NodeFactory.h \
  ../AST/NodeFactory/../../STPManager/STPManager.h SubstitutionMap.h \
  Symbols.h CountOfSymbols.h
+consteval.o: consteval.cpp simplifier.h ../AST/AST.h ../AST/UsefulDefs.h \
+ ../AST/../main/Globals.h ../AST/ASTKind.h \
+ ../AST/../extlib-constbv/constantbv.h ../AST/RunTimes.h ../AST/ASTNode.h \
+ ../AST/../AST/NodeFactory/HashingNodeFactory.h \
+ ../AST/../AST/NodeFactory/NodeFactory.h ../AST/ASTKind.h \
+ ../AST/ASTInternal.h ../AST/ASTInterior.h ../AST/ASTSymbol.h \
+ ../AST/ASTBVConst.h ../STPManager/STPManager.h \
+ ../STPManager/UserDefinedFlags.h ../STPManager/../AST/AST.h \
+ ../STPManager/../AST/NodeFactory/HashingNodeFactory.h \
+ ../AST/NodeFactory/SimplifyingNodeFactory.h \
+ ../AST/NodeFactory/NodeFactory.h \
+ ../AST/NodeFactory/../../STPManager/STPManager.h SubstitutionMap.h
 simplifier.o: simplifier.cpp simplifier.h ../AST/AST.h \
  ../AST/UsefulDefs.h ../AST/../main/Globals.h ../AST/ASTKind.h \
  ../AST/../extlib-constbv/constantbv.h ../AST/RunTimes.h ../AST/ASTNode.h \
@@ -141,21 +141,6 @@ ConstantBitPropagation.o: constantBitP/ConstantBitPropagation.cpp \
  constantBitP/../../AST/NodeFactory/NodeFactory.h \
  constantBitP/../../simplifier/simplifier.h \
  constantBitP/ConstantBitP_Utility.h
-FixedBits.o: constantBitP/FixedBits.cpp constantBitP/../../AST/AST.h \
- constantBitP/../../AST/UsefulDefs.h \
- constantBitP/../../AST/../main/Globals.h \
- constantBitP/../../AST/ASTKind.h \
- constantBitP/../../AST/../extlib-constbv/constantbv.h \
- constantBitP/../../AST/RunTimes.h constantBitP/../../AST/ASTNode.h \
- constantBitP/../../AST/../AST/NodeFactory/HashingNodeFactory.h \
- constantBitP/../../AST/../AST/NodeFactory/NodeFactory.h ../AST/ASTKind.h \
- constantBitP/../../AST/ASTInternal.h \
- constantBitP/../../AST/ASTInterior.h constantBitP/../../AST/ASTSymbol.h \
- constantBitP/../../AST/ASTBVConst.h constantBitP/FixedBits.h \
- constantBitP/ConstantBitP_Utility.h \
- constantBitP/ConstantBitPropagation.h constantBitP/Dependencies.h \
- constantBitP/NodeToFixedBitsMap.h constantBitP/WorkList.h \
- constantBitP/MultiplicationStats.h
 ConstantBitP_Utility.o: constantBitP/ConstantBitP_Utility.cpp \
  constantBitP/ConstantBitP_Utility.h \
  constantBitP/ConstantBitPropagation.h constantBitP/FixedBits.h \
@@ -172,3 +157,18 @@ ConstantBitP_Utility.o: constantBitP/ConstantBitP_Utility.cpp \
  constantBitP/../../AST/ASTBVConst.h constantBitP/NodeToFixedBitsMap.h \
  constantBitP/WorkList.h constantBitP/MultiplicationStats.h \
  constantBitP/../../extlib-constbv/constantbv.h
+FixedBits.o: constantBitP/FixedBits.cpp constantBitP/../../AST/AST.h \
+ constantBitP/../../AST/UsefulDefs.h \
+ constantBitP/../../AST/../main/Globals.h \
+ constantBitP/../../AST/ASTKind.h \
+ constantBitP/../../AST/../extlib-constbv/constantbv.h \
+ constantBitP/../../AST/RunTimes.h constantBitP/../../AST/ASTNode.h \
+ constantBitP/../../AST/../AST/NodeFactory/HashingNodeFactory.h \
+ constantBitP/../../AST/../AST/NodeFactory/NodeFactory.h ../AST/ASTKind.h \
+ constantBitP/../../AST/ASTInternal.h \
+ constantBitP/../../AST/ASTInterior.h constantBitP/../../AST/ASTSymbol.h \
+ constantBitP/../../AST/ASTBVConst.h constantBitP/FixedBits.h \
+ constantBitP/ConstantBitP_Utility.h \
+ constantBitP/ConstantBitPropagation.h constantBitP/Dependencies.h \
+ constantBitP/NodeToFixedBitsMap.h constantBitP/WorkList.h \
+ constantBitP/MultiplicationStats.h

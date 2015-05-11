@@ -530,7 +530,7 @@
 /* #undef HAVE____CHKSTK */
 
 /* Linker version detected at compile time. */
-#define HOST_LINK_VERSION "2.24.90.20141014"
+#define HOST_LINK_VERSION "2.24"
 
 /* Installation directory for binary executables */
 #define LLVM_BINDIR "/usr/local/bin"
@@ -628,7 +628,7 @@
 #define LTDL_SHLIB_EXT ".so"
 
 /* Define to the system default library search path. */
-#define LTDL_SYSSEARCHPATH "/lib:/usr/lib:/usr/lib/x86_64-linux-gnu/libfakeroot:/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu/mesa-egl:/usr/lib/x86_64-linux-gnu/mesa:/usr/lib/x86_64-linux-gnu/mir/client8driver/mesa"
+#define LTDL_SYSSEARCHPATH "/lib:/usr/lib:/usr/local/lib:/usr/lib/vmware-tools/lib32/libvmGuestLib.so:/usr/lib/vmware-tools/lib64/libvmGuestLib.so:/usr/lib/vmware-tools/lib32/libvmGuestLibJava.so:/usr/lib/vmware-tools/lib64/libvmGuestLibJava.so:/usr/lib/vmware-tools/lib32/libDeployPkg.so:/usr/lib/vmware-tools/lib64/libDeployPkg.so:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu/mesa-egl:/usr/lib/x86_64-linux-gnu/mesa"
 
 /* Define if /dev/zero should be used when mapping RWX memory, or undefine if
    its not necessary */

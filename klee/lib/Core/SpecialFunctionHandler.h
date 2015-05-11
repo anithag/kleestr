@@ -136,6 +136,9 @@ namespace klee {
     HANDLER(handleMulOverflow);
     HANDLER(handleSubOverflow);
     HANDLER(handleDivRemOverflow);
+    HANDLER(handleTestFunction);
+    HANDLER(handleTestFunctionAdds);
+    HANDLER(handleFoo);
     HANDLER(handleStrcat);
     HANDLER(handleStrlen);
     HANDLER(handleStrcmp);

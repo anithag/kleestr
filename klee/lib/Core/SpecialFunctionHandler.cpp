@@ -28,6 +28,7 @@
 #include "llvm/Module.h"
 #endif
 #include "llvm/ADT/Twine.h"
+#include "llvm/ADT/APInt.h"	// Included for testing purposes - remove if not needed to parse Int from expr
 
 #include <errno.h>
 
@@ -90,6 +91,9 @@ static SpecialFunctionHandler::HandlerInfo handlerInfo[] = {
   add("klee_alias_function", handleAliasFunction, false),
   add("malloc", handleMalloc, true),
   add("realloc", handleRealloc, true),
+  add("test_function_adds", handleTestFunctionAdds, true),
+  add("test_function", handleTestFunction, true),
+  add("foo", handleFoo, true),
   add("strcat", handleStrcat, true),
   add("strlen", handleStrlen, true),
   add("strcmp", handleStrcmp, true),
@@ -368,6 +372,7 @@ void SpecialFunctionHandler::handleMalloc(ExecutionState &state,
   executor.executeAlloc(state, arguments[0], false, target);
 }
 
+// HERE: I am going to add another function!
 void SpecialFunctionHandler::handleAssume(ExecutionState &state,
                             KInstruction *target,
                             std::vector<ref<Expr> > &arguments) {
@@ -676,6 +681,64 @@ void SpecialFunctionHandler::handleGetErrno(ExecutionState &state,
   executor.bindLocal(target, state,
                      ConstantExpr::create(errno, Expr::Int32));
 }
+
+void SpecialFunctionHandler::handleTestFunctionAdds(ExecutionState &state,
+                            KInstruction *target,
+                            std::vector<ref<Expr> > &arguments) {
+  // XXX should type check args
+  assert(arguments.size() == 1 &&
+         "invalid number of arguments to test_function");
+
+  ref<Expr> value = executor.toUnique(state, arguments[0]);
+  ConstantExpr *CE = dyn_cast<ConstantExpr>(value);
+  uint64_t int_val = CE->getLimitedValue();
+  executor.bindLocal(target, state, ConstantExpr::create((int_val + 102), Expr::Int32));
+  return;
+
+}
+
+void SpecialFunctionHandler::handleTestFunction(ExecutionState &state,
+                            KInstruction *target,
+                            std::vector<ref<Expr> > &arguments) {
+	// XXX should type check args
+	  assert(arguments.size() == 1 &&
+	         "invalid number of arguments to test_function");
+
+	  // TODO: Parse string out of arguments [0] and [1]
+	  // TODO: Generate constraints for string concat: - must be two arguments, result must be concat of both
+
+	  //ref<Expr> value = executor.toUnique(state, arguments[0]);
+	  //ConstantExpr *CE = dyn_cast<ConstantExpr>(value);
+	  ref<Expr> value = arguments[0];
+
+	  ref<ConstantExpr> compare_to = ConstantExpr::create(100, Expr::Int32);
+	  ref<Expr> equal_test = EqExpr::create(value, compare_to);
+	  executor.addConstraint(state, equal_test);
+	  //executor.bindLocal(target, state, ConstantExpr::create((int_val + 102), Expr::Int32));
+	  return;
+}
+
+void SpecialFunctionHandler::handleFoo(ExecutionState &state,
+                            KInstruction *target,
+                            std::vector<ref<Expr> > &arguments) {
+	// XXX should type check args
+	  assert(arguments.size() == 2 &&
+	         "invalid number of arguments to test_function");
+
+	  // TODO: Parse string out of arguments [0] and [1]
+	  // TODO: Generate constraints for string concat: - must be two arguments, result must be concat of both
+
+	  ref<Expr> dest_left = arguments[0];
+	  ref<Expr> src_right = arguments[1];
+//	  ref<ConstantExpr> left_width = ConstantExpr::create(dest_left->getWidth(), dest_left->getWidth());
+//	  ref<ConstantExpr> right_width = ConstantExpr::create(src_right->getWidth(), src_right->getWidth());
+//	  ref<UgtExpr> len_constrain = UgtExpr::create(dyn_cast<Expr>(left_width), dyn_cast<Expr>(right_width));
+//
+//	  executor.addConstraint(state, dyn_cast<Expr>(len_constrain));
+	  executor.bindLocal(target, state, ConstantExpr::create(102, Expr::Int32));
+	  return;
+}
+
 
 void SpecialFunctionHandler::handleCalloc(ExecutionState &state,
                             KInstruction *target,

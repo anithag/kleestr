@@ -1,0 +1,4 @@
+KLEE: ERROR: /home/zehranaz/kleestr/klee-uclibc/libc/string/strcat.c:22: memory error: out of bound pointer
+KLEE: NOTE: now ignoring this error at this location
+KLEE: ERROR: /home/zehranaz/kleestr/klee-uclibc/libc/string/strcat.c:24: memory error: out of bound pointer
+KLEE: NOTE: now ignoring this error at this location

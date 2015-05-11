@@ -624,20 +624,17 @@ typename SolverContext::result_type MetaSMTBuilder<SolverContext>::construct_int
 template<typename SolverContext>
 typename SolverContext::result_type MetaSMTBuilder<SolverContext>::construct_string(ref<Expr> e, int *width_out) {
   
-		//ignore width_out
-            typename SolverContext::result_type res ;
-            ConstantExpr *coe = cast<ConstantExpr>(e);
-            assert(coe);
-            unsigned coe_width = coe->getWidth();
-	    char *buf = new char[12];
-	    unsigned long value1 = coe->getZExtValue();
-	    buf[0] = 0;
-	    std::string value(buf);
-	    //std::string value(buf);
+        typename SolverContext::result_type res ;
+	std::string value;
+        MetaSMTExprHashMapIter it = _constructed.find(e);
+        if (it != _constructed.end()) {
+            return it->second.first;
+        } else {
+            res = evaluate(_solver, metaSMT::logic::String::new_string(0));
+            _constructed.insert(std::make_pair(e, std::make_pair(res, 0)));
+            return res;
+        }
 
-            res = evaluate(_solver, metaSMT::logic::String::ustring(value, coe_width));
-            _constructed.insert(std::make_pair(e, std::make_pair(res, *width_out)));
-	    return res;
 }
 
 template<typename SolverContext>
@@ -1213,8 +1210,7 @@ typename SolverContext::result_type MetaSMTBuilder<SolverContext>::constructActu
             StrlenExpr *se = cast<StrlenExpr>(e);
             assert(se);
     
-            //typename SolverContext::result_type left_expr = evaluate(_solver, construct(se->getLeft(), width_out));
-            typename SolverContext::result_type left_expr = evaluate(_solver, metaSMT::logic::String::new_string(0));
+            typename SolverContext::result_type left_expr = evaluate(_solver, construct_string(se->getLeft(), 0));
     
 	    //Important: construct a map of previous variable to newly generated string
             _constructed.insert(std::make_pair(e, std::make_pair(left_expr, 0)));
@@ -1276,7 +1272,7 @@ typename SolverContext::result_type MetaSMTBuilder<SolverContext>::constructActu
 				right_expr= evaluate(_solver, metaSMT::logic::String::ustring(value, 0));
 		}
 	    	else 		
-				right_expr= evaluate(_solver, metaSMT::logic::String::new_string(0));
+				right_expr= evaluate(_solver, construct_string(se->getRight(), 0));
 	    } else if (rightconcrete) {
 		//Left kid is concrete
 	    	if(leftconcrete) {
@@ -1284,13 +1280,13 @@ typename SolverContext::result_type MetaSMTBuilder<SolverContext>::constructActu
 	    			left_expr = evaluate(_solver, metaSMT::logic::String::ustring(value, 0));
 		}
 		else
-	    			left_expr = evaluate(_solver, metaSMT::logic::String::new_string(0));
+	    			left_expr = evaluate(_solver, construct_string(se->getLeft(), 0));
 
 		value = se->getrightconcrete();
  		right_expr= evaluate(_solver, metaSMT::logic::String::ustring(value, 0));
 	    } else {
-	    	left_expr = evaluate(_solver, metaSMT::logic::String::new_string(0));
-	    	right_expr= evaluate(_solver, metaSMT::logic::String::new_string(0));
+	    	left_expr = evaluate(_solver, construct_string(se->getLeft(), 0));
+	    	right_expr= evaluate(_solver, construct_string(se->getRight(), 0));
 	    }
             //assert(*width_out != 1 && "uncanonicalized sle");
             *width_out = 1;    

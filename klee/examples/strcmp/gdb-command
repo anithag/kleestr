@@ -1,1 +1,1 @@
-r --use-cex-cache=0 --use-cache=0 --use-forked-solver=0 --use-metasmt=cvc4 strcmp.o
+r --write-smt2s --use-cex-cache=0 --use-cache=0 --use-forked-solver=0 --use-metasmt=cvc4 test.o

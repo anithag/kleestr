@@ -1230,17 +1230,51 @@ typename SolverContext::result_type MetaSMTBuilder<SolverContext>::constructActu
             StrconcatExpr *se = cast<StrconcatExpr>(e);
             assert(se);
     
-            typename SolverContext::result_type left_expr = evaluate(_solver, metaSMT::logic::String::new_string(0));
-            typename SolverContext::result_type right_expr = evaluate(_solver, metaSMT::logic::String::new_string(0));
-    
+            typename SolverContext::result_type left_expr ; 
+            typename SolverContext::result_type right_expr ; 
+	    
+            Expr *left = cast<Expr>(se->getLeft());
+	    Expr *right = cast<Expr> (se->getRight());
+	
+	    std::string value;
+	    
+            bool leftconcrete = se->isleftconcrete();
+ 	    bool rightconcrete = se->isrightconcrete();
+
+	    if (leftconcrete) {
+		//Left kid is concrete
+		value = se->getleftconcrete();
+	    	left_expr = evaluate(_solver, metaSMT::logic::String::ustring(value, 0));
+
+	    	if(rightconcrete) {
+				value = se->getrightconcrete();
+				right_expr= evaluate(_solver, metaSMT::logic::String::ustring(value, 0));
+		}
+	    	else 		
+				right_expr= evaluate(_solver, construct_string(se->getRight(), 0));
+	    } else if (rightconcrete) {
+		//Left kid is concrete
+	    	if(leftconcrete) {
+				value = se->getleftconcrete();
+	    			left_expr = evaluate(_solver, metaSMT::logic::String::ustring(value, 0));
+		}
+		else
+	    			left_expr = evaluate(_solver, construct_string(se->getLeft(), 0));
+
+		value = se->getrightconcrete();
+ 		right_expr= evaluate(_solver, metaSMT::logic::String::ustring(value, 0));
+	    } else {
+	    	left_expr = evaluate(_solver, construct_string(se->getLeft(), 0));
+	    	right_expr= evaluate(_solver, construct_string(se->getRight(), 0));
+	    }
             //assert(*width_out != 1 && "uncanonicalized sle");
             *width_out = 1;    
 
 	     //FIXME: Somehow get root and hash it. Push it to map
 	    const Array *rootleft = se->getarray(0);
 	    const Array *rootright = se->getarray(1);
-            _arr_hash.hashArrayExpr(rootleft, left_expr);
-            _arr_hash.hashArrayExpr(rootright, right_expr);
+            if(rootleft) _arr_hash.hashArrayExpr(rootleft, left_expr);
+            if(rootright) _arr_hash.hashArrayExpr(rootright, right_expr);
     
             res = evaluate(_solver, strconcat(left_expr, right_expr));
             break;	  

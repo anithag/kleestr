@@ -403,10 +403,12 @@ void SpecialFunctionHandler::handleStrcat(ExecutionState &state,
   ref<Expr> e = StrconcatExpr::create(arguments[0], arguments[1]);
   
  //Get array left and right
-  const Array *left, *right;
+  const Array *left=NULL, *right=NULL;
+  bool issymbolic = false;
+  StrconcatExpr *expr = cast<StrconcatExpr>(e);
+ 
   Executor::ExactResolutionList rl;
   executor.resolveExact(state, arguments[0], rl, "make_symbolic");
-  
   for (Executor::ExactResolutionList::iterator it = rl.begin(), 
          ie = rl.end(); it != ie; ++it) {
     const MemoryObject *mo = it->first.first;
@@ -418,11 +420,24 @@ void SpecialFunctionHandler::handleStrcat(ExecutionState &state,
     for (unsigned i = 0; i != state.symbolics.size(); ++i)
              if((s->symbolics[i].second)->name == mo->name) {
   			left = (s->symbolics[i].second);
+			issymbolic = true;
+			expr->setleftarray(left);
 			break;
 	     }
   }  
+  if(!issymbolic) {
+	//concrete
+     std::string msg_str = readStringAtAddress(state, arguments[0]);
+     expr->setleftconcrete(true);
+     expr->setleftstring(msg_str);
+     expr->setleftarray(NULL);
+
+  }
+
+	//for use below
+  issymbolic = false;
+  rl.clear();
   executor.resolveExact(state, arguments[1], rl, "make_symbolic");
-  
   for (Executor::ExactResolutionList::iterator it = rl.begin(), 
          ie = rl.end(); it != ie; ++it) {
     const MemoryObject *mo = it->first.first;
@@ -433,13 +448,20 @@ void SpecialFunctionHandler::handleStrcat(ExecutionState &state,
     //get Symbolic array associated with this memoryobject
     for (unsigned i = 0; i != state.symbolics.size(); ++i)
              if((s->symbolics[i].second)->name == mo->name) {
+			issymbolic = true;
   			right = (s->symbolics[i].second);
+			expr->setrightarray(right);
 			break;
 	     }
   }  
-  
-   StrconcatExpr *expr = cast<StrconcatExpr>(e);
-   expr->setarray(left, right);
+  if(!issymbolic) {
+	//concrete
+     std::string msg_str = readStringAtAddress(state, arguments[1]);
+     expr->setrightconcrete(true);
+     expr->setrightstring(msg_str);
+     expr->setrightarray(NULL);
+     
+  }
 
    executor.bindLocal(target, state, e);
 }

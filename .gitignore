@@ -1,0 +1,3 @@
+setup.sh
+*klee-out-*
+*.o

@@ -1010,6 +1010,44 @@ public:
                this->arrayleft = left; 
                this->arrayright = right; 
   }
+  void setleftarray(const Array *left) { 
+               this->arrayleft = left; 
+  }
+
+  void setrightarray(const Array *right) { 
+               this->arrayright = right; 
+  }
+
+  bool isleftconcrete() {
+	return cast<ConstantExpr>(left)->isconcrete();
+
+  }
+  bool isrightconcrete() {
+	return cast<ConstantExpr>(right)->isconcrete();
+
+  }
+  void setleftconcrete(bool t) {
+	cast<ConstantExpr>(left)->setconcrete(t);
+
+  }
+
+  void setrightconcrete(bool t) {
+	cast<ConstantExpr>(right)->setconcrete(t);
+
+  }
+
+ void setleftstring(std::string str) {
+    cast<ConstantExpr>(left)->setString(str);
+ }
+ void setrightstring(std::string str) {
+    cast<ConstantExpr>(right)->setString(str);
+ }
+ std::string getleftconcrete() {
+	return cast<ConstantExpr>(left)->getString();
+ }
+ std::string getrightconcrete() {
+	return cast<ConstantExpr>(right)->getString();
+ }
 };
 
 class StrcmpExpr : public NonConstantExpr { 

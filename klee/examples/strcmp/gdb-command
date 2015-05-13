@@ -1,1 +1,1 @@
-r --use-cex-cache=0 --use-cache=0 --use-forked-solver=0 --use-metasmt=cvc4 strcmp.o
+r --use-cex-cache=0 --use-cache=0 --use-forked-solver=0 --use-metasmt=cvc4 strcmp4.o

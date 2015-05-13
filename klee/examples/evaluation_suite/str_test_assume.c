@@ -15,7 +15,6 @@ int cmp_len(char *x, char *y, int i) {
     }
   else
     return i-1;
-  
 }
 
 int cmp_str (char *c, char *d, int num) {
@@ -38,9 +37,8 @@ int main() {
   int i;
   klee_make_symbolic(a, STRLEN, "str1");
   klee_make_symbolic(b, STRLEN, "str2");
-
-  klee_assume(strlen(a) == strlen(b));
   int result = cmp_str(a,b,len);
+  klee_assume(strlen(a) == strlen(b));
   klee_assert(strlen(a) == strlen(a));
   klee_assert(strlen(a) == strlen(b));
   return result;

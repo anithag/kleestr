@@ -1,5 +1,6 @@
 /*
  * First KLEE tutorial: testing a small function
+ * Nested expression fails.
  */
 
 #include <klee/klee.h>

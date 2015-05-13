@@ -6,7 +6,7 @@
 
 int get_sign(char *x, char *y, int i) {
   
-  if(strcat(x, y) == "hello world" )
+  if(strcat(x, y) == "hello world") 
           return i+1;
   else
           return i-1;

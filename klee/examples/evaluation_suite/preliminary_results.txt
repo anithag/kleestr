@@ -191,3 +191,15 @@ CK --
 	Time: 0m7.627s
 K* --
 	Hangs and no tests returned.
+
+str_tests_mixed_conditions.c (Worse for K*)
+CK-- (134)
+	KLEE: done: total instructions = 6694
+	KLEE: done: completed paths = 18
+	KLEE: done: generated tests = 14
+	Time: 0m0.331s
+K*-- (133)
+	KLEE: done: total instructions = 88
+	KLEE: done: completed paths = 4
+	KLEE: done: generated tests = 4
+	Time: 0m9.663s

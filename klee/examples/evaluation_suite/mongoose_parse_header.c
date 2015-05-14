@@ -1,3 +1,8 @@
+/*
+ *  Test inspired by Mongoose webserver. Problem is it aliases into the string
+ *  which breaks kleestr.
+ */
+
 #include <klee/klee.h>
 #include <stddef.h>
 
@@ -10,10 +15,17 @@ static int parse_header(const char *str, size_t str_len, const char *var_name,
   if (buf != NULL && buf_size > 0) buf[0] = '\0';
 
   // Find where variable starts
-  for (s = str; s != NULL && s + n < end; s++) {
-    if ((s == str || s[-1] == ch || s[-1] == ch1) && s[n] == '=' &&
-        !memcmp(s, var_name, n)) break;
-  }
+  // for (s = str; s != NULL && s + n < end; s++) {
+  //   if ((s == str || s[0] == ch || s[0] == ch1) && s[str_len-3] == '=' /*&&
+  //       !memcmp(s, var_name, n)*/) break;
+  // }
+  
+  // for (s = str; s != NULL && s + n < end; s++) {
+  //   if (s[str_len-3] == '=') 
+  //     break;
+  // }
+  if (str_len >1 )
+    s = str[str_len - 1];
 
   if (s != NULL && &s[n + 1] < end) {
     s += n + 1;

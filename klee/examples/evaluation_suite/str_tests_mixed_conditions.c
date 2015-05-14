@@ -7,10 +7,8 @@
 
 
 char* cmp_str (char *a, char *b) {
-  if (strcmp(a, b) && strlen(a)==2 && strlen(b)==3)
+  if (strcmp(a, b) && strlen(a)==2 && strlen(b)==3) 
     return a;
-  // else if (strcmp(a,b) > 0)
-  //   return a;
   else 
     return b;
 }

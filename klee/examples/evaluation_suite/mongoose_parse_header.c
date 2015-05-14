@@ -10,7 +10,7 @@ static int parse_header(const char *str, size_t str_len, const char *var_name,
                         char *buf, size_t buf_size) {
   int ch = ' ', ch1 = ',', len = 0;
   size_t n = strlen(var_name);
-  const char *p, *end = str + str_len, *s = NULL;
+  const char *p, *end = str + str_len, *s = str;
 
   if (buf != NULL && buf_size > 0) buf[0] = '\0';
 
@@ -24,8 +24,6 @@ static int parse_header(const char *str, size_t str_len, const char *var_name,
   //   if (s[str_len-3] == '=') 
   //     break;
   // }
-  if (str_len >1 )
-    s = str[str_len - 1];
 
   if (s != NULL && &s[n + 1] < end) {
     s += n + 1;

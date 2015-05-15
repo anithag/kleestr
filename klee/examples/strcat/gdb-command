@@ -1,1 +1,3 @@
 r --use-cex-cache=0 --use-cache=0 --use-forked-solver=0 --use-metasmt=cvc4 strcat4.o
+b smt_engine.cpp:3401
+r

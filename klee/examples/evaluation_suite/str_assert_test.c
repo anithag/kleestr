@@ -49,8 +49,8 @@ int main() {
 
   // Sanity checks -- make sure klee_assert is working properly
   klee_assert(strcmp("a", "a") == 0);
-  klee_assert(strlen(a) + strlen("b") == strlen(a)+1);
-  klee_assume(strlen(a) + 1 > strlen(a));
+  // klee_assert(strlen(a) + strlen("b") == strlen(a)+1);
+  // klee_assume(strlen(a) + 1 > strlen(a));
   return cmp_str(a, b, len);
   // klee_assert(strlen("c") > 0);
   // // This should fails when klee generates a case not covered here
